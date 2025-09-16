@@ -105,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'pt-BR'
 
 TIME_ZONE = 'America/Recife'
 
@@ -115,26 +115,25 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = 'media/'
+MEDIA_URL = 'media/' # uploads de usuários
 
-MEDIA_ROOT = BASE_DIR / 'media/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static", # arquivos static globais
+]
+
+MEDIA_ROOT = BASE_DIR / "media/" # uploads de usuários
+
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# Configurações do Crispy Forms
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-AUTH_USER_MODEL = "app.Usuario"
-
-LOGIN_URL = "login"
-
-LOGOUT_REDIRECT_URL = "index"
-
-LOGIN_REDIRECT_URL = "inicio"
