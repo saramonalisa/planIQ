@@ -13,3 +13,9 @@ def index(request):
     if request.user.is_authenticated:
         return redirect('inicio') 
     return render(request, "index.html")
+
+def inicio(request):
+    return render(request, "inicio.html")
+
+def login(request):
+    return render(request, "login.html")
