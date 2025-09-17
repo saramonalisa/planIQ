@@ -1,0 +1,230 @@
+:root {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --nav-bg: #fff;
+  --sidebar-bg: #f8f9fa;
+  --sidebar-text: #212529;
+  --footer-bg: #f8f9fa;
+  --footer-text:  #212529;
+  --link-color: #212529;
+  --link-hover: #0d6efd;
+  --switch-ball-contrast: #212529;
+}
+
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --nav-bg: #1f1f1f;
+  --sidebar-bg: #1f1f1f;
+  --sidebar-text: #e0e0e0;
+  --footer-bg: #000;
+  --footer-text: #fff;
+  --link-color: #e0e0e0;
+  --link-hover: #0d6efd;
+  --switch-ball-contrast: #212529;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar {
+  background-color: var(--nav-bg) !important;
+  color: var(--text-color);
+}
+
+.sidebar {
+  width: 250px;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  bottom: 0;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid #dee2e6;
+  transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  z-index: 1000;
+  color: var(--sidebar-text);
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  transform: translateY(-50%);
+  z-index: 1100;
+  background-color: var(--sidebar-bg);
+  border-radius: 50%;
+  border: 1px solid #ced4da;
+  padding: 6px;
+  color: var(--sidebar-text);
+}
+
+.sidebar .nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--link-color) !important;
+  transition: color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  color: var(--link-hover) !important;
+}
+
+.sidebar .nav-link i {
+  font-size: 1.2rem;
+  color: var(--link-color);
+}
+
+.sidebar .nav-link .text {
+  margin-left: 10px;
+  transition: opacity 0.3s ease, width 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar.collapsed .nav-link .text {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  display: inline-block;
+}
+
+/* Container */
+.theme-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+}
+
+/* Esconde checkbox */
+.theme-toggle {
+  display: none;
+}
+
+/* Label estilizada como switch */
+.switch-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background: var(--sidebar-bg);
+  border: 2px solid var(--link-color);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+/* Ícones sempre ocupam espaço fixo */
+.switch-label .sun,
+.switch-label .moon {
+  position: absolute;
+  font-size: 16px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  color: var(--link-color);
+}
+
+/* Posição dos ícones */
+.switch-label .sun {
+  left: 4px;
+  opacity: 1;
+}
+
+.switch-label .moon {
+  right: 4px;
+  opacity: 1;
+}
+
+/* Bolinha que desliza */
+.switch-ball {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background: var(--link-color);
+  border-radius: 50%;
+  transition: transform 0.4s ease, background 0.3s ease;
+}
+
+/* Estado dark (checkbox ON) */
+.theme-toggle:checked + .switch-label .sun {
+  opacity: 1;
+}
+
+.theme-toggle:checked + .switch-label .moon {
+  opacity: 1;
+  color: var(--switch-ball-contrast);
+}
+
+.theme-toggle:checked + .switch-label .switch-ball {
+  transform: translateX(30px);
+}
+
+.main-content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  padding: 80px 20px 40px 20px;
+  width: calc(100% - 250px);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.main-content.collapsed {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+footer {
+  transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  text-align: center;
+  padding: 20px 0;
+}
+
+footer.collapsed {
+  margin-left: 80px;
+  width: calc(100% - 80px);
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    top: 56px;
+    bottom: 0;
+    height: auto;
+  }
+
+  .main-content,
+  footer {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
