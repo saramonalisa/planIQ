@@ -19,3 +19,9 @@ def inicio(request):
 
 def login(request):
     return render(request, "login.html")
+
+def editar_tarefa(request):
+    return render(request, "editar_tarefa.html")
+
+def nova_tarefa(request):
+    return render(request, "nova_tarefa.html")
