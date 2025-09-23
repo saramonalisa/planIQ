@@ -13,8 +13,17 @@
 <body style="font-family: Poppins, sans-serif;">
 
 <nav class="navbar navbar-expand-lg border-bottom fixed-top">
-  <div class="container d-flex">
+  <div class="container d-flex justify-content-between align-items-center">
     <a class="navbar-brand fw-bold" href="#">PlanIQ</a>
+
+    <div class="theme-switch d-flex align-items-center">
+      <input type="checkbox" id="themeToggle" class="theme-toggle">
+      <label for="themeToggle" class="switch-label mb-0 ms-2">
+        <i class="bi bi-sun-fill sun"></i>
+        <i class="bi bi-moon-fill moon"></i>
+        <span class="switch-ball"></span>
+      </label>
+    </div>
   </div>
 </nav>
 
@@ -25,49 +34,32 @@
 
   <ul class="nav nav-pills flex-column mb-auto mt-4">
     <li class="nav-item">
-      <a href="#" class="nav-link">
-        <i class="bi bi-house-door"></i>
-        <span class="text">###</span>
+      <a href="{% url 'inicio' %}" class="nav-link">
+        <i class="bi bi-house-door-fill"></i>
+        <span class="text">Início</span>
       </a>
     </li>
     <li>
-      <a href="#" class="nav-link">
-        <i class="bi bi-speedometer2"></i>
-        <span class="text">###</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <i class="bi bi-table"></i>
-      <span class="text">###</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <i class="bi bi-box"></i>
-        <span class="text">###</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <i class="bi bi-people"></i>
-        <span class="text">###</span>
+      <a href="{% url 'nova_tarefa' %}" class="nav-link">
+        <i class="bi bi-plus-circle-fill"></i>
+        <span class="text">Nova Tarefa</span>
       </a>
     </li>
   </ul>
-
-  <div class="theme-switch mt-auto">
-    <input type="checkbox" id="themeToggle" class="theme-toggle">
-    <label for="themeToggle" class="switch-label">
-      <i class="bi bi-sun-fill sun"></i>
-      <i class="bi bi-moon-fill moon"></i>
-      <span class="switch-ball"></span>
-    </label>
-  </div>
 </div>
 
 <main id="mainContent" class="main-content">
   <div class="container py-4">
+    <div class="container mt-3">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
     {% block content %}{% endblock %}
   </div>
 </main>

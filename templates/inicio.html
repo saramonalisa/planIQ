@@ -1,2 +1,107 @@
-{% load static %}
-{% block content %}{% endblock content %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+      <a href="{% url 'nova_tarefa' %}" class="btn btn-secondary mb-3">+ Nova Tarefa</a>
+
+      {% if tarefas %}
+        <ul class="list-group">
+          {% for tarefa in tarefas %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>
+                {{ tarefa.titulo }}
+                {% if tarefa.atrasada %}
+                  <span class="badge bg-danger ms-2">Atrasada</span>
+                {% endif %}
+              </span>
+              <a href="{% url 'detalhar_tarefa' tarefa.id %}" class="btn btn-sm btn-outline-secondary">Detalhar</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhuma tarefa cadastrada.</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header text-center">
+          <h5 class="mb-0">Setembro 2025</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Dom</th>
+                  <th>Seg</th>
+                  <th>Ter</th>
+                  <th>Qua</th>
+                  <th>Qui</th>
+                  <th>Sex</th>
+                  <th>Sáb</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td class="text-muted">1</td>
+                  <td class="text-muted">2</td>
+                  <td class="text-muted">3</td>
+                  <td class="text-muted">4</td>
+                  <td class="text-muted">5</td>
+                  <td class="text-muted">6</td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td>8</td>
+                  <td class="bg-warning text-white fw-bold">9</td>
+                  <td>10</td>
+                  <td>11</td>
+                  <td>12</td>
+                  <td>13</td>
+                </tr>
+                <tr>
+                  <td>14</td>
+                  <td>15</td>
+                  <td>16</td>
+                  <td class="bg-danger text-white fw-bold">17</td>
+                  <td>18</td>
+                  <td>19</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td class="bg-success text-white fw-bold">22</td>
+                  <td>23</td>
+                  <td>24</td>
+                  <td>25</td>
+                  <td>26</td>
+                  <td>27</td>
+                </tr>
+                <tr>
+                  <td>28</td>
+                  <td>29</td>
+                  <td>30</td>
+                  <td class="text-muted">1</td>
+                  <td class="text-muted">2</td>
+                  <td class="text-muted">3</td>
+                  <td class="text-muted">4</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="small text-muted mt-3">
+              <span class="badge bg-warning">&nbsp;</span> Prazo próximo &nbsp;
+              <span class="badge bg-danger">&nbsp;</span> Atrasada &nbsp;
+              <span class="badge bg-success">&nbsp;</span> Concluída
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

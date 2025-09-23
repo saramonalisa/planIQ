@@ -1,0 +1,57 @@
+[
+  {
+    "model": "app.tarefa",
+    "pk": 1,
+    "fields": {
+      "titulo": "Estudar matemática",
+      "descricao": "Revisar álgebra linear e resolver 5 exercícios do livro.",
+      "concluida": false,
+      "data_criacao": "2025-09-15T10:00:00Z",
+      "prazo": "2025-09-25"
+    }
+  },
+  {
+    "model": "app.tarefa",
+    "pk": 2,
+    "fields": {
+      "titulo": "Leitura de história",
+      "descricao": "Capítulo 3: Revolução Francesa.",
+      "concluida": true,
+      "data_criacao": "2025-09-16T14:30:00Z",
+      "prazo": "2025-09-20"
+    }
+  },
+  {
+    "model": "app.tarefa",
+    "pk": 3,
+    "fields": {
+      "titulo": "Trabalho de biologia",
+      "descricao": "Montar apresentação sobre fotossíntese.",
+      "concluida": false,
+      "data_criacao": "2025-09-18T09:00:00Z",
+      "prazo": "2025-09-28"
+    }
+  },
+  {
+    "model": "app.tarefa",
+    "pk": 4,
+    "fields": {
+      "titulo": "Revisão para prova de física",
+      "descricao": "Estudar leis de Newton e assistir vídeo-aula.",
+      "concluida": false,
+      "data_criacao": "2025-09-17T16:00:00Z",
+      "prazo": "2025-09-23"
+    }
+  },
+  {
+    "model": "app.tarefa",
+    "pk": 5,
+    "fields": {
+      "titulo": "Lista de exercícios de química",
+      "descricao": "Exercícios sobre ligações químicas.",
+      "concluida": true,
+      "data_criacao": "2025-09-14T12:45:00Z",
+      "prazo": "2025-09-19"
+    }
+  }
+]

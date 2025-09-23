@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ tarefa.titulo }}</h4>
+            <div>
+                <a href="{% url 'editar_tarefa' tarefa.id %}" class="btn btn-sm btn-secondary me-2">Editar</a>
+
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
+                    Excluir
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            {% if tarefa.descricao %}
+                <p>{{ tarefa.descricao }}</p>
+            {% else %}
+                <p class="text-muted fst-italic">Sem descrição.</p>
+            {% endif %}
+        </div>
+
+        <div class="card-footer text-end">
+            {% if not tarefa.concluida %}
+                <form method="POST" action="{% url 'marcar_concluida' tarefa.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-secondary">Marcar como Concluída</button>
+                </form>
+            {% else %}
+                <span class="badge bg-success">Tarefa concluída</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir a tarefa <strong>{{ tarefa.titulo }}</strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
