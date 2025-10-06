@@ -1,107 +1,180 @@
 {% extends "base.html" %}
+{% load dict_filters %}
 
 {% block content %}
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6">
-      <a href="{% url 'nova_tarefa' %}" class="btn btn-secondary mb-3">+ Nova Tarefa</a>
+      <a href="{% url 'nova_tarefa' %}" class="btn btn-secondary mb-3">
+        <i class="bi bi-plus-circle"></i> Nova Tarefa
+      </a>
 
       {% if tarefas %}
         <ul class="list-group">
           {% for tarefa in tarefas %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <span>
-                {{ tarefa.titulo }}
-                {% if tarefa.atrasada %}
-                  <span class="badge bg-danger ms-2">Atrasada</span>
-                {% endif %}
-              </span>
-              <a href="{% url 'detalhar_tarefa' tarefa.id %}" class="btn btn-sm btn-outline-secondary">Detalhar</a>
+            <li class="list-group-item">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ tarefa.titulo }}</strong>
+
+                  {% if tarefa.atrasada %}
+                    <span class="badge bg-danger ms-2">Atrasada</span>
+                  {% endif %}
+
+                  <span class="badge status-badge ms-2
+                    {% if tarefa.status == 'pendente' %}bg-warning
+                    {% elif tarefa.status == 'em_progresso' %}bg-primary
+                    {% elif tarefa.status == 'concluida' %}bg-success
+                    {% endif %}" data-status-label>
+                    {{ tarefa.get_status_display }}
+                  </span>
+                </div>
+
+                <div class="d-flex align-items-center">
+                  <button class="btn btn-sm btn-outline-warning me-1 btn-status {% if tarefa.status == 'pendente' %}active{% endif %}"
+                          data-url="{% url 'alterar_status_tarefa' tarefa.id 'pendente' %}"
+                          data-status="pendente"
+                          title="Pendente">
+                    <i class="bi bi-hourglass-split"></i>
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-primary me-1 btn-status {% if tarefa.status == 'em_progresso' %}active{% endif %}"
+                          data-url="{% url 'alterar_status_tarefa' tarefa.id 'em_progresso' %}"
+                          data-status="em_progresso"
+                          title="Em Progresso">
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+
+                  <button class="btn btn-sm btn-outline-success me-2 btn-status {% if tarefa.status == 'concluida' %}active{% endif %}"
+                          data-url="{% url 'alterar_status_tarefa' tarefa.id 'concluida' %}"
+                          data-status="concluida"
+                          title="Concluída">
+                    <i class="bi bi-check2-circle"></i>
+                  </button>
+
+                  <a href="{% url 'detalhar_tarefa' tarefa.id %}" class="btn btn-sm btn-outline-secondary" title="Detalhar">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                </div>
+              </div>
             </li>
           {% endfor %}
         </ul>
       {% else %}
-        <p class="text-muted">Nenhuma tarefa cadastrada.</p>
+        <p>Nenhuma tarefa cadastrada.</p>
       {% endif %}
     </div>
 
     <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-header text-center">
-          <h5 class="mb-0">Setembro 2025</h5>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-bordered text-center align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>Dom</th>
-                  <th>Seg</th>
-                  <th>Ter</th>
-                  <th>Qua</th>
-                  <th>Qui</th>
-                  <th>Sex</th>
-                  <th>Sáb</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td class="text-muted">1</td>
-                  <td class="text-muted">2</td>
-                  <td class="text-muted">3</td>
-                  <td class="text-muted">4</td>
-                  <td class="text-muted">5</td>
-                  <td class="text-muted">6</td>
-                </tr>
-                <tr>
-                  <td>7</td>
-                  <td>8</td>
-                  <td class="bg-warning text-white fw-bold">9</td>
-                  <td>10</td>
-                  <td>11</td>
-                  <td>12</td>
-                  <td>13</td>
-                </tr>
-                <tr>
-                  <td>14</td>
-                  <td>15</td>
-                  <td>16</td>
-                  <td class="bg-danger text-white fw-bold">17</td>
-                  <td>18</td>
-                  <td>19</td>
-                  <td>20</td>
-                </tr>
-                <tr>
-                  <td>21</td>
-                  <td class="bg-success text-white fw-bold">22</td>
-                  <td>23</td>
-                  <td>24</td>
-                  <td>25</td>
-                  <td>26</td>
-                  <td>27</td>
-                </tr>
-                <tr>
-                  <td>28</td>
-                  <td>29</td>
-                  <td>30</td>
-                  <td class="text-muted">1</td>
-                  <td class="text-muted">2</td>
-                  <td class="text-muted">3</td>
-                  <td class="text-muted">4</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="small text-muted mt-3">
-              <span class="badge bg-warning">&nbsp;</span> Prazo próximo &nbsp;
-              <span class="badge bg-danger">&nbsp;</span> Atrasada &nbsp;
-              <span class="badge bg-success">&nbsp;</span> Concluída
-            </div>
-          </div>
-        </div>
+      <h3>{{ mes_nome }} {{ ano }}</h3>
+
+      <table class="table table-bordered text-center align-middle" style="font-size: 0.85rem;">
+        <thead class="table-light" style="font-size: 0.75rem;">
+          <tr>
+            <th style="padding: 0.25rem;">Dom</th>
+            <th style="padding: 0.25rem;">Seg</th>
+            <th style="padding: 0.25rem;">Ter</th>
+            <th style="padding: 0.25rem;">Qua</th>
+            <th style="padding: 0.25rem;">Qui</th>
+            <th style="padding: 0.25rem;">Sex</th>
+            <th style="padding: 0.25rem;">Sáb</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for semana in semanas %}
+            <tr>
+              {% for dia in semana %}
+                {% if dia == 0 %}
+                  <td style="min-width: 60px; height: 80px; padding: 0.25rem;"></td>
+                {% else %}
+                  <td class="align-top" style="min-width: 60px; height: 80px; vertical-align: top; padding: 0.25rem;">
+                    <strong style="font-size: 0.9rem;">{{ dia }}</strong>
+                    {% with tarefas_dia=tarefas_por_dia|dict_get:dia %}
+                      {% if tarefas_dia %}
+                        <ul class="list-unstyled mt-1 mb-0" style="font-size: 0.75rem;">
+                          {% for tarefa in tarefas_dia %}
+                            <li>
+                              <span class="badge
+                                {% if tarefa.status == 'pendente' %}bg-warning
+                                {% elif tarefa.status == 'em_progresso' %}bg-primary
+                                {% elif tarefa.status == 'concluida' %}bg-success
+                                {% endif %}">
+                                {{ tarefa.titulo }}
+                              </span>
+                            </li>
+                          {% endfor %}
+                        </ul>
+                      {% endif %}
+                    {% endwith %}
+                  </td>
+                {% endif %}
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="small text-muted mt-3">
+        <span class="badge bg-warning">&nbsp;</span> Pendente &nbsp;
+        <span class="badge bg-primary">&nbsp;</span> Em Progresso &nbsp;
+        <span class="badge bg-success">&nbsp;</span> Concluída
       </div>
     </div>
-
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.btn-status').forEach(button => {
+      button.addEventListener('click', function () {
+        const url = this.dataset.url;
+        const status = this.dataset.status;
+        const csrfToken = '{{ csrf_token }}';
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Erro ao atualizar status");
+
+          const listItem = this.closest('li');
+          const badge = listItem.querySelector('[data-status-label]');
+          const buttons = listItem.querySelectorAll('.btn-status');
+
+          badge.textContent = statusToLabel(status);
+          badge.className = 'badge status-badge ms-2 ' + statusToColor(status);
+
+          buttons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+        })
+        .catch(error => {
+          alert("Erro ao atualizar o status.");
+          console.error(error);
+        });
+      });
+    });
+
+    function statusToLabel(status) {
+      switch (status) {
+        case 'pendente': return 'Pendente';
+        case 'em_progresso': return 'Em Progresso';
+        case 'concluida': return 'Concluída';
+        default: return '';
+      }
+    }
+
+    function statusToColor(status) {
+      switch (status) {
+        case 'pendente': return 'bg-warning';
+        case 'em_progresso': return 'bg-primary';
+        case 'concluida': return 'bg-success';
+        default: return '';
+      }
+    }
+  });
+</script>
 {% endblock %}

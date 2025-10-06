@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const footer = document.querySelector('footer');
   const icon = toggleBtn.querySelector('i');
   const themeToggle = document.getElementById('themeToggle');
+  const navbar = document.querySelector('nav.navbar');
 
   const updateIcon = (collapsed) => {
     icon.classList.toggle('bi-chevron-double-left', !collapsed);
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sidebar.classList.add('collapsed');
     mainContent.classList.add('collapsed');
     footer.classList.add('collapsed');
+    navbar.classList.add('sidebar-collapsed');
     updateIcon(true);
   }
 
@@ -23,19 +25,26 @@ document.addEventListener("DOMContentLoaded", function () {
     sidebar.classList.toggle('collapsed');
     mainContent.classList.toggle('collapsed');
     footer.classList.toggle('collapsed');
+
     const collapsed = sidebar.classList.contains('collapsed');
     localStorage.setItem('sidebar-collapsed', collapsed);
     updateIcon(collapsed);
+
+    if (collapsed) {
+      navbar.classList.add('sidebar-collapsed');
+    } else {
+      navbar.classList.remove('sidebar-collapsed');
+    }
   });
 
   if (window.innerWidth < 768 && !isCollapsed) {
     sidebar.classList.add('collapsed');
     mainContent.classList.add('collapsed');
     footer.classList.add('collapsed');
+    navbar.classList.add('sidebar-collapsed');
     updateIcon(true);
   }
 
-  // ---- Modo claro/escuro ----
   const applyTheme = (theme) => {
     if (theme === 'dark') {
       document.body.classList.add('dark-mode');

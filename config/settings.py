@@ -102,6 +102,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Autentication
+AUTH_USER_MODEL = "app.Usuario"
+LOGIN_URL = "login"
+LOGOUT_REDIRECT_URL = "app:index"
+LOGIN_REDIRECT_URL = "app:index"
+
+# Backend de emails para desenvolvimento
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -118,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = 'media/' # uploads de usuários
+MEDIA_URL = '/media/' # uploads de usuários
 
 STATICFILES_DIRS = [
     BASE_DIR / "static", # arquivos static globais
