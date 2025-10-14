@@ -1,0 +1,48 @@
+{% load dict_filters %}
+<h3>{{ mes_nome }} {{ ano }}</h3>
+
+<table class="table table-bordered text-center align-middle" style="font-size: 0.85rem;">
+    <thead class="table-light" style="font-size: 0.75rem;">
+      <tr>
+        <th style="padding: 0.25rem;">Dom</th>
+        <th style="padding: 0.25rem;">Seg</th>
+        <th style="padding: 0.25rem;">Ter</th>
+        <th style="padding: 0.25rem;">Qua</th>
+        <th style="padding: 0.25rem;">Qui</th>
+        <th style="padding: 0.25rem;">Sex</th>
+        <th style="padding: 0.25rem;">Sáb</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for semana in semanas %}
+        <tr>
+          {% for dia in semana %}
+            {% if dia == 0 %}
+              <td style="min-width: 60px; height: 80px; padding: 0.25rem;"></td>
+            {% else %}
+              <td class="align-top" style="min-width: 60px; height: 80px; vertical-align: top; padding: 0.25rem;">
+                <strong style="font-size: 0.9rem;">{{ dia }}</strong>
+                {% with tarefas_dia=tarefas_por_dia|dict_get:dia %}
+                  {% if tarefas_dia %}
+                    <ul class="list-unstyled mt-1 mb-0" style="font-size: 0.75rem;">
+                      {% for tarefa in tarefas_dia %}
+                        <li>
+                          {% include "partials/_badge.html" with tarefa=tarefa %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                {% endwith %}
+              </td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
+
+<div class="small text-muted mt-3">
+    <span class="badge bg-warning">&nbsp;</span> Pendente &nbsp;
+    <span class="badge bg-primary">&nbsp;</span> Em Progresso &nbsp;
+    <span class="badge bg-success">&nbsp;</span> Concluída
+</div>

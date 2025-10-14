@@ -1,0 +1,40 @@
+{% if user.is_authenticated %}
+<div id="sidebar" class="sidebar d-flex flex-column p-3">
+  <button id="toggleSidebar" class="sidebar-toggle btn btn-sm">
+    <i class="bi bi-chevron-double-left"></i>
+  </button>
+
+  <ul class="nav nav-pills flex-column mb-auto mt-4">
+    <li class="nav-item">
+      <a href="{% url 'inicio' %}" class="nav-link">
+        <i class="bi bi-house-door"></i>
+        <span class="text">Início</span>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'nova_tarefa' %}" class="nav-link">
+        <i class="bi bi-plus-circle"></i>
+        <span class="text">Nova Tarefa</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link">
+        <i class="bi bi-list-task"></i>
+        <span class="text">Minhas Tarefas</span>
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'calendario' %}" class="nav-link">
+        <i class="bi bi-calendar"></i>
+        <span class="text">Calendário</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="nav-link">
+      <i class="bi bi-gear"></i>
+      <span class="text">Configurações</span>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endif %}

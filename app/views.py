@@ -6,9 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils import timezone
+from collections import defaultdict
 from .models import Usuario, Tarefa
 from .forms import CadastroUsuarioForm, TarefaForm
-from collections import defaultdict
+from .utils import gerar_calendario
 import calendar
 
 def index(request):
@@ -50,33 +51,7 @@ def logout(request):
 
 @login_required
 def inicio(request):
-    hoje = timezone.localdate()
-    ano = hoje.year
-    mes = hoje.month
-
-    mes_nome = calendar.month_name[mes]
-
-    tarefas = Tarefa.objects.filter(
-        usuario=request.user,
-        prazo__year=ano,
-        prazo__month=mes
-    ).order_by('prazo')
-
-    tarefas_por_dia = defaultdict(list)
-    for tarefa in tarefas:
-        tarefas_por_dia[tarefa.prazo.day].append(tarefa)
-
-    cal = calendar.Calendar(firstweekday=6)
-    semanas = list(cal.monthdayscalendar(ano, mes))
-
-    context = {
-        "tarefas": Tarefa.objects.filter(usuario=request.user).order_by('prazo'),
-        "ano": ano,
-        "mes_nome": mes_nome,
-        "semanas": semanas,
-        "tarefas_por_dia": tarefas_por_dia,
-    }
-
+    context = gerar_calendario(request.user)
     return render(request, "inicio.html", context)
 
 
@@ -146,7 +121,10 @@ def alterar_status_tarefa(request, tarefa_id, novo_status):
             tarefa.save()
 
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'status': 'ok', 'novo_status': novo_status})
+                return JsonResponse({
+                    'id': tarefa.id,
+                    'status': tarefa.status
+                })
 
             return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
 
@@ -154,31 +132,5 @@ def alterar_status_tarefa(request, tarefa_id, novo_status):
 
 @login_required
 def calendario(request):
-    hoje = timezone.localdate()
-    ano = hoje.year
-    mes = hoje.month
-
-    mes_nome = calendar.month_name[mes]
-
-    tarefas = Tarefa.objects.filter(
-        usuario=request.user,
-        prazo__year=ano,
-        prazo__month=mes
-    ).order_by('prazo')
-
-    tarefas_por_dia = defaultdict(list)
-    for tarefa in tarefas:
-        tarefas_por_dia[tarefa.prazo.day].append(tarefa)
-
-    cal = calendar.Calendar(firstweekday=6)
-    semanas = list(cal.monthdayscalendar(ano, mes))
-
-    context = {
-        "tarefas": Tarefa.objects.filter(usuario=request.user).order_by('prazo'),
-        "ano": ano,
-        "mes_nome": mes_nome,
-        "semanas": semanas,
-        "tarefas_por_dia": tarefas_por_dia,
-    }
-
+    context = gerar_calendario(request.user)
     return render(request, "tarefas/calendario.html", context)

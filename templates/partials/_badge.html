@@ -1,0 +1,9 @@
+<span class="badge status-badge ms-2
+    {% if tarefa.status == 'pendente' %}bg-warning
+    {% elif tarefa.status == 'em_progresso' %}bg-primary
+    {% elif tarefa.status == 'concluida' %}bg-success
+    {% endif %}" 
+    data-status-label
+    data-tarefa-id="{{ tarefa.id }}">
+    {{ tarefa.get_status_display }}
+</span>

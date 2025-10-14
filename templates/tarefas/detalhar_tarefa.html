@@ -2,9 +2,9 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="mb-3">
-        <span style="cursor: pointer;" onclick="history.back()">&larr; Voltar</span>
-    </div>
+  <div class="mb-3">
+    <span style="cursor: pointer;" onclick="history.back()">&larr; Voltar</span>
+  </div>
 
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -26,107 +26,44 @@
     </div>
 
     <div class="card-footer text-end">
-      <span class="badge status-badge me-3
-        {% if tarefa.status == 'pendente' %}bg-warning
-        {% elif tarefa.status == 'em_progresso' %}bg-primary
-        {% elif tarefa.status == 'concluida' %}bg-success
-        {% endif %}" data-status-label>
-        {{ tarefa.get_status_display }}
-      </span>
+      {% include "partials/_badge.html" with tarefa=tarefa %}
 
       <button class="btn btn-outline-warning btn-status {% if tarefa.status == 'pendente' %}active{% endif %}"
               data-url="{% url 'alterar_status_tarefa' tarefa.id 'pendente' %}"
-              data-status="pendente">
-        Pendente
+              data-status="pendente">Pendente
       </button>
 
       <button class="btn btn-outline-primary btn-status {% if tarefa.status == 'em_progresso' %}active{% endif %}"
               data-url="{% url 'alterar_status_tarefa' tarefa.id 'em_progresso' %}"
-              data-status="em_progresso">
-        Em Progresso
+              data-status="em_progresso">Em Progresso
       </button>
 
       <button class="btn btn-outline-success btn-status {% if tarefa.status == 'concluida' %}active{% endif %}"
               data-url="{% url 'alterar_status_tarefa' tarefa.id 'concluida' %}"
-              data-status="concluida">
-        Concluída
+              data-status="concluida">Concluída
       </button>
     </div>
   </div>
 </div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir a tarefa <strong>"{{ tarefa.titulo }}"</strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </div>
+            </form>
         </div>
-        <div class="modal-body">
-          Tem certeza que deseja excluir a tarefa <strong>{{ tarefa.titulo }}</strong>?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-danger">Excluir</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.btn-status').forEach(button => {
-      button.addEventListener('click', function () {
-        const url = this.dataset.url;
-        const status = this.dataset.status;
-        const csrfToken = '{{ csrf_token }}';
-
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest'
-          }
-        })
-        .then(response => {
-          if (!response.ok) throw new Error("Erro ao atualizar status");
-
-          const badge = document.querySelector('[data-status-label]');
-          const buttons = document.querySelectorAll('.btn-status');
-
-          badge.textContent = statusToLabel(status);
-          badge.className = 'badge status-badge me-3 ' + statusToColor(status);
-
-          buttons.forEach(btn => btn.classList.remove('active'));
-          this.classList.add('active');
-        })
-        .catch(error => {
-          alert("Erro ao atualizar o status.");
-          console.error(error);
-        });
-      });
-    });
-
-    function statusToLabel(status) {
-      switch (status) {
-        case 'pendente': return 'Pendente';
-        case 'em_progresso': return 'Em Progresso';
-        case 'concluida': return 'Concluída';
-        default: return '';
-      }
-    }
-
-    function statusToColor(status) {
-      switch (status) {
-        case 'pendente': return 'bg-warning';
-        case 'em_progresso': return 'bg-primary';
-        case 'concluida': return 'bg-success';
-        default: return '';
-      }
-    }
-  });
-</script>
 {% endblock %}

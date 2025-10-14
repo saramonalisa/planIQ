@@ -12,106 +12,14 @@
 </head>
 <body style="font-family: Poppins, sans-serif;">
 
-<nav class="navbar navbar-expand-lg border-bottom fixed-top">
-  <div class="container-fluid d-flex align-items-center px-3">
+{% include "partials/_navbar.html" %}
 
-    {% if user.is_authenticated %}
-    <div class="dropdown d-flex align-items-center me-auto" id="userDropdownContainer">
-      <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-        {% if user.avatar %}
-        <img src="{{ user.avatar.url }}" alt="avatar" width="32" height="32" class="rounded-circle me-2" />
-        {% else %}
-        <svg width="32" height="32" viewBox="0 0 32 32" class="me-2" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="16" cy="16" r="16" fill="#6c757d" />
-          <text x="50%" y="50%" text-anchor="middle" dy=".35em" font-size="16" fill="white" font-family="Poppins, sans-serif">
-            {{ user.nome|first|upper }}
-          </text>
-        </svg>
-        {% endif %}
-        <span class="user-name d-inline">{{ user.nome }}</span>
-      </a>
-      <ul class="dropdown-menu" aria-labelledby="userDropdown">
-        <li>
-          <a class="dropdown-item" href="#">Editar Perfil</a>
-        </li>
-        <li>
-          <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sair</a>
-          <form id="logout-form" method="POST" action="{% url 'logout' %}" style="display: none;">
-            {% csrf_token %}
-          </form>
-        </li>
-      </ul>
-    </div>
-    {% endif %}
-
-    <div class="position-absolute start-50 translate-middle-x">
-      <span class="navbar-brand fw-bold mb-0 h4">PlanIQ</span>
-    </div>
-
-    <div class="d-flex align-items-center gap-3">
-      <div class="theme-switch d-flex align-items-center">
-        <input type="checkbox" id="themeToggle" class="theme-toggle">
-        <label for="themeToggle" class="switch-label mb-0 ms-2">
-          <i class="bi bi-sun-fill sun"></i>
-          <i class="bi bi-moon-fill moon"></i>
-          <span class="switch-ball"></span>
-        </label>
-      </div> 
-  </div>
-</nav>
-
-{% if user.is_authenticated %}
-<div id="sidebar" class="sidebar d-flex flex-column p-3">
-  <button id="toggleSidebar" class="sidebar-toggle btn btn-sm">
-    <i class="bi bi-chevron-double-left"></i>
-  </button>
-
-  <ul class="nav nav-pills flex-column mb-auto mt-4">
-    <li class="nav-item">
-      <a href="{% url 'inicio' %}" class="nav-link">
-        <i class="bi bi-house-door"></i>
-        <span class="text">Início</span>
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'nova_tarefa' %}" class="nav-link">
-        <i class="bi bi-plus-circle"></i>
-        <span class="text">Nova Tarefa</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-        <i class="bi bi-list-task"></i>
-        <span class="text">Minhas Tarefas</span>
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'calendario' %}" class="nav-link">
-        <i class="bi bi-calendar"></i>
-        <span class="text">Calendário</span>
-      </a>
-    </li>
-    <li>
-      <a href="#" class="nav-link">
-      <i class="bi bi-gear"></i>
-      <span class="text">Configurações</span>
-      </a>
-    </li>
-  </ul>
-</div>
-{% endif %}
+{% include "partials/_sidebar.html" %}
 
 <main id="mainContent" class="main-content {% if not user.is_authenticated %}full-width{% endif %}">
   <div class="container py-4">
     <div class="container mt-3">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      {% endfor %}
-    {% endif %}
+    {% include "partials/_mensagens.html" %}
     </div>
     {% block content %}{% endblock %}
   </div>
@@ -124,6 +32,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/script.js' %}"></script>
+<script src="{% static 'js/status.js' %}"></script>
 
 </body>
 </html>
