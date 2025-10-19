@@ -16,9 +16,11 @@
     </div>
 
     <div class="col-md-6">
-      {% include "partials/_calendario.html" %}
+      <!-- Aplicando a classe .calendar-home aqui para usar o estilo compacto -->
+      <div class="calendar-home">
+        {% include "partials/_calendario.html" %}
+      </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

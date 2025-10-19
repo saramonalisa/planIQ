@@ -3,40 +3,16 @@
     <li class="list-group-item">
       <div class="d-flex justify-content-between align-items-center">
         <div>
+          <a href="{% url 'detalhar_tarefa' tarefa.id %}" class="btn btn-sm btn-outline-secondary" title="Detalhar">
+          <i class="bi bi-eye"></i>
+          </a>
           <strong>{{ tarefa.titulo }}</strong>
-
-          {% if tarefa.atrasada %}
+          {% if tarefa.atrasada and tarefa.status not in 'concluida' %}
             <span class="badge bg-danger ms-2">Atrasada</span>
           {% endif %}
-
-          {% include "partials/_badge.html" with tarefa=tarefa %}
         </div>
-
         <div class="d-flex align-items-center">
-          <button class="btn btn-sm btn-outline-warning me-1 btn-status {% if tarefa.status == 'pendente' %}active{% endif %}"
-                  data-url="{% url 'alterar_status_tarefa' tarefa.id 'pendente' %}"
-                  data-status="pendente"
-                  title="Pendente">
-            <i class="bi bi-hourglass-split"></i>
-          </button>
-
-          <button class="btn btn-sm btn-outline-primary me-1 btn-status {% if tarefa.status == 'em_progresso' %}active{% endif %}"
-                  data-url="{% url 'alterar_status_tarefa' tarefa.id 'em_progresso' %}"
-                  data-status="em_progresso"
-                  title="Em Progresso">
-            <i class="bi bi-arrow-repeat"></i>
-          </button>
-
-          <button class="btn btn-sm btn-outline-success me-2 btn-status {% if tarefa.status == 'concluida' %}active{% endif %}"
-                  data-url="{% url 'alterar_status_tarefa' tarefa.id 'concluida' %}"
-                  data-status="concluida"
-                  title="Concluída">
-            <i class="bi bi-check2-circle"></i>
-          </button>
-
-          <a href="{% url 'detalhar_tarefa' tarefa.id %}" class="btn btn-sm btn-outline-secondary" title="Detalhar">
-            <i class="bi bi-eye"></i>
-          </a>
+        {% include "partials/_select_status.html" %}
         </div>
       </div>
     </li>

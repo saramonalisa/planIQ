@@ -3,14 +3,52 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="text-center">
-        <h1 class="mb-4">Bem-vindo ao Gerenciador de Tarefas</h1>
-
-            <p class="lead">Organize suas tarefas diárias de forma eficiente e fácil.</p>
-            <div class="d-grid gap-2 col-6 mx-auto mt-4">
-                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-                <a href="{% url 'cadastro' %}" class="btn btn-outline-secondary">Criar conta</a>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold">Bem-vindo(a) ao PlanIQ</h1>
+                <p class="lead">A plataforma inteligente para otimizar sua organização acadêmica e seu tempo.</p>
             </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">Organização Simplificada</h6>
+                            <p class="card-text small">Tenha todas as suas tarefas organizadas de forma clara e objetiva, sem perder nenhum prazo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">Gestão de Tempo Eficiente</h6>
+                            <p class="card-text small">Planeje suas atividades de forma inteligente e evite a sobrecarga de última hora.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">Acompanhamento Ágil</h6>
+                            <p class="card-text small">Acompanhe o progresso de suas tarefas em tempo real, com atualizações contínuas sobre o que está feito e o que ainda precisa ser feito.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mt-4 mt-md-0 d-flex justify-content-center align-items-center">
+            <div class="text-center p-4 rounded bg-light shadow-lg" style="max-width: 400px; width: 100%;">
+                <h5 class="mb-4">Comece agora a otimizar sua rotina acadêmica!</h5>
+                <p class="mb-4">Faça login ou cadastre-se para aproveitar todos os recursos do PlanIQ.</p>
+                <div class="d-grid gap-2 col-12 mx-auto">
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-sm mb-2">Login</a>
+                    <a href="{% url 'cadastro' %}" class="btn btn-outline-secondary btn-sm ">Criar conta</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

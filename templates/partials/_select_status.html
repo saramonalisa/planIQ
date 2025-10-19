@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'alterar_status_tarefa' tarefa.id %}"> 
+  {% csrf_token %} 
+  <select name="status" class="form-select form-select-sm status-selector d-inline w-auto" 
+  data-tarefa-id="{{ tarefa.id }}" 
+  aria-label="Alterar status da tarefa"> 
+  <option value="pendente" {% if tarefa.status == 'pendente' %}selected{% endif %}>Pendente</option> 
+  <option value="em_progresso" {% if tarefa.status == 'em_progresso' %}selected{% endif %}>Em Progresso</option> 
+  <option value="concluida" {% if tarefa.status == 'concluida' %}selected{% endif %}>Concluída</option> 
+</select> 
+</form>

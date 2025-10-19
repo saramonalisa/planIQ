@@ -1,0 +1,11 @@
+{% load dict_filters %}
+{% if tarefas_dia %}
+  {% with tarefas_dia|tarefas_pendentes as count %}
+    {% if count > 0 %}
+      <div class="tarefa-count
+        {% if count <= 3 %}low{% elif count <= 6 %}medium{% else %}high{% endif %}">
+        {% if count > 9 %}9+{% else %}{{ count }}{% endif %}
+      </div>
+    {% endif %}
+  {% endwith %}
+{% endif %}

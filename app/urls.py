@@ -31,12 +31,12 @@ urlpatterns = [
 
     # Tarefas
     path('nova_tarefa/', views.nova_tarefa, name='nova_tarefa'),
-    path('editar_tarefa/', views.editar_tarefa, name='editar_tarefa'),
     path('detalhar_tarefa/<int:tarefa_id>/', views.detalhar_tarefa, name='detalhar_tarefa'),
+    path('minhas_tarefas/', views.minhas_tarefas, name='minhas_tarefas'),
     path('editar_tarefa/<int:tarefa_id>/', views.editar_tarefa, name='editar_tarefa'),
     path('excluir_tarefa/<int:tarefa_id>/', views.excluir_tarefa, name='excluir_tarefa'),
     path('marcar_concluida/<int:tarefa_id>/', views.marcar_concluida, name='marcar_concluida'),
-    path('alterar_status_tarefa/<int:tarefa_id>/<str:novo_status>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
+    path('alterar_status_tarefa/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
     path('calendario/', views.calendario, name='calendario'),
     ]
 

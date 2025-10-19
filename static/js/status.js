@@ -33,6 +33,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  function atualizarBadge(tarefaId, status) {
+    const badges = document.querySelectorAll(`.status-badge[data-tarefa-id="${tarefaId}"]`);
+    badges.forEach(badge => {
+      badge.textContent = statusToLabel(status);
+      badge.className = 'badge status-badge me-3 ' + statusToColor(status);
+    });
+  }
+
   document.body.addEventListener('click', function(e) {
     const button = e.target.closest('.btn-status');
     if (!button) return;
@@ -58,17 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!tarefaId || !novoStatus) throw new Error('JSON retornado inválido');
 
-      const badges = document.querySelectorAll(`.status-badge[data-tarefa-id="${tarefaId}"]`);
-      badges.forEach(badge => {
-        badge.textContent = statusToLabel(novoStatus);
-        badge.className = badge.className.replace(/bg-\w+/, statusToColor(novoStatus));
-      });
-
-      const singleBadge = document.querySelector('[data-status-label]:not([data-tarefa-id])');
-      if(singleBadge) {
-        singleBadge.textContent = statusToLabel(novoStatus);
-        singleBadge.className = 'badge status-badge me-3 ' + statusToColor(novoStatus);
-      }
+      atualizarBadge(tarefaId, novoStatus);
 
       const parent = button.closest('li, .card-footer');
       if(parent) {
@@ -76,12 +74,49 @@ document.addEventListener('DOMContentLoaded', function () {
         btns.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
       }
-
     })
     .catch(error => {
       alert("Erro ao atualizar o status. Veja o console para detalhes.");
       console.error(error);
     });
+  });
+
+  document.body.addEventListener('change', function (e) {
+    const select = e.target.closest('.status-selector');
+    if (!select) return;
+
+    const tarefaId = select.dataset.tarefaId;
+    const novoStatus = select.value;
+
+    if (!tarefaId || !novoStatus) return;
+
+    fetch(`/alterar_status_tarefa/${tarefaId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({ status: novoStatus })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error("Erro ao atualizar status");
+      return response.json();
+    })
+    .then(data => {
+      const novo = data.status;
+      atualizarBadge(tarefaId, novo);
+    })
+    .catch(error => {
+      alert("Erro ao atualizar o status. Veja o console para detalhes.");
+      console.error(error);
+    });
+  });
+
+  window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
   });
 
 });

@@ -1,38 +1,103 @@
+/*-------------------------------------
+Root & Dark Mode
+--------------------------------------*/
+/* Light mode variables */
 :root {
-  --bg-color: #f8f9fa;
-  --text-color: #212529;
-  --nav-bg: #fff;
-  --sidebar-bg: #f8f9fa;
-  --sidebar-text: #212529;
-  --footer-bg: #f8f9fa;
-  --footer-text:  #212529;
-  --link-color: #212529;
-  --link-hover: #6d7986;
+  --bg-color: #fafafa;
+  --text-color: #222222;
+  --nav-bg: #ffffff;
+  --sidebar-bg: #f0f0f0;
+  --sidebar-text: #2c2c2c;
+  --footer-bg: #fafafa;
+  --footer-text: #222222;
+  --link-color: #2c2c2c;
+  --link-hover: #555555;
+
+  /* Cards */
+  --card-bg: #ffffff;
+  --card-border: #dcdcdc;
+  --card-text: #222222;
+
+  /* Calendar specific */
+  --calendar-day-bg: #f5faff;
+  --calendar-day-hover-bg: #e1f0ff;
+  --calendar-day-shadow: rgba(0, 0, 0, 0.1);
+
+  /* Task count badges */
+  --badge-low: #0056b3;
+  --badge-medium: #b35900;
+  --badge-high: #a80000;
+
+  /* Novas variáveis para bordas, headers e hovers */
+  --border-light: #dee2e6;          /* bordas claras */
+  --table-header-bg: #f8f9fa;       /* fundo header tabela */
+  --input-hover-bg: #e9ecef;         /* hover inputs */
 }
 
+/* Dark mode overrides */
 body.dark-mode {
   --bg-color: #121212;
-  --text-color: #e0e0e0;
+  --text-color: #dcdcdc;
   --nav-bg: #1f1f1f;
-  --sidebar-bg: #1f1f1f;
-  --sidebar-text: #e0e0e0;
-  --footer-bg: #000;
-  --footer-text: #fff;
-  --link-color: #e0e0e0;
-  --link-hover: #aaaaaa;
+  --sidebar-bg: #2a2a2a;
+  --sidebar-text: #dcdcdc;
+  --footer-bg: #1f1f1f;
+  --footer-text: #dcdcdc;
+  --link-color: #dcdcdc;
+  --link-hover: #bbbbbb;
+
+  /* Cards */
+  --card-bg: #1e1e1e;
+  --card-border: #333333;
+  --card-text: #dcdcdc;
+
+  /* Calendar specific */
+  --calendar-day-bg: #1a1a1a;
+  --calendar-day-hover-bg: #2a2a2a;
+  --calendar-day-shadow: rgba(255, 255, 255, 0.1);
+
+  /* Task count badges */
+  --badge-low: #3a84ff;
+  --badge-medium: #ff9f3f;
+  --badge-high: #ff5c5c;
+
+  /* Novas variáveis para bordas, headers e hovers */
+  --border-light: #444444;          /* bordas escuras */
+  --table-header-bg: #2a2a2a;       /* fundo header tabela escuro */
+  --input-hover-bg: #3a3a3a;         /* hover inputs escuro */
 }
 
+/*-------------------------------------
+Global (Body, Links, Transitions)
+--------------------------------------*/
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+  color: var(--link-hover);
+  transform: scale(1.1);
+}
+
+/*-------------------------------------
+Navbar
+--------------------------------------*/
 .navbar {
   background-color: var(--nav-bg) !important;
   color: var(--text-color);
 }
 
+/*-------------------------------------
+Sidebar & Sidebar Toggle
+--------------------------------------*/
 .sidebar {
   width: 250px;
   position: fixed;
@@ -40,7 +105,7 @@ body {
   left: 0;
   bottom: 0;
   background-color: var(--sidebar-bg);
-  border-right: 1px solid #dee2e6;
+  border-right: 1px solid var(--border-light); /* modificado para variável */
   transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   z-index: 1000;
   color: var(--sidebar-text);
@@ -63,32 +128,44 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: var(--link-hover) !important;
+}
+
+.sidebar-toggle i {
+  color: var(--link-color);
+  transition: color 0.3s ease;
+}
+
+.sidebar-toggle:hover i {
+  color: var(--bg-color);
 }
 
 .sidebar .nav-link {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
+  padding: 10px 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--link-color) !important;
-  transition: color 0.3s ease;
 }
 
 .sidebar .nav-link:hover {
-  color: var(--link-hover) !important;
+  transform: scale(1.05);
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50rem;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .sidebar .nav-link i {
   font-size: 1.2rem;
   color: var(--link-color);
-}
-
-.sidebar .nav-link .text {
-  margin-left: 10px;
-  transition: opacity 0.3s ease, width 0.3s ease, color 0.3s ease;
-  white-space: nowrap;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .sidebar.collapsed .nav-link .text {
@@ -98,89 +175,14 @@ body {
   display: inline-block;
 }
 
-.sidebar-toggle i {
-  color: var(--sidebar-text);
-  transition: color 0.3s ease;
+.sidebar .nav-link .text {
+  margin-left: 10px;
+  white-space: nowrap;
 }
 
-/* Container */
-.theme-switch {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px 0;
-}
-
-/* Esconde checkbox */
-.theme-toggle {
-  display: none;
-}
-
-/* Label estilizada como switch */
-.switch-label {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 60px;
-  height: 30px;
-  background: var(--sidebar-bg);
-  border: 2px solid var(--text-color);
-  border-radius: 50px;
-  cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
-  overflow: hidden;
-}
-
-/* Ícones sempre ocupam espaço fixo */
-.switch-label .sun,
-.switch-label .moon {
-  position: absolute;
-  font-size: 16px;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  text-align: center;
-  transition: opacity 0.4s ease;
-  color: var(--text-color);
-}
-
-/* Posição dos ícones */
-.switch-label .sun {
-  left: 4px;
-  opacity: 1;
-}
-
-.switch-label .moon {
-  right: 4px;
-  opacity: 1;
-}
-
-/* Bolinha que desliza */
-.switch-ball {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 22px;
-  height: 22px;
-  background: var(--text-color);
-  border-radius: 50%;
-  transition: transform 0.4s ease, background 0.3s ease;
-}
-
-/* Estado dark (checkbox ON) */
-.theme-toggle:checked + .switch-label .sun {
-  opacity: 1;
-}
-
-.theme-toggle:checked + .switch-label .moon {
-  opacity: 1;
-  color: var(--switch-ball-contrast);
-}
-
-.theme-toggle:checked + .switch-label .switch-ball {
-  transform: translateX(30px);
-}
-
+/*-------------------------------------
+Main Content Area
+--------------------------------------*/
 .main-content {
   margin-left: 250px;
   transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
@@ -196,7 +198,6 @@ body {
   width: calc(100% - 80px);
 }
 
-/* NOVO: quando não tiver sidebar */
 .main-content.full-width {
   margin-left: 0 !important;
   width: 100% !important;
@@ -204,6 +205,9 @@ body {
   padding-right: 20px;
 }
 
+/*-------------------------------------
+Footer
+--------------------------------------*/
 footer {
   transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   margin-left: 250px;
@@ -224,39 +228,18 @@ footer.full-width {
   width: 100% !important;
 }
 
-a {
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--link-hover);
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    top: 56px;
-    bottom: 0;
-    height: auto;
-  }
-
-  .main-content,
-  footer {
-    margin-left: 80px;
-    width: calc(100% - 80px);
-  }
-}
-
-/* Dropdown */
+/*-------------------------------------
+Dropdown Menu & User Dropdown
+--------------------------------------*/
 .dropdown-menu {
   background-color: var(--nav-bg) !important;
   color: var(--text-color) !important;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--border-light) !important; /* modificado para variável */
 }
 
 .dropdown-menu .dropdown-item {
   color: var(--text-color) !important;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.3s ease;
 }
 
 .dropdown-menu .dropdown-item:hover {
@@ -264,12 +247,12 @@ a:hover {
   color: var(--link-hover) !important;
 }
 
-.dropdown-toggle{
+.dropdown-toggle {
   color: var(--text-color);
 }
 
 .dropdown-divider {
-  border-top: 1px solid var(--text-color);
+  border-top: 1px solid var(--border-light); /* modificado para variável */
 }
 
 .dropdown-menu form {
@@ -293,8 +276,9 @@ a:hover {
   color: var(--link-hover) !important;
 }
 
+/* User dropdown */
 #userDropdownContainer {
-  padding-left: 12px; 
+  padding-left: 12px;
   width: auto;
   transition: padding 0.3s ease;
 }
@@ -314,8 +298,380 @@ nav.navbar.sidebar-collapsed #userDropdownContainer .user-name {
   transition: opacity 0.3s ease, width 0.3s ease;
 }
 
+/*-------------------------------------
+Forms (Inputs, Buttons, Selects)
+--------------------------------------*/
+input.form-control,
+select.form-select,
+textarea.form-control {
+  background-color: var(--sidebar-bg);
+  border: 1px solid var(--link-color);
+  color: var(--text-color);
+  border-radius: 50rem !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+input.form-control:hover,
+select.form-select:hover,
+textarea.form-control:hover {
+  background-color: var(--calendar-day-hover-bg);
+  border-color: var(--link-hover);
+}
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.btn {
+  background-color: var(--sidebar-bg);
+  color: var(--form-text);
+  border: 1px solid var(--link-color);
+  border-radius: 50rem !important;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+.btn:hover {
+  background-color: var(--calendar-day-hover-bg);
+  color: var(--text-color);
+  border-color: var(--link-hover);
+}
+
+
+/*-------------------------------------
+List Group Items
+--------------------------------------*/
+ul.list-group li.list-group-item {
+  margin-bottom: 4px;
+  padding: 6px 6px;
+  border-radius: 12px; 
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  border: 1px solid transparent;
+
+  background-color: var(--card-bg);
+  border-color: var(--card-border);
+  color: var(--card-text);
+}
+
+li.list-group-item:has(.btn:hover) {
+  background-color: var(--calendar-day-hover-bg);
+  border-radius: 50rem;
+  transform: scale(1.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+/*-------------------------------------
+Theme Switch Toggle
+--------------------------------------*/
+.theme-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.theme-toggle {
+  display: none;
+}
+
+.switch-label {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background: var(--sidebar-bg);
+  border: 1px solid var(--text-color);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.switch-label .sun,
+.switch-label .moon {
+  position: absolute;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  color: var(--text-color);
+}
+
+.switch-label .sun {
+  left: 6px;
+  opacity: 1;
+  z-index: 2;
+}
+
+.switch-label .moon {
+  right: 6px;
+  opacity: 1;
+  z-index: 2;
+}
+
+.switch-ball {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: var(--text-color);
+  border-radius: 50%;
+  transition: transform 0.4s ease, background 0.3s ease;
+}
+
+body:not(.dark-mode) .switch-label .sun {
+  color: var(--bg-color);
+}
+
+body:not(.dark-mode) .switch-label .moon {
+  opacity: 1;
+}
+
+body.dark-mode .switch-label .moon {
+  color: var(--bg-color);
+}
+
+body.dark-mode .switch-label .sun {
+  opacity: 1;
+}
+
+.theme-toggle:checked + .switch-label .switch-ball {
+  transform: translateX(30px);
+}
+
+.theme-toggle:checked + .switch-label .moon {
+  opacity: 1;
+}
+
+.theme-toggle:checked + .switch-label .sun {
+  opacity: 1;
+}
+
+.switch-ball:hover {
+  transform: scale(1.1);
+  background-color: var(--sidebar-text);
+}
+
+/*-------------------------------------
+Calendar
+--------------------------------------*/
+.calendar {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 8px var(--calendar-day-shadow);
+  margin: 20px auto;
+  width: 70%;
+  max-width: 800px;
+  color: var(--card-text);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.calendar-table {
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.7rem;
+  background-color: var(--footer-bg);
+}
+
+.calendar-table th,
+.calendar-table td {
+  padding: 0.25rem;
+}
+
+.calendar-table th {
+  font-size: 0.85rem;
+  background-color: var(--sidebar-bg) !important;
+  color: var(--link-color) !important;
+}
+
+.calendar-table td {
+  min-width: 50px;
+  height: 50px;
+  vertical-align: top;
+  font-size: 0.85rem;
+  padding: 0.15rem;
+}
+
+.calendar-table td strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.calendar-table td ul {
+  padding: 0;
+  margin-top: 5px;
+}
+
+.calendar-table td ul li {
+  font-size: 0.7rem;
+  margin-bottom: 3px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.calendar-day {
+  background-color: var(--calendar-day-bg) !important;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  color: var(--link-color) !important;
+}
+
+.calendar-day:hover {
+  background-color: var(--calendar-day-hover-bg) !important;
+  box-shadow: 0 0 5px var(--link-hover);
+  cursor: pointer;
+}
+
+.empty-day {
+  min-width: 50px;
+  height: 50px;
+  background-color: var(--calendar-day-bg) !important;
+}
+
+.calendar-table td ul li:hover {
+  transform: scale(1.05);
+  background-color: var(--calendar-day-hover-bg) !important;
+}
+
+/*-------------------------------------
+Task Count Badges
+--------------------------------------*/
+.tarefa-count {
+  display: inline-block;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 2px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  margin-top: 1px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.tarefa-count.low {
+  background-color: var(--badge-low);
+}
+
+.tarefa-count.medium {
+  background-color: var(--badge-medium);
+}
+
+.tarefa-count.high {
+  background-color: var(--badge-high);
+}
+
+.day:hover .tarefa-count {
+  transform: scale(1.1);
+}
+
+
+/*-------------------------------------
+Task Cards
+--------------------------------------*/
+.tarefa-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--card-text);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px var(--calendar-day-shadow);
+  margin: 0 auto 2rem auto;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.tarefa-card .card-header {
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--card-border);
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tarefa-card .card-header h4 {
+  margin: 0;
+  color: var(--card-text);
+}
+
+.tarefa-card .card-body {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--card-text);
+  border-bottom: 1px solid var(--card-border);
+  background-color: var(--card-bg);
+}
+
+.tarefa-card .card-body p,
+.tarefa-card .card-body p.text-muted {
+  color: var(--card-text) !important
+}
+
+.tarefa-card .card-footer {
+  background-color: var(--nav-bg);
+  border-top: 1px solid var(--card-border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sidebar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--link-color);
+  border-radius: 20px;
+  border: 2px solid var(--sidebar-bg);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  #userDropdownContainer .user-name {
-    display: none !important;
+  .sidebar {
+    width: 80px;
+  }
+
+  .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+
+  footer {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+
+  footer {
+    margin-left: 0;
+    width: 100%;
   }
 }

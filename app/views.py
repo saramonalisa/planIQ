@@ -22,19 +22,21 @@ def cadastro(request):
     if request.method == 'POST':
         form = CadastroUsuarioForm(request.POST, request.FILES)
         if form.is_valid():
-            usuario = form.save()
-            auth_login(request, usuario)
+            usuario = form.save(commit=False)
+            usuario.set_password(form.cleaned_data['password'])
+            usuario.save()
             return redirect('inicio')
     else:
         form = CadastroUsuarioForm()
-    return render(request, "registration/cadastro.html", {"form": form})
+    return render(request, 'registration/cadastro.html', {'form': form})
 
 
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
-        senha = request.POST.get('password')
-        user = authenticate(request, username=username, password=senha)
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
         if user is not None:
             auth_login(request, user)
             return redirect('inicio')
@@ -59,6 +61,12 @@ def inicio(request):
 def detalhar_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
     return render(request, "tarefas/detalhar_tarefa.html", {"tarefa": tarefa})
+
+
+@login_required
+def minhas_tarefas(request):
+    tarefas = Tarefa.objects.filter(usuario=request.user).order_by('-data_criacao')
+    return render(request, "tarefas/minhas_tarefas.html", {"tarefas": tarefas})
 
 
 @login_required
@@ -112,23 +120,24 @@ def marcar_concluida(request, tarefa_id):
 
 
 @login_required
-def alterar_status_tarefa(request, tarefa_id, novo_status):
+def alterar_status_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
+    novo_status = request.POST.get('status')
 
-    if request.method == 'POST':
-        if novo_status in ['pendente', 'em_progresso', 'concluida']:
-            tarefa.status = novo_status
-            tarefa.save()
+    if novo_status in ['pendente', 'em_progresso', 'concluida']:
+        tarefa.status = novo_status
+        tarefa.save()
 
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'id': tarefa.id,
-                    'status': tarefa.status
-                })
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'id': tarefa.id,
+                'status': tarefa.status
+            })
 
-            return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
+        referer = request.META.get('HTTP_REFERER')
+        return redirect(referer or 'inicio')
 
-    return HttpResponseForbidden("Método não permitido")
+    return HttpResponseForbidden("Status inválido")
 
 @login_required
 def calendario(request):
