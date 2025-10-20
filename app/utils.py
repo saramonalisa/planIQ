@@ -4,9 +4,22 @@ import calendar
 from .models import Tarefa
 
 def gerar_calendario(usuario, ano=None, mes=None):
+    from collections import defaultdict
+    from django.utils import timezone
+    import calendar
+    from .models import Tarefa
+
     hoje = timezone.localdate()
-    ano = ano or hoje.year
-    mes = mes or hoje.month
+
+    try:
+        ano = int(ano)
+    except (TypeError, ValueError):
+        ano = hoje.year
+
+    try:
+        mes = int(mes)
+    except (TypeError, ValueError):
+        mes = hoje.month
 
     meses_pt = [
         '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -29,6 +42,7 @@ def gerar_calendario(usuario, ano=None, mes=None):
 
     return {
         "ano": ano,
+        "mes": mes,
         "mes_nome": mes_nome,
         "semanas": semanas,
         "tarefas_por_dia": tarefas_por_dia,

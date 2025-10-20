@@ -23,7 +23,7 @@
               <td class="empty-day"></td>
             {% else %}
               <td class="calendar-day">
-                <a href="{% url 'tarefas_do_dia' ano mes dia %}" class="text-decoration-none d-block">
+                <a href="{% url 'tarefas_do_dia' ano=ano mes=mes dia=dia %}" class="text-decoration-none d-block">
                   <strong>{{ dia }}</strong>
                   {% include "partials/_tarefa_count.html" with tarefas_dia=tarefas_por_dia|dict_get:dia %}
                 </a>
