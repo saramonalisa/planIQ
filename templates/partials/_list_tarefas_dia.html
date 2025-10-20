@@ -8,12 +8,14 @@
              title="Detalhar">
             <i class="bi bi-eye"></i>
           </a>
+
           <strong>{{ tarefa.titulo }}</strong>
 
           {% if tarefa.atrasada and tarefa.status != 'concluida' %}
             <span class="badge bg-danger ms-2">Atrasada</span>
           {% endif %}
         </div>
+
         <div class="d-flex align-items-center">
           {% include "partials/_select_status.html" %}
         </div>
@@ -21,7 +23,7 @@
     </li>
   {% empty %}
     <li class="list-group-item text-center text-muted">
-      Nenhuma tarefa encontrada.
+      Nenhuma tarefa para este dia.
     </li>
   {% endfor %}
 </ul>

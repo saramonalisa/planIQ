@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-3">
+        <span style="cursor: pointer;" onclick="history.back()">&larr; Voltar</span>
+    </div>
+    <h3 class="mb-4">Tarefas de {{ data|date:"d/m/Y" }}</h3>
+    <div class="mt-2">
+        {% include "partials/_lista_tarefas.html" with tarefas=tarefas %}
+    </div>
+</div>
+{% endblock %}

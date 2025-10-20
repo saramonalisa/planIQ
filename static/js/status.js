@@ -33,11 +33,34 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function atualizarBadge(tarefaId, status) {
-    const badges = document.querySelectorAll(`.status-badge[data-tarefa-id="${tarefaId}"]`);
+  function prioridadeToLabel(prioridade) {
+    switch (prioridade) {
+      case 'alta': return 'Alta';
+      case 'media': return 'Média';
+      case 'baixa': return 'Baixa';
+      default: return '';
+    }
+  }
+
+  function prioridadeToColor(prioridade) {
+    switch (prioridade) {
+      case 'alta': return 'bg-danger';
+      case 'media': return 'bg-warning';
+      case 'baixa': return 'bg-success';
+      default: return '';
+    }
+  }
+
+  function atualizarBadge(tarefaId, status, tipo) {
+    const badges = document.querySelectorAll(`.${tipo}-badge[data-tarefa-id="${tarefaId}"]`);
     badges.forEach(badge => {
-      badge.textContent = statusToLabel(status);
-      badge.className = 'badge status-badge me-3 ' + statusToColor(status);
+      if (tipo === 'status') {
+        badge.textContent = statusToLabel(status);
+        badge.className = 'badge status-badge me-3 ' + statusToColor(status);
+      } else if (tipo === 'prioridade') {
+        badge.textContent = prioridadeToLabel(status);
+        badge.className = 'badge prioridade-badge me-3 ' + prioridadeToColor(status);
+      }
     });
   }
 
@@ -66,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       if (!tarefaId || !novoStatus) throw new Error('JSON retornado inválido');
 
-      atualizarBadge(tarefaId, novoStatus);
+      atualizarBadge(tarefaId, novoStatus, 'status');
 
       const parent = button.closest('li, .card-footer');
       if(parent) {
@@ -82,33 +105,33 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   document.body.addEventListener('change', function (e) {
-    const select = e.target.closest('.status-selector');
+    const select = e.target.closest('.prioridade-selector');
     if (!select) return;
 
     const tarefaId = select.dataset.tarefaId;
-    const novoStatus = select.value;
+    const novaPrioridade = select.value;
 
-    if (!tarefaId || !novoStatus) return;
+    if (!tarefaId || !novaPrioridade) return;
 
-    fetch(`/alterar_status_tarefa/${tarefaId}/`, {
+    fetch(`/alterar_prioridade_tarefa/${tarefaId}/`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': csrfToken,
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded'
       },
-      body: new URLSearchParams({ status: novoStatus })
+      body: new URLSearchParams({ prioridade: novaPrioridade })
     })
     .then(response => {
-      if (!response.ok) throw new Error("Erro ao atualizar status");
+      if (!response.ok) throw new Error("Erro ao atualizar prioridade");
       return response.json();
     })
     .then(data => {
-      const novo = data.status;
-      atualizarBadge(tarefaId, novo);
+      const novaPrioridade = data.prioridade;
+      atualizarBadge(tarefaId, novaPrioridade, 'prioridade');
     })
     .catch(error => {
-      alert("Erro ao atualizar o status. Veja o console para detalhes.");
+      alert("Erro ao atualizar a prioridade. Veja o console para detalhes.");
       console.error(error);
     });
   });

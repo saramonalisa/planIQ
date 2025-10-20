@@ -6,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.utils import timezone
+from django.db.models import Case, When, Value, IntegerField
 from collections import defaultdict
 from .models import Usuario, Tarefa
 from .forms import CadastroUsuarioForm, TarefaForm
 from .utils import gerar_calendario
+from datetime import date
 import calendar
 
 def index(request):
@@ -54,6 +56,19 @@ def logout(request):
 @login_required
 def inicio(request):
     context = gerar_calendario(request.user)
+
+    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    context.update({'tarefas': tarefas})
+
     return render(request, "inicio.html", context)
 
 
@@ -65,9 +80,47 @@ def detalhar_tarefa(request, tarefa_id):
 
 @login_required
 def minhas_tarefas(request):
-    tarefas = Tarefa.objects.filter(usuario=request.user).order_by('-data_criacao')
+    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
     return render(request, "tarefas/minhas_tarefas.html", {"tarefas": tarefas})
 
+
+@login_required
+def tarefas_do_dia(request, ano, mes, dia):
+    data_escolhida = date(ano, mes, dia)
+    tarefas = Tarefa.objects.filter(
+        usuario=request.user,
+        prazo=data_escolhida
+    ).annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    context = {
+        'data': data_escolhida,
+        'tarefas': tarefas,
+        'ano': ano,
+        'mes': mes,
+        'mes_nome': gerar_calendario(request.user)['mes_nome'],
+        'semanas': gerar_calendario(request.user)['semanas'],
+        'tarefas_por_dia': gerar_calendario(request.user)['tarefas_por_dia']
+    }
+
+    return render(request, 'tarefas/tarefas_do_dia.html', context)
+
+    
 
 @login_required
 def nova_tarefa(request):
@@ -79,25 +132,34 @@ def nova_tarefa(request):
             tarefa.save()
             messages.success(request, "Tarefa criada com sucesso!")
             return redirect('inicio')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
     else:
         form = TarefaForm()
+
     return render(request, 'tarefas/nova_tarefa.html', {'form': form})
 
 
 @login_required
 def editar_tarefa(request, tarefa_id):
-    tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user)
+    tarefa = get_object_or_404(Tarefa, id=tarefa_id)
 
     if request.method == 'POST':
         form = TarefaForm(request.POST, instance=tarefa)
         if form.is_valid():
             form.save()
-            messages.success(request, "Tarefa atualizada com sucesso!")
-            return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
+            messages.success(request, "Tarefa editada com sucesso!")
+            return redirect('inicio')
+        else:
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, f"{field.label}: {error}")
     else:
         form = TarefaForm(instance=tarefa)
 
-    return render(request, 'tarefas/editar_tarefa.html', {'form': form, 'tarefa': tarefa})
+    return render(request, 'tarefas/editar_tarefa.html', {'form': form})
 
 
 @login_required
@@ -138,6 +200,28 @@ def alterar_status_tarefa(request, tarefa_id):
         return redirect(referer or 'inicio')
 
     return HttpResponseForbidden("Status inválido")
+
+
+@login_required
+def alterar_prioridade_tarefa(request, tarefa_id):
+    tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
+    nova_prioridade = request.POST.get('prioridade')
+
+    if nova_prioridade in ['alta', 'media', 'baixa', 'sem_prioridade']:
+        tarefa.prioridade = nova_prioridade
+        tarefa.save()
+
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({
+                'id': tarefa.id,
+                'prioridade': tarefa.prioridade
+            })
+
+        referer = request.META.get('HTTP_REFERER')
+        return redirect(referer or 'inicio')
+
+    return HttpResponseForbidden("Prioridade inválida")
+
 
 @login_required
 def calendario(request):

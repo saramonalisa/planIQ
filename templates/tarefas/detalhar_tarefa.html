@@ -18,6 +18,20 @@
     </div>
 
     <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <div>
+          <strong>Prazo:</strong> {% if tarefa.prazo %} {{ tarefa.prazo|date:"d/m/Y" }} {% else %} Não definido {% endif %}
+        </div>
+        <div>
+          <strong>Status:</strong> 
+          {% include "partials/_select_status.html" %}
+        </div>
+        <div>
+          <strong>Prioridade:</strong>
+          {% include "partials/_select_priority.html" %}
+        </div>
+      </div>
+
       {% if tarefa.descricao %}
         <p>{{ tarefa.descricao }}</p>
       {% else %}
@@ -25,30 +39,28 @@
       {% endif %}
     </div>
 
-    <div class="card-footer text-end">
-      {% include "partials/_select_status.html" %}
-    </div>
+    <div class="card-footer text-end"></div>
   </div>
 </div>
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                <div class="modal-body">
-                    Tem certeza que deseja excluir a tarefa <strong>"{{ tarefa.titulo }}"</strong>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary " data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-danger ">Excluir</button>
-                </div>
-            </form>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'excluir_tarefa' tarefa.id %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </div>
+        <div class="modal-body">
+          Tem certeza que deseja excluir a tarefa <strong>"{{ tarefa.titulo }}"</strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Excluir</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 {% endblock %}

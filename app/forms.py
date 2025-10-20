@@ -44,43 +44,31 @@ class CadastroUsuarioForm(forms.ModelForm):
 
 
 class TarefaForm(forms.ModelForm):
-    concluida = forms.BooleanField(
-        label='Concluída',
-        required=False,
-        initial=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
-    )
 
     class Meta:
         model = Tarefa
-        fields = ['titulo', 'prazo', 'descricao']
+        fields = ['titulo', 'prazo', 'descricao', 'prioridade', 'notificacoes']
         widgets = {
-            'titulo': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Digite o título da tarefa'
-            }),
-            'prazo': forms.DateInput(attrs={
-                'class': 'form-control',
-                'type': 'date'
-            }),
-            'descricao': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 4,
-                'placeholder': 'Descreva os detalhes da tarefa (opcional)'
-            }),
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Digite o título da tarefa'}),
+            'prazo': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Descreva os detalhes da tarefa (opcional)'}),
+            'prioridade': forms.Select(attrs={'class': 'form-control'}),
+            'notificacoes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            self.fields['concluida'].initial = (self.instance.status == 'concluida')
+        if self.instance and hasattr(self.instance, 'prazo'):
+            self.fields['prazo'].initial = self.instance.prazo 
 
     def save(self, commit=True):
         tarefa = super().save(commit=False)
+        
         if self.cleaned_data.get('concluida'):
             tarefa.status = 'concluida'
-        elif tarefa.status == 'concluida':
+        else:
             tarefa.status = 'pendente'
+        
         if commit:
             tarefa.save()
         return tarefa

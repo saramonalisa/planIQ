@@ -13,7 +13,7 @@
         {% csrf_token %}
 
         <div class="row mb-3">
-            <div class="col-md-6">
+            <div class="col-4">
                 <label for="{{ form.titulo.id_for_label }}" class="form-label">Título</label>
                 {{ form.titulo }}
                 {% if form.titulo.errors %}
@@ -21,11 +21,24 @@
                 {% endif %}
             </div>
 
-            <div class="col-md-6">
+            <div class="col-4">
                 <label for="{{ form.prazo.id_for_label }}" class="form-label">Prazo</label>
                 {{ form.prazo }}
                 {% if form.prazo.errors %}
                     <div class="text-danger small">{{ form.prazo.errors.0 }}</div>
+                {% endif %}
+            </div>
+
+            <div class="col-4">
+                <label for="{{ form.prioridade.id_for_label }}" class="form-label">Prioridade</label>
+                <select name="prioridade" class="form-select form-select-sm">
+                    <option value="alta" {% if form.prioridade.value == 'alta' %} selected {% endif %}>Alta</option>
+                    <option value="media" {% if form.prioridade.value == 'media' %} selected {% endif %}>Média</option>
+                    <option value="baixa" {% if form.prioridade.value == 'baixa' %} selected {% endif %}>Baixa</option>
+                    <option value="sem_prioridade" {% if form.prioridade.value == 'sem_prioridade' %} selected {% endif %}>Sem prioridade</option>
+                </select>
+                {% if form.prioridade.errors %}
+                    <div class="text-danger small">{{ form.prioridade.errors.0 }}</div>
                 {% endif %}
             </div>
         </div>
@@ -39,12 +52,12 @@
         </div>
 
         <div class="mb-3 form-check">
-            {{ form.concluida }}
-            <label class="form-check-label" for="{{ form.concluida.id_for_label }}">
+            {{ form.notificacoes }}
+            <label class="form-check-label" for="{{ form.enviar_notificacoes.id_for_label }}">
                 Enviar notificações de lembrete para esta tarefa
             </label>
-            {% if form.concluida.errors %}
-                <div class="text-danger small">{{ form.concluida.errors.0 }}</div>
+            {% if form.notificacoes.errors %}
+                <div class="text-danger small">{{ form.enviar_notificacoes.errors.0 }}</div>
             {% endif %}
         </div>
 
