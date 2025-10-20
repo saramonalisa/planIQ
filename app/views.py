@@ -53,9 +53,29 @@ def logout(request):
     return redirect('index')
 
 
-@login_required
 def inicio(request):
-    context = gerar_calendario(request.user)
+    hoje = timezone.localdate()
+    ano = request.GET.get('ano')
+    mes = request.GET.get('mes')
+
+    try:
+        ano = int(ano)
+    except (TypeError, ValueError):
+        ano = hoje.year
+
+    try:
+        mes = int(mes)
+    except (TypeError, ValueError):
+        mes = hoje.month
+
+    if mes < 1:
+        mes = 12
+        ano -= 1
+    elif mes > 12:
+        mes = 1
+        ano += 1
+
+    context = gerar_calendario(request.user, ano=ano, mes=mes)
 
     tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
         prioridade_order=Case(
@@ -67,7 +87,11 @@ def inicio(request):
         )
     ).order_by('prioridade_order')
 
-    context.update({'tarefas': tarefas})
+    context.update({
+        'tarefas': tarefas,
+        'ano': ano,
+        'mes': mes
+    })
 
     return render(request, "inicio.html", context)
 

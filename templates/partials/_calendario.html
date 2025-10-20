@@ -1,8 +1,12 @@
 {% load dict_filters %}
 
 <div class="calendar">
-  <h3 class="text-center fw-bold">{{ mes_nome }} {{ ano }}</h3>
-  
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'inicio' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-primary">&lt;</a>
+    <h3 class="text-center fw-bold">{{ mes_nome }} {{ ano }}</h3>
+    <a href="{% url 'inicio' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-primary">&gt;</a>
+  </div>
+
   <table class="table table-bordered text-center align-middle calendar-table">
     <thead class="table-light">
       <tr>
@@ -19,16 +23,15 @@
       {% for semana in semanas %}
         <tr>
           {% for dia in semana %}
-            {% if dia == 0 %}
-              <td class="empty-day"></td>
-            {% else %}
-              <td class="calendar-day">
-                <a href="{% url 'tarefas_do_dia' ano=ano mes=mes dia=dia %}" class="text-decoration-none d-block">
-                  <strong>{{ dia }}</strong>
-                  {% include "partials/_tarefa_count.html" with tarefas_dia=tarefas_por_dia|dict_get:dia %}
-                </a>
-              </td>
-            {% endif %}
+            <td class="calendar-day {% if dia.mes != 'atual' %}text-muted{% endif %}">
+              <a href="{% url 'tarefas_do_dia' ano=dia.ano_link mes=dia.mes_link dia=dia.numero %}" 
+                 class="d-block text-decoration-none {% if dia.mes != 'atual' %}text-muted{% else %}text-body fw-bold{% endif %}">
+                {{ dia.numero }}
+                <div>
+                  {% include "partials/_tarefa_count.html" with tarefas_dia=tarefas_por_dia|dict_get:dia.chave %}
+                </div>
+              </a>
+            </td>
           {% endfor %}
         </tr>
       {% endfor %}

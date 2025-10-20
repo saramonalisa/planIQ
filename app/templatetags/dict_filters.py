@@ -14,3 +14,8 @@ def tarefas_pendentes(tarefas):
     if not tarefas:
         return 0
     return sum(1 for t in tarefas if not getattr(t, "concluida", False))
+
+@register.filter
+def add(value, arg):
+    """Soma dois valores"""
+    return int(value) + int(arg)
