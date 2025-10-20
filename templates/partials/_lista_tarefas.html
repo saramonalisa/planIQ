@@ -7,7 +7,7 @@
           <i class="bi bi-eye"></i>
           </a>
           <strong>{{ tarefa.titulo }}</strong>
-          {% if tarefa.atrasada and tarefa.status not in 'concluida' %}
+          {% if tarefa.atrasada and tarefa.status != 'concluida' %}
             <span class="badge bg-danger ms-2">Atrasada</span>
           {% endif %}
         </div>

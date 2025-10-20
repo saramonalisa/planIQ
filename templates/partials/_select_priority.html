@@ -1,0 +1,10 @@
+<form method="post" action="{% url 'alterar_prioridade_tarefa' tarefa.id %}">
+    {% csrf_token %}
+    <select name="prioridade" class="form-select form-select-sm prioridade-selector d-inline w-auto"
+            data-tarefa-id="{{ tarefa.id }}" aria-label="Alterar prioridade da tarefa">
+      <option value="alta" {% if tarefa.prioridade == 'alta' %}selected{% endif %}>Alta</option>
+      <option value="media" {% if tarefa.prioridade == 'media' %}selected{% endif %}>Média</option>
+      <option value="baixa" {% if tarefa.prioridade == 'baixa' %}selected{% endif %}>Baixa</option>
+      <option value="sem_prioridade" {% if tarefa.prioridade == 'sem_prioridade' %}selected{% endif %}>Sem Prioridade</option>
+    </select>
+  </form>
