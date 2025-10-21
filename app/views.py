@@ -52,7 +52,7 @@ def logout(request):
     auth_logout(request)
     return redirect('index')
 
-
+@login_required
 def inicio(request):
     hoje = timezone.localdate()
     ano = request.GET.get('ano')
@@ -206,6 +206,7 @@ def marcar_concluida(request, tarefa_id):
 
 
 @login_required
+@require_POST
 def alterar_status_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
     novo_status = request.POST.get('status')
@@ -249,5 +250,42 @@ def alterar_prioridade_tarefa(request, tarefa_id):
 
 @login_required
 def calendario(request):
-    context = gerar_calendario(request.user)
+    hoje = timezone.localdate()
+    ano = request.GET.get('ano')
+    mes = request.GET.get('mes')
+
+    try:
+        ano = int(ano)
+    except (TypeError, ValueError):
+        ano = hoje.year
+
+    try:
+        mes = int(mes)
+    except (TypeError, ValueError):
+        mes = hoje.month
+
+    if mes < 1:
+        mes = 12
+        ano -= 1
+    elif mes > 12:
+        mes = 1
+        ano += 1
+
+    context = gerar_calendario(request.user, ano=ano, mes=mes)
+
+    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    context.update({
+        'tarefas': tarefas,
+        'ano': ano,
+        'mes': mes
+    })
     return render(request, "tarefas/calendario.html", context)
