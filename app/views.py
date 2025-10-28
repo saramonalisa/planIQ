@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
 from collections import defaultdict
 from .models import Usuario, Tarefa
-from .forms import CadastroUsuarioForm, TarefaForm
+from .forms import CadastroUsuarioForm, TarefaForm, UserForm, ProfileForm
 from .utils import gerar_calendario
 from datetime import date
 import calendar
@@ -81,7 +81,6 @@ def inicio(request):
 
     context = gerar_calendario(request.user, ano=ano, mes=mes)
 
-    # 🔽 Aqui a separação das tarefas por status
     tarefas_pendentes = Tarefa.objects.filter(usuario=request.user, status='pendente').annotate(
         prioridade_order=Case(
             When(prioridade='alta', then=Value(1)),
@@ -112,7 +111,6 @@ def inicio(request):
         )
     ).order_by('prioridade_order')
 
-    # Atualiza o contexto que vai pro HTML
     context.update({
         'tarefas_pendentes': tarefas_pendentes,
         'tarefas_andamento': tarefas_andamento,
@@ -213,7 +211,7 @@ def editar_tarefa(request, tarefa_id):
 
     return render(request, 'tarefas/editar_tarefa.html', {
     'form': form,
-    'tarefa': tarefa,  # aqui dentro do dicionário
+    'tarefa': tarefa,
 })
 
 
@@ -321,7 +319,6 @@ def calendario(request):
     })
     return render(request, "tarefas/calendario.html", context)
 
-<<<<<<< HEAD
 
 @csrf_exempt
 def upload_image(request):
@@ -331,7 +328,8 @@ def upload_image(request):
         url = default_storage.url(path)
         return JsonResponse({'location': url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
-=======
+
+
 def editar_profile(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
@@ -347,6 +345,3 @@ def editar_profile(request):
 
     return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
-def home(request):
-    return HttpResponse("Bem-vindo à página inicial!")
->>>>>>> d48cc9c50b7152f44c66b1925064b48b2850d1a7

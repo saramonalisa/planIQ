@@ -10,6 +10,7 @@ urlpatterns = [
 
     # Registration
     path('cadastro/', views.cadastro, name='cadastro'),
+    path('edit_profile/', views.editar_profile, name='edit_profile'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
     path('resetar-senha/', auth_views.PasswordResetView.as_view(
@@ -46,8 +47,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-urlpatterns = [
-    path('', views.home, name='home'),
-    path('edit_profile/', views.editar_profile, name='edit_profile'),
-]
