@@ -16,11 +16,53 @@
     </div>
 
     <div class="col-md-6">
-      <!-- Aplicando a classe .calendar-home aqui para usar o estilo compacto -->
-      <div class="calendar-home">
-        {% include "partials/_calendario.html" %}
-      </div>
+      <a href="{% url 'nova_tarefa' %}" class="btn btn-secondary mb-3">
+        <i class="bi bi-plus-circle"></i> Nova Tarefa
+      </a>
+    
+      <!-- 🔹 Seção 1: Pendentes -->
+      <h4 class="mt-4 text-warning">🕐 Tarefas Pendentes</h4>
+      {% if tarefas_pendentes %}
+        <ul class="list-group mb-3">
+          {% for tarefa in tarefas_pendentes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ tarefa.titulo }}</span>
+              <span class="badge bg-warning text-dark">{{ tarefa.prioridade|title }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhuma tarefa pendente.</p>
+      {% endif %}
+    
+      <!-- 🔹 Seção 2: Em andamento -->
+      <h4 class="mt-4 text-primary">⚙️ Em Andamento</h4>
+      {% if tarefas_andamento %}
+        <ul class="list-group mb-3">
+          {% for tarefa in tarefas_andamento %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span>{{ tarefa.titulo }}</span>
+              <span class="badge bg-primary">{{ tarefa.prioridade|title }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhuma tarefa em andamento.</p>
+      {% endif %}
+    
+      <!-- 🔹 Seção 3: Concluídas -->
+      <h4 class="mt-4 text-success">✅ Concluídas</h4>
+      {% if tarefas_concluidas %}
+        <ul class="list-group mb-3">
+          {% for tarefa in tarefas_concluidas %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="text-decoration-line-through">{{ tarefa.titulo }}</span>
+              <span class="badge bg-success">{{ tarefa.prioridade|title }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">Nenhuma tarefa concluída.</p>
+      {% endif %}
     </div>
-  </div>
-</div>
-{% endblock %}
+    
