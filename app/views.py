@@ -13,6 +13,8 @@ from .forms import CadastroUsuarioForm, TarefaForm
 from .utils import gerar_calendario
 from datetime import date
 import calendar
+from .profile import Profile
+from django.http import HttpResponse
 
 def index(request):
     if request.user.is_authenticated:
@@ -289,3 +291,21 @@ def calendario(request):
         'mes': mes
     })
     return render(request, "tarefas/calendario.html", context)
+
+def editar_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')  
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+
+    return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
+
+def home(request):
+    return HttpResponse("Bem-vindo à página inicial!")

@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Usuario, Tarefa
+from .profile import Profile
 
 class CadastroUsuarioForm(forms.ModelForm):
     password = forms.CharField(
@@ -72,3 +73,13 @@ class TarefaForm(forms.ModelForm):
         if commit:
             tarefa.save()
         return tarefa
+    
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['photo', 'bio']
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['username', 'email', 'nome', 'avatar']
