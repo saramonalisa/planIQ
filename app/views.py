@@ -77,7 +77,8 @@ def inicio(request):
 
     context = gerar_calendario(request.user, ano=ano, mes=mes)
 
-    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
+    # 🔽 Aqui a separação das tarefas por status
+    tarefas_pendentes = Tarefa.objects.filter(usuario=request.user, status='pendente').annotate(
         prioridade_order=Case(
             When(prioridade='alta', then=Value(1)),
             When(prioridade='media', then=Value(2)),
@@ -87,8 +88,31 @@ def inicio(request):
         )
     ).order_by('prioridade_order')
 
+    tarefas_andamento = Tarefa.objects.filter(usuario=request.user, status='em_progresso').annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    tarefas_concluidas = Tarefa.objects.filter(usuario=request.user, status='concluida').annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    # Atualiza o contexto que vai pro HTML
     context.update({
-        'tarefas': tarefas,
+        'tarefas_pendentes': tarefas_pendentes,
+        'tarefas_andamento': tarefas_andamento,
+        'tarefas_concluidas': tarefas_concluidas,
         'ano': ano,
         'mes': mes
     })
