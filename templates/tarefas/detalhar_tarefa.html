@@ -33,7 +33,7 @@
       </div>
 
       {% if tarefa.descricao %}
-        <p>{{ tarefa.descricao }}</p>
+        <p>{{ tarefa.descricao|safe }}</p>
       {% else %}
         <p class="text-muted fst-italic">Sem descrição.</p>
       {% endif %}

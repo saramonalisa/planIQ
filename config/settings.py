@@ -40,8 +40,7 @@ INSTALLED_APPS = [
     'app',
     'crispy_forms',
     'crispy_bootstrap5',
-    'ckeditor',
-    'ckeditor_uploader',
+    'tinymce',
 ]
 
 MIDDLEWARE = [
@@ -139,7 +138,6 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / "media/" # uploads de usuários
 
 
-CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

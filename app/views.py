@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import default_storage
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
@@ -175,7 +177,7 @@ def editar_tarefa(request, tarefa_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Tarefa editada com sucesso!")
-            return redirect('inicio')
+            return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
         else:
             for field in form:
                 for error in field.errors:
@@ -183,7 +185,10 @@ def editar_tarefa(request, tarefa_id):
     else:
         form = TarefaForm(instance=tarefa)
 
-    return render(request, 'tarefas/editar_tarefa.html', {'form': form})
+    return render(request, 'tarefas/editar_tarefa.html', {
+    'form': form,
+    'tarefa': tarefa,  # aqui dentro do dicionário
+})
 
 
 @login_required
@@ -289,3 +294,13 @@ def calendario(request):
         'mes': mes
     })
     return render(request, "tarefas/calendario.html", context)
+
+
+@csrf_exempt
+def upload_image(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        image = request.FILES['file']
+        path = default_storage.save(f'tinymce_uploads/{image.name}', image)
+        url = default_storage.url(path)
+        return JsonResponse({'location': url})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

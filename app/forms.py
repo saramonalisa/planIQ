@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from tinymce.widgets import TinyMCE
 from .models import Usuario, Tarefa
 
 class CadastroUsuarioForm(forms.ModelForm):
@@ -44,14 +45,18 @@ class CadastroUsuarioForm(forms.ModelForm):
 
 
 class TarefaForm(forms.ModelForm):
-
+    
     class Meta:
         model = Tarefa
         fields = ['titulo', 'prazo', 'descricao', 'prioridade', 'notificacoes']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Digite o título da tarefa'}),
             'prazo': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Descreva os detalhes da tarefa (opcional)'}),
+            'descricao': TinyMCE(attrs={
+                'cols': 80,
+                'rows': 10,
+                'placeholder': 'Descreva os detalhes da tarefa (opcional)'
+            }),
             'prioridade': forms.Select(attrs={'class': 'form-control'}),
             'notificacoes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
@@ -64,9 +69,7 @@ class TarefaForm(forms.ModelForm):
     def save(self, commit=True):
         tarefa = super().save(commit=False)
         
-        if self.cleaned_data.get('concluida'):
-            tarefa.status = 'concluida'
-        else:
+        if not tarefa.status:
             tarefa.status = 'pendente'
         
         if commit:

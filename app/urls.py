@@ -40,6 +40,8 @@ urlpatterns = [
     path('alterar_status_tarefa/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
     path('alterar_prioridade_tarefa/<int:tarefa_id>/', views.alterar_prioridade_tarefa, name='alterar_prioridade_tarefa'),
     path('calendario/', views.calendario, name='calendario'),
+    
+    path('upload_image/', views.upload_image, name='upload_image'),
     ]
 
 if settings.DEBUG:
