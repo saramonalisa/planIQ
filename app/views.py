@@ -15,6 +15,8 @@ from .forms import CadastroUsuarioForm, TarefaForm
 from .utils import gerar_calendario
 from datetime import date
 import calendar
+from .profile import Profile
+from django.http import HttpResponse
 
 def index(request):
     if request.user.is_authenticated:
@@ -79,7 +81,8 @@ def inicio(request):
 
     context = gerar_calendario(request.user, ano=ano, mes=mes)
 
-    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
+    # 🔽 Aqui a separação das tarefas por status
+    tarefas_pendentes = Tarefa.objects.filter(usuario=request.user, status='pendente').annotate(
         prioridade_order=Case(
             When(prioridade='alta', then=Value(1)),
             When(prioridade='media', then=Value(2)),
@@ -89,8 +92,31 @@ def inicio(request):
         )
     ).order_by('prioridade_order')
 
+    tarefas_andamento = Tarefa.objects.filter(usuario=request.user, status='em_progresso').annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    tarefas_concluidas = Tarefa.objects.filter(usuario=request.user, status='concluida').annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order')
+
+    # Atualiza o contexto que vai pro HTML
     context.update({
-        'tarefas': tarefas,
+        'tarefas_pendentes': tarefas_pendentes,
+        'tarefas_andamento': tarefas_andamento,
+        'tarefas_concluidas': tarefas_concluidas,
         'ano': ano,
         'mes': mes
     })
@@ -295,6 +321,7 @@ def calendario(request):
     })
     return render(request, "tarefas/calendario.html", context)
 
+<<<<<<< HEAD
 
 @csrf_exempt
 def upload_image(request):
@@ -304,3 +331,22 @@ def upload_image(request):
         url = default_storage.url(path)
         return JsonResponse({'location': url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+=======
+def editar_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile')  
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+
+    return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
+
+def home(request):
+    return HttpResponse("Bem-vindo à página inicial!")
+>>>>>>> d48cc9c50b7152f44c66b1925064b48b2850d1a7
