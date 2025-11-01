@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseForbidden
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -10,54 +9,21 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
 from collections import defaultdict
-from .models import Usuario, Tarefa
-from .forms import CadastroUsuarioForm, TarefaForm, UserForm, ProfileForm
-from .utils import gerar_calendario
+from .models import Tarefa
+from .forms import TarefaForm
+from .utils import gerar_calendario, lista_por_status
 from datetime import date
 import calendar
-from .profile import Profile
 from django.http import HttpResponse
 
 def index(request):
     if request.user.is_authenticated:
-        return redirect('inicio')
+        return redirect('app:home')
     return render(request, "index.html")
 
 
-def cadastro(request):
-    if request.method == 'POST':
-        form = CadastroUsuarioForm(request.POST, request.FILES)
-        if form.is_valid():
-            usuario = form.save(commit=False)
-            usuario.set_password(form.cleaned_data['password'])
-            usuario.save()
-            return redirect('inicio')
-    else:
-        form = CadastroUsuarioForm()
-    return render(request, 'registration/cadastro.html', {'form': form})
-
-
-def login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            auth_login(request, user)
-            return redirect('inicio')
-        else:
-            messages.error(request, "Usuário ou senha inválidos.")
-    return render(request, "registration/login.html")
-
-
 @login_required
-def logout(request):
-    auth_logout(request)
-    return redirect('index')
-
-@login_required
-def inicio(request):
+def home(request):
     hoje = timezone.localdate()
     ano = request.GET.get('ano')
     mes = request.GET.get('mes')
@@ -81,45 +47,11 @@ def inicio(request):
 
     context = gerar_calendario(request.user, ano=ano, mes=mes)
 
-    tarefas_pendentes = Tarefa.objects.filter(usuario=request.user, status='pendente').annotate(
-        prioridade_order=Case(
-            When(prioridade='alta', then=Value(1)),
-            When(prioridade='media', then=Value(2)),
-            When(prioridade='baixa', then=Value(3)),
-            default=Value(4),
-            output_field=IntegerField()
-        )
-    ).order_by('prioridade_order')
+    tarefas = lista_por_status(request.user)
 
-    tarefas_andamento = Tarefa.objects.filter(usuario=request.user, status='em_progresso').annotate(
-        prioridade_order=Case(
-            When(prioridade='alta', then=Value(1)),
-            When(prioridade='media', then=Value(2)),
-            When(prioridade='baixa', then=Value(3)),
-            default=Value(4),
-            output_field=IntegerField()
-        )
-    ).order_by('prioridade_order')
+    context.update(tarefas)
 
-    tarefas_concluidas = Tarefa.objects.filter(usuario=request.user, status='concluida').annotate(
-        prioridade_order=Case(
-            When(prioridade='alta', then=Value(1)),
-            When(prioridade='media', then=Value(2)),
-            When(prioridade='baixa', then=Value(3)),
-            default=Value(4),
-            output_field=IntegerField()
-        )
-    ).order_by('prioridade_order')
-
-    context.update({
-        'tarefas_pendentes': tarefas_pendentes,
-        'tarefas_andamento': tarefas_andamento,
-        'tarefas_concluidas': tarefas_concluidas,
-        'ano': ano,
-        'mes': mes
-    })
-
-    return render(request, "inicio.html", context)
+    return render(request, "home.html", context)
 
 
 @login_required
@@ -130,16 +62,8 @@ def detalhar_tarefa(request, tarefa_id):
 
 @login_required
 def minhas_tarefas(request):
-    tarefas = Tarefa.objects.filter(usuario=request.user).annotate(
-        prioridade_order=Case(
-            When(prioridade='alta', then=Value(1)),
-            When(prioridade='media', then=Value(2)),
-            When(prioridade='baixa', then=Value(3)),
-            default=Value(4),
-            output_field=IntegerField()
-        )
-    ).order_by('prioridade_order')
-    return render(request, "tarefas/minhas_tarefas.html", {"tarefas": tarefas})
+    context = lista_por_status(usuario=request.user)
+    return render(request, "tarefas/minhas_tarefas.html", context)
 
 
 @login_required
@@ -181,7 +105,7 @@ def nova_tarefa(request):
             tarefa.usuario = request.user
             tarefa.save()
             messages.success(request, "Tarefa criada com sucesso!")
-            return redirect('inicio')
+            return redirect('app:home')
         else:
             for field in form:
                 for error in field.errors:
@@ -221,7 +145,7 @@ def excluir_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, pk=tarefa_id, usuario=request.user)
     tarefa.delete()
     messages.success(request, "Tarefa excluída com sucesso!")
-    return redirect('inicio')
+    return redirect('app:home')
 
 
 @login_required
@@ -231,7 +155,7 @@ def marcar_concluida(request, tarefa_id):
     tarefa.concluida = True
     tarefa.save()
     messages.success(request, "Tarefa marcada como concluída!")
-    return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
+    return redirect('app:detalhar_tarefa', tarefa_id=tarefa.id)
 
 
 @login_required
@@ -251,7 +175,7 @@ def alterar_status_tarefa(request, tarefa_id):
             })
 
         referer = request.META.get('HTTP_REFERER')
-        return redirect(referer or 'inicio')
+        return redirect(referer or 'home')
 
     return HttpResponseForbidden("Status inválido")
 
@@ -272,7 +196,7 @@ def alterar_prioridade_tarefa(request, tarefa_id):
             })
 
         referer = request.META.get('HTTP_REFERER')
-        return redirect(referer or 'inicio')
+        return redirect(referer or 'app:home')
 
     return HttpResponseForbidden("Prioridade inválida")
 
@@ -328,20 +252,3 @@ def upload_image(request):
         url = default_storage.url(path)
         return JsonResponse({'location': url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-def editar_profile(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=request.user)
-        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            return redirect('profile')  
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = ProfileForm(instance=request.user.profile)
-
-    return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
-

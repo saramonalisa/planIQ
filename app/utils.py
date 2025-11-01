@@ -1,7 +1,9 @@
 from collections import defaultdict
 from django.utils import timezone
+from django.db.models import Case, When, Value, IntegerField
+from accounts.models import Usuario
+from app.models import Tarefa
 import calendar
-from .models import Tarefa
 
 def gerar_calendario(usuario, ano=None, mes=None):
     hoje = timezone.localdate()
@@ -78,4 +80,29 @@ def gerar_calendario(usuario, ano=None, mes=None):
         "mes_ant": mes_ant,
         "ano_prox": ano_prox,
         "mes_prox": mes_prox
+    }
+
+
+def lista_por_status(usuario):
+    prioridade_order = Case(
+        When(prioridade='alta', then=Value(1)),
+        When(prioridade='media', then=Value(2)),
+        When(prioridade='baixa', then=Value(3)),
+        default=Value(4),
+        output_field=IntegerField()
+    )
+
+    tarefas_pendentes = Tarefa.objects.filter(usuario=usuario, status='pendente')
+    tarefas_pendentes = tarefas_pendentes.annotate(prioridade_order=prioridade_order).order_by('prioridade_order')
+
+    tarefas_andamento = Tarefa.objects.filter(usuario=usuario, status='em_progresso')
+    tarefas_andamento = tarefas_andamento.annotate(prioridade_order=prioridade_order).order_by('prioridade_order')
+
+    tarefas_concluidas = Tarefa.objects.filter(usuario=usuario, status='concluida')
+    tarefas_concluidas = tarefas_concluidas.annotate(prioridade_order=prioridade_order).order_by('prioridade_order')
+
+    return {
+        'tarefas_pendentes': tarefas_pendentes,
+        'tarefas_andamento': tarefas_andamento,
+        'tarefas_concluidas': tarefas_concluidas,
     }

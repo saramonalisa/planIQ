@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app',
+    'accounts',
     'crispy_forms',
     'crispy_bootstrap5',
     'tinymce',
@@ -105,8 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Autentication
-AUTH_USER_MODEL = "app.Usuario"
-LOGIN_URL = "login"
+AUTH_USER_MODEL = "accounts.Usuario"
+LOGIN_URL = "accounts:login"
 LOGOUT_REDIRECT_URL = "app:index"
 LOGIN_REDIRECT_URL = "app:index"
 
@@ -139,7 +140,6 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / "media/" # uploads de usuários
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 
 # Default primary key field type

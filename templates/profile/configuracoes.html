@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Editar Perfil</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Exibe o formulário com os dados do usuário, mas sem o campo de senha -->
+        {{ form.as_p }}
+        
+        <button type="submit">Salvar Alterações</button>
+    </form>
+{% endblock %}

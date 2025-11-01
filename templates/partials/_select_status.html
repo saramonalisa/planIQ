@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'alterar_status_tarefa' tarefa.id %}"> 
+<form method="post" action="{% url 'app:alterar_status_tarefa' tarefa.id %}"> 
   {% csrf_token %} 
   <select name="status" class="form-select form-select-sm status-selector d-inline w-auto" 
   data-tarefa-id="{{ tarefa.id }}" 

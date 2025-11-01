@@ -6,31 +6,31 @@
 
   <ul class="nav nav-pills flex-column mb-auto mt-4">
     <li class="nav-item">
-      <a href="{% url 'inicio' %}" class="nav-link">
+      <a href="{% url 'app:home' %}" class="nav-link">
         <i class="bi bi-house-door"></i>
         <span class="text">Início</span>
       </a>
     </li>
     <li>
-      <a href="{% url 'nova_tarefa' %}" class="nav-link">
+      <a href="{% url 'app:nova_tarefa' %}" class="nav-link">
         <i class="bi bi-plus-circle"></i>
         <span class="text">Nova Tarefa</span>
       </a>
     </li>
     <li>
-      <a href="{% url 'minhas_tarefas' %}" class="nav-link">
+      <a href="{% url 'app:minhas_tarefas' %}" class="nav-link">
         <i class="bi bi-list-task"></i>
         <span class="text">Minhas Tarefas</span>
       </a>
     </li>
     <li>
-      <a href="{% url 'calendario' %}" class="nav-link">
+      <a href="{% url 'app:calendario' %}" class="nav-link">
         <i class="bi bi-calendar"></i>
         <span class="text">Calendário</span>
       </a>
     </li>
     <li>
-      <a href="#" class="nav-link">
+      <a href="{% url 'accounts:configuracoes' %}" class="nav-link">
       <i class="bi bi-gear"></i>
       <span class="text">Configurações</span>
       </a>

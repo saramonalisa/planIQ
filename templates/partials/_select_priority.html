@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'alterar_prioridade_tarefa' tarefa.id %}">
+<form method="post" action="{% url 'app:alterar_prioridade_tarefa' tarefa.id %}">
     {% csrf_token %}
     <select name="prioridade" class="form-select form-select-sm prioridade-selector d-inline w-auto"
             data-tarefa-id="{{ tarefa.id }}" aria-label="Alterar prioridade da tarefa">
