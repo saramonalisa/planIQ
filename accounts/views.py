@@ -19,8 +19,14 @@ def cadastro(request):
         form = UserProfileForm(request.POST, request.FILES)
         if form.is_valid():
             usuario = form.save(commit=False)
-            usuario.set_password(form.cleaned_data['password'])
-            usuario.save()
+            usuario.set_password(form.cleaned_data['password']) 
+            usuario.save() 
+
+            user = authenticate(request, username=usuario.username, password=form.cleaned_data['password'])
+            if user is not None:
+                auth_login(request, user)
+
+            messages.success(request, 'Cadastro realizado com sucesso. Seja bem-vindo(a)!')
             return redirect('app:home')
     else:
         form = UserProfileForm()
@@ -35,6 +41,7 @@ def login(request):
 
         if user is not None:
             auth_login(request, user)
+            messages.success(request, 'Login realizado com sucesso. Seja bem-vindo(a)!')
             return redirect('app:home')
         else:
             messages.error(request, "Usuário ou senha inválidos.")

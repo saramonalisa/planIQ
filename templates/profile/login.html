@@ -1,35 +1,63 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <h2 class="text-center mb-4">Login</h2>
-
-            <form method="POST" novalidate>
+<div class="container">
+  <div class="d-flex align-items-center h-100">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card">
+            <div class="card-body p-5">
+              <h2 class="text-center fw-bold">PlanIQ | Login</h2>
+              <p class="text-center my-3">
+                Ainda não tem uma conta? <a href="{% url 'accounts:cadastro' %}" class="fw-bold text-body"><u>Cadastre-se</u></a>
+              </p>
+              <form method="POST" novalidate>
                 {% csrf_token %}
+                <div class="mb-3">
+                  <label for="id_username" class="form-label">Usuário</label>
+                  <input type="text" name="username" id="id_username" class="form-control" required>
+                  <div class="text-danger" id="usernameError"></div>
+                </div>
 
                 <div class="mb-3">
-                    <label for="id_username" class="form-label">Usuário</label>
-                    <input type="text" name="username" id="id_username" class="form-control" placeholder="Digite seu nome de usuário" required>
+                  <label for="id_password" class="form-label">Senha</label>
+                  <div class="input-group">
+                    <input type="password" name="password" id="id_password" class="form-control" required>
+                    <button type="button" class="btn btn-outline-secondary" id="togglePassword" onclick="togglePasswordVisibility()">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                  </div>
+                  <div class="text-danger" id="passwordError"></div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="id_password" class="form-label">Senha</label>
-                    <input type="password" name="password" id="id_password" class="form-control" placeholder="Digite sua senha" required>
-                </div>
-                <a href="{% url 'accounts:password_reset' %}">Esqueceu a senha?</a>
+                <a href="{% url 'accounts:password_reset' %}" class="d-block text-start text-body">Esqueceu a senha?</a>
 
-                <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary  mt-3">Entrar</button>
+                <div class="d-flex justify-content-center mt-4">
+                  <button type="submit" class="btn btn-primary">Entrar</button>
                 </div>
-            </form>
-
-            <p class="text-center mt-3">
-                Ainda não tem uma conta? <a href="{% url 'accounts:cadastro' %}">Cadastre-se</a>
-            </p>
+              </form>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<script>
+  function togglePasswordVisibility() {
+    const passwordField = document.getElementById('id_password');
+    const toggleButton = document.getElementById('togglePassword');
+    
+    if (passwordField.type === 'password') {
+      passwordField.type = 'text';
+      toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    } else {
+      passwordField.type = 'password';
+      toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+    }
+  }
+</script>
 {% endblock %}

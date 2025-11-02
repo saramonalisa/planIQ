@@ -1,13 +1,51 @@
 {% extends "base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
-    <h2>Editar Perfil</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        <!-- Exibe o formulário com os dados do usuário, mas sem o campo de senha -->
-        {{ form.as_p }}
-        
-        <button type="submit">Salvar Alterações</button>
-    </form>
+<div class="container">
+  <div class="d-flex align-items-center h-100">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card">
+            <div class="card-body p-5">
+              <h2 class="text-center fw-bold mb-4">Editar Perfil</h2>
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                  <label for="id_nome" class="form-label">Nome de Usuário</label>
+                  {{ form.username|add_class:"form-control" }}
+                  <div class="text-danger" id="usernameError"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_nome" class="form-label">Nome de Exibição</label>
+                  {{ form.nome|add_class:"form-control" }}
+                  <div class="text-danger" id="nomeError"></div>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="id_email" class="form-label">E-mail</label>
+                  {{ form.email|add_class:"form-control" }}
+                  <div class="text-danger" id="emailError"></div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_avatar" class="form-label">Foto de Perfil</label>
+                  {{ form.avatar|add_class:"form-control" }}
+                  <div class="text-danger" id="avatarError"></div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4">
+                  <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
