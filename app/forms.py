@@ -3,6 +3,7 @@ from django.forms.widgets import ClearableFileInput
 from django.core.exceptions import ValidationError
 from tinymce.widgets import TinyMCE
 from .models import Tarefa
+from .models import Periodo, Materia, Tarefa
 
 class TarefaForm(forms.ModelForm):
     
@@ -49,4 +50,22 @@ class TarefaForm(forms.ModelForm):
         if commit:
             tarefa.save()
         return tarefa
+    
+class PeriodoForm(forms.ModelForm):
+    class Meta:
+        model = Periodo
+        fields = ['nome', 'data_inicio', 'data_fim']
+
+
+class MateriaForm(forms.ModelForm):
+    class Meta:
+        model = Materia
+        fields = ['periodo', 'nome']
+
+
+class TarefaForm(forms.ModelForm):
+    class Meta:
+        model = Tarefa
+        fields = ['materia', 'titulo', 'descricao', 'data_entrega', 'concluida']
+
     
