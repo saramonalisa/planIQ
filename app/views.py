@@ -15,6 +15,10 @@ from .utils import gerar_calendario, lista_por_status
 from datetime import datetime, date
 import calendar
 from django.http import HttpResponse
+from .models import Periodo, Materia, Tarefa
+from .forms import PeriodoForm, MateriaForm, TarefaForm
+
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -279,3 +283,69 @@ def upload_image(request):
         url = default_storage.url(path)
         return JsonResponse({'location': url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+@login_required
+def lista_periodos(request):
+    periodos = Periodo.objects.filter(user=request.user)
+    return render(request, 'academico/lista_periodos.html', {'periodos': periodos})
+
+
+@login_required
+def novo_periodo(request):
+    if request.method == 'POST':
+        form = PeriodoForm(request.POST)
+        if form.is_valid():
+            periodo = form.save(commit=False)
+            periodo.user = request.user
+            periodo.save()
+            return redirect('lista_periodos')
+    else:
+        form = PeriodoForm()
+    return render(request, 'academico/form_periodo.html', {'form': form})
+
+
+@login_required
+def nova_materia(request):
+    if request.method == 'POST':
+        form = MateriaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_periodos')
+    else:
+        form = MateriaForm()
+    return render(request, 'academico/form_materia.html', {'form': form})
+
+
+@login_required
+def nova_tarefa(request):
+    if request.method == 'POST':
+        form = TarefaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_tarefas')
+    else:
+        form = TarefaForm()
+    return render(request, 'academico/form_tarefa.html', {'form': form})
+
+
+@login_required
+def lista_tarefas(request):
+    materia_id = request.GET.get('materia')
+    periodo_id = request.GET.get('periodo')
+
+    tarefas = Tarefa.objects.all()
+    if materia_id:
+        tarefas = tarefas.filter(materia_id=materia_id)
+    if periodo_id:
+        tarefas = tarefas.filter(materia__periodo_id=periodo_id)
+
+    periodos = Periodo.objects.filter(user=request.user)
+    materias = Materia.objects.filter(periodo__in=periodos)
+
+    context = {
+        'tarefas': tarefas,
+        'periodos': periodos,
+        'materias': materias
+    }
+    return render(request, 'academico/lista_tarefas.html', context)
