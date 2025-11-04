@@ -2,12 +2,30 @@
 
 {% block content %}
 <div class="container mt-5">
+  <!-- Seção de boas-vindas -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">Bem-vindo ao PlanIQ!</h1>
+    <p class="lead">Gerencie suas tarefas, matérias e períodos de forma prática e organizada.</p>
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a href="{% url 'lista_periodos' %}" class="btn btn-outline-primary btn-lg">
+        <i class="bi bi-calendar-week"></i> Ver Períodos
+      </a>
+      <a href="{% url 'lista_tarefas' %}" class="btn btn-outline-success btn-lg">
+        <i class="bi bi-list-check"></i> Ver Tarefas
+      </a>
+      <a href="{% url 'nova_materia' %}" class="btn btn-outline-info btn-lg">
+        <i class="bi bi-book"></i> Adicionar Matéria
+      </a>
+    </div>
+  </div>
+
+  <!-- Layout de tarefas e calendário -->
   <div class="row">
     <div class="col-md-6">
       <a href="{% url 'app:nova_tarefa' %}" class="btn btn-secondary mb-3">
         <i class="bi bi-plus-circle"></i> Nova Tarefa
       </a>
-        {% include "partials/_lista_tarefas.html" %}
+      {% include "partials/_lista_tarefas.html" %}
     </div>
 
     <div class="col-md-6">

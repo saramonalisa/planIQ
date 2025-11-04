@@ -17,13 +17,24 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
-from django.conf import settings
+from django.conf import settings 
+
+
+from django.contrib import admin
+from django.urls import path, include
+from app import views  # importa suas views
 
 urlpatterns = [
-    path('', include("app.urls", namespace='app')),
-    path('accounts/', include("accounts.urls", namespace='accounts')),
+    path('', views.home, name='home'),  # 👈 ESTA LINHA É A PÁGINA INICIAL
+    path('periodos/', include('app.urls')),
+    path('materias/', include('app.urls')),
+    path('tarefas/', include('app.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('tinymce/', include('tinymce.urls')),
     path('admin/', admin.site.urls),
 ]
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
 

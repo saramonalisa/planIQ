@@ -1,7 +1,9 @@
+from tkinter import CASCADE
 from django.db import models
 from django.utils import timezone
 from accounts.models import Usuario
 from django.contrib.auth.models import User
+from django.conf import settings
 
 class Tarefa(models.Model):
     STATUS_CHOICES = [
@@ -36,7 +38,7 @@ class Tarefa(models.Model):
         return False
     
 class Periodo(models.Model):
-    user = models.ForeignKey(User, on_delete=CASCADE, related_name='pedriodos')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='periodos')
     nome = models.CharField(max_length=100)
     data_inicio = models.DateField()
     data_fim = models.DateField()
