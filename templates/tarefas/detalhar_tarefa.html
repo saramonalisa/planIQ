@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load static %}
+{% block title %}Detalhar Tarefa - PlanIQ{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -8,9 +10,28 @@
 
   <div class="card tarefa-card">
     <div class="card-header d-flex justify-content-between align-items-center">
-      <h4 class="mb-0">{{ tarefa.titulo }}</h4>
+      <h4 class="mb-0 d-flex align-items-center">
+        <span id="titulo-tarefa">{{ tarefa.titulo }}</span>
+        <a href="javascript:void(0);" id="editar--{{ tarefa.id }}" onclick="abrirFormularioEdicao(this)" data-id="{{ tarefa.id }}" class="ms-2 text-secondary"><i class="bi bi-pencil-square"></i></a>
+      </h4>
+
+      <div id="form-edicao" style="display:none;" class="w-100">
+        <form method="POST" id="form-titulo-edicao" class="d-flex align-items-center w-100">
+          {% csrf_token %}
+          <div class="form-group me-2">
+            <input type="text" id="novo-titulo" class="form-control" value="{{ tarefa.titulo }}" maxlength="100">
+            {% if form.titulo.errors %}
+            <div class="text-danger small">
+              {{ form.titulo.errors.0 }}
+            </div>
+            {% endif %}
+          </div>
+          <button type="button" class="btn btn-sm btn-primary me-2" onclick="salvarTitulo(event)">Salvar</button>
+          <button type="button" class="btn btn-sm btn-secondary" onclick="cancelarEdicao()">Cancelar</button>
+        </form>
+      </div>
+
       <div>
-        <a href="{% url 'app:editar_tarefa' tarefa.id %}" class="btn btn-sm btn-secondary me-2"><i class="bi bi-pencil-square"></i></a>
         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">
           <i class="bi bi-trash"></i>
         </button>
@@ -20,8 +41,35 @@
     <div class="card-body">
       <div class="d-flex justify-content-between">
         <div>
-          <strong>Prazo:</strong> {% if tarefa.prazo %} {{ tarefa.prazo|date:"d/m/Y" }} {% else %} Não definido {% endif %}
+          <strong>Prazo:</strong><br>
+          <div class="d-flex justify-content-between">
+            <span id="prazo-tarefa">
+            {% if tarefa.prazo %}
+              {{ tarefa.prazo|date:"d/m/Y" }} 
+            {% else %}
+              Não definido
+            {% endif %}
+          </span>
+          <a href="javascript:void(0);" id="editar-prazo-{{ tarefa.id }}" onclick="abrirFormularioEdicaoPrazo(this)" data-id="{{ tarefa.id }}" class="ms-2 text-secondary"><i class="bi bi-pencil-square"></i></a>
+          </div>
+
+          <div id="form-edicao-prazo" style="display:none;" class="mt-3 w-100">
+            <form method="POST" id="form-prazo-edicao" class="d-flex align-items-center w-100">
+              {% csrf_token %}
+              <div class="form-group me-2">
+                <input type="date" id="novo-prazo" class="form-control" value="{% if tarefa.prazo %}{{ tarefa.prazo|date:"Y-m-d" }}{% endif %}">
+                {% if form.prazo.errors %}
+                <div class="text-danger small">
+                  {{ form.prazo.errors.0 }}
+                </div>
+                {% endif %}
+              </div>
+              <button type="button" class="btn btn-sm btn-primary me-2" onclick="salvarPrazo(event)">Salvar</button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="cancelarEdicaoPrazo()">Cancelar</button>
+            </form>
+          </div>
         </div>
+
         <div>
           <strong>Status:</strong> 
           {% include "partials/_select_status.html" %}
@@ -32,35 +80,264 @@
         </div>
       </div>
 
-      {% if tarefa.descricao %}
-        <p>{{ tarefa.descricao|safe }}</p>
-      {% else %}
-        <p class="text-muted fst-italic">Sem descrição.</p>
-      {% endif %}
+      <div class="mt-5">
+        <strong>Descrição </strong><a href="javascript:void(0);" id="editar-descricao-{{ tarefa.id }}" onclick="abrirFormularioEdicaoDescricao(this)" data-id="{{ tarefa.id }}" class="ms-2 text-secondary"><i class="bi bi-pencil-square"></i></a>
+        <div id="descricao-tarefa">
+          {% if tarefa.descricao %}
+            <p>{{ tarefa.descricao|safe }}</p>
+          {% else %}
+            <p class="text-muted fst-italic">Sem descrição.</p>
+          {% endif %}
+        </div>
+        
+        <div id="form-edicao-descricao" style="display:none;" class="w-100 mt-3">
+          <form method="POST" id="form-descricao-edicao" class="w-100">
+            {% csrf_token %}
+            <div class="form-group w-100">
+              <textarea id="nova-descricao" class="form-control" rows="5">{{ tarefa.descricao|safe }}</textarea>
+              {% if form.descricao.errors %}
+              <div class="text-danger small">
+                {{ form.descricao.errors.0 }}
+              </div>
+              {% endif %}
+            </div>
+            
+            <div class="mt-3">
+              <button type="button" class="btn btn-sm btn-primary me-2" onclick="salvarDescricao(event)">Salvar</button>
+              <button type="button" class="btn btn-sm btn-secondary" onclick="cancelarEdicaoDescricao()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-
-    <div class="card-footer text-end"></div>
   </div>
 </div>
 
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="POST" action="{% url 'app:excluir_tarefa' tarefa.id %}">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-title" id="confirmDeleteLabel">Confirmar exclusão</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          Tem certeza que deseja excluir a tarefa <strong>"{{ tarefa.titulo }}"</strong>?
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-danger">Excluir</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+<script>
+  function abrirFormularioEdicao(elemento) {
+    document.getElementById("titulo-tarefa").style.display = 'none';
+    elemento.style.display = 'none';
+    
+    const formEdicao = document.getElementById("form-edicao");
+    formEdicao.style.display = 'block'; 
+  }
+
+  function cancelarEdicao() {
+    document.getElementById("titulo-tarefa").style.display = 'block';
+    document.getElementById("editar--{{ tarefa.id }}").style.display = 'inline-block';
+    
+    document.getElementById("form-edicao").style.display = 'none';
+  }
+
+  function salvarTitulo(event) {
+    event.preventDefault();
+
+    const novoTitulo = document.getElementById('novo-titulo').value;
+    const tarefaId = document.querySelector('[onclick="abrirFormularioEdicao(this)"]').getAttribute('data-id');
+
+    if (!tarefaId) {
+      alert("Erro: ID da tarefa não encontrado.");
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/editar_tarefa/" + tarefaId + "/", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+    
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          document.getElementById('titulo-tarefa').innerText = response.titulo;
+          cancelarEdicao();
+        } else {
+          alert('Erro ao salvar título: ' + response.message);
+        }
+      }
+    };
+
+    xhr.send("titulo=" + encodeURIComponent(novoTitulo));
+  }
+
+  function abrirFormularioEdicaoPrazo(elemento) {
+    document.getElementById("prazo-tarefa").style.display = 'none';
+    elemento.style.display = 'none';
+    
+    const formEdicaoPrazo = document.getElementById("form-edicao-prazo");
+    formEdicaoPrazo.style.display = 'block'; 
+  }
+
+  function cancelarEdicaoPrazo() {
+    document.getElementById("prazo-tarefa").style.display = 'block';
+    document.getElementById("editar-prazo-{{ tarefa.id }}").style.display = 'inline-block';
+    
+    document.getElementById("form-edicao-prazo").style.display = 'none';
+  }
+
+  function salvarPrazo(event) {
+    event.preventDefault();
+
+    const novoPrazo = document.getElementById('novo-prazo').value;
+    const tarefaId = document.querySelector('[onclick="abrirFormularioEdicaoPrazo(this)"]').getAttribute('data-id');
+
+    if (!tarefaId) {
+      alert("Erro: ID da tarefa não encontrado.");
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/editar_tarefa/" + tarefaId + "/", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+    
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          document.getElementById('prazo-tarefa').innerText = response.prazo;
+          cancelarEdicaoPrazo();
+        } else {
+          alert('Erro ao salvar prazo: ' + response.message);
+        }
+      }
+    };
+
+    xhr.send("prazo=" + encodeURIComponent(novoPrazo));
+  }
+
+  function inicializarTinyMCE() {
+    tinymce.init({
+      selector: '#nova-descricao',
+      height: 300,
+      menubar: false,
+      branding: false,
+      language: 'pt_BR',
+      plugins: 'advlist autolink lists link image charmap \
+                searchreplace code fullscreen media table help wordcount autosave',
+      toolbar: 'undo redo | removeformat | bold italic underline strikethrough \
+                | fontselect fontsizeselect forecolor backcolor | alignleft  aligncenter alignright alignjustify | outdent indent \
+                | bullist numlist checklist | table image media | link unlink | restoredraft | hr subscript superscript charmap | code | fullscreen | searchreplace',
+      elementpath: false,
+      autosave_ask_before_unload: true,
+      paste_data_images: true,
+      automatic_uploads: true,
+      file_picker_types: 'image',
+      file_picker_callback: function(callback, value, meta) {
+        if (meta.filetype === 'image') {
+          const input = document.createElement('input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('accept', 'image/*');
+          input.setAttribute('multiple', '');
+
+          input.onchange = function() {
+            const files = Array.from(this.files);
+
+            files.forEach(file => {
+              const reader = new FileReader();
+
+              reader.onload = function() {
+                const id = 'blobid' + (new Date()).getTime();
+                const blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                const base64 = reader.result.split(',')[1];
+                const blobInfo = blobCache.create(id, file, base64);
+                blobCache.add(blobInfo);
+                callback(blobInfo.blobUri(), { title: file.name });
+              };
+
+              reader.readAsDataURL(file);
+            });
+          };
+
+          input.click();
+        }
+      },
+      images_upload_handler: function (blobInfo, success, failure) {
+        const formData = new FormData();
+        formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+        fetch('/upload_image/', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.location) {
+            success(data.location);
+          } else {
+            failure('Erro ao enviar a imagem');
+          }
+        })
+        .catch(err => failure('Erro ao enviar a imagem: ' + err.message));
+      }
+    });
+  }
+
+  function abrirFormularioEdicaoDescricao(elemento) {
+    document.getElementById("descricao-tarefa").style.display = 'none';
+    elemento.style.display = 'none';
+    
+    const formEdicaoDescricao = document.getElementById("form-edicao-descricao");
+    formEdicaoDescricao.style.display = 'block';
+    
+    inicializarTinyMCE();
+  }
+
+  function salvarDescricao(event) {
+    event.preventDefault();
+
+    const novaDescricao = tinymce.get('novo-descricao').getContent();
+    const tarefaId = document.querySelector('[onclick="abrirFormularioEdicaoDescricao(this)"]').getAttribute('data-id');
+
+    if (!tarefaId) {
+      alert("Erro: ID da tarefa não encontrado.");
+      return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "/editar_tarefa/" + tarefaId + "/", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+    
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        const response = JSON.parse(xhr.responseText);
+        if (response.success) {
+          document.getElementById('descricao-tarefa').innerHTML = response.descricao;
+          cancelarEdicaoDescricao();
+        } else {
+          alert('Erro ao salvar descrição: ' + response.message);
+        }
+      }
+    };
+
+    xhr.send("descricao=" + encodeURIComponent(novaDescricao));
+  }
+  
+  function cancelarEdicaoDescricao() {
+    document.getElementById("descricao-tarefa").style.display = 'block';
+    document.getElementById("editar-descricao-{{ tarefa.id }}").style.display = 'inline-block';
+    
+    document.getElementById("form-edicao-descricao").style.display = 'none';
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
 {% endblock %}

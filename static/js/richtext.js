@@ -5,12 +5,13 @@ document.addEventListener("DOMContentLoaded", function() {
         menubar: false,
         branding: false,
         language: 'pt_BR',
-        plugins: 'advlist autolink lists link image charmap print preview anchor \
-                  searchreplace visualblocks code fullscreen insertdatetime media table paste help wordcount',
-        toolbar: 'undo redo | formatselect | bold italic underline strikethrough \
-                  | forecolor backcolor | removeformat | subscript superscript \
-                  | bullist numlist checklist | outdent indent | alignleft aligncenter alignright alignjustify \
-                  | link unlink anchor | image media | table | hr | code fullscreen | preview print | charmap | searchreplace',
+        plugins: 'advlist autolink lists link image charmap \
+                  searchreplace code fullscreen media table help wordcount autosave',
+        toolbar: 'undo redo | removeformat | bold italic underline strikethrough \
+                  | fontselect fontsizeselect forecolor backcolor | alignleft  aligncenter alignright alignjustify | outdent indent \
+                  | bullist numlist checklist | table | image media | link unlink | restoredraft | hr subscript superscript charmap | code | fullscreen | searchreplace',
+        elementpath: false,
+        autosave_ask_before_unload: true,
         paste_data_images: true,
         automatic_uploads: true,
         file_picker_types: 'image',

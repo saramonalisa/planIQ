@@ -1,4 +1,6 @@
 from django import forms
+from django.forms.widgets import ClearableFileInput
+from django.core.exceptions import ValidationError
 from tinymce.widgets import TinyMCE
 from .models import Tarefa
 
@@ -13,7 +15,7 @@ class TarefaForm(forms.ModelForm):
             'descricao': TinyMCE(attrs={
                 'cols': 80,
                 'rows': 10,
-                'placeholder': 'Descreva os detalhes da tarefa (opcional)'
+                'placeholder': 'Descreva os detalhes da tarefa.',
             }),
             'prioridade': forms.Select(attrs={'class': 'form-control'}),
             'notificacoes': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -23,6 +25,20 @@ class TarefaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and hasattr(self.instance, 'prazo'):
             self.fields['prazo'].initial = self.instance.prazo 
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        current_prazo = cleaned_data.get('current_prazo')
+        new_prazo = cleaned_data.get('new_prazo')
+        confirm_new_prazo = cleaned_data.get('confirm_new_prazo')
+
+        if new_prazo and current_prazo:
+            if not self.instance.check_prazo(current_prazo):
+                raise ValidationError("A senha atual está incorreta.")
+            if new_prazo != confirm_new_prazo:
+                raise ValidationError("As novas senhas não coincidem.")
+
+        return cleaned_data
 
     def save(self, commit=True):
         tarefa = super().save(commit=False)

@@ -12,7 +12,7 @@ from collections import defaultdict
 from .models import Tarefa
 from .forms import TarefaForm
 from .utils import gerar_calendario, lista_por_status
-from datetime import date
+from datetime import datetime, date
 import calendar
 from django.http import HttpResponse
 
@@ -116,27 +116,42 @@ def nova_tarefa(request):
     return render(request, 'tarefas/nova_tarefa.html', {'form': form})
 
 
+
 @login_required
+@csrf_exempt
 def editar_tarefa(request, tarefa_id):
-    tarefa = get_object_or_404(Tarefa, id=tarefa_id)
-
     if request.method == 'POST':
-        form = TarefaForm(request.POST, instance=tarefa)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Tarefa editada com sucesso!")
-            return redirect('detalhar_tarefa', tarefa_id=tarefa.id)
-        else:
-            for field in form:
-                for error in field.errors:
-                    messages.error(request, f"{field.label}: {error}")
-    else:
-        form = TarefaForm(instance=tarefa)
+        tarefa = get_object_or_404(Tarefa, id=tarefa_id)
 
-    return render(request, 'tarefas/editar_tarefa.html', {
-    'form': form,
-    'tarefa': tarefa,
-})
+        novo_titulo = request.POST.get('titulo')
+        novo_prazo = request.POST.get('prazo')
+        nova_descricao = request.POST.get('descricao')
+
+        if novo_titulo:
+            tarefa.titulo = novo_titulo
+
+        if novo_prazo:
+            try:
+                novo_prazo = datetime.strptime(novo_prazo, "%Y-%m-%d").date()
+                tarefa.prazo = novo_prazo
+            except ValueError:
+                return JsonResponse({'success': False, 'message': 'Data do prazo inválida'}, status=400)
+
+        tarefa.save()
+
+        if nova_descricao is not None:
+            tarefa.descricao = nova_descricao
+
+        tarefa.save()
+
+        return JsonResponse({
+            'success': True,
+            'titulo': tarefa.titulo,
+            'prazo': tarefa.prazo.strftime("%d/%m/%Y") if tarefa.prazo else 'Não definido',
+            'descricao': tarefa.descricao or 'Sem descrição',
+        })
+
+    return JsonResponse({'success': False, 'message': 'Método não permitido'}, status=405)
 
 
 @login_required
