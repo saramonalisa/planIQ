@@ -3,9 +3,10 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-app_name='app'
+app_name = 'app'
 
 urlpatterns = [
+    # Páginas principais
     path('', views.index, name='index'),
     path('home/', views.home, name='home'),
 
@@ -20,20 +21,18 @@ urlpatterns = [
     path('alterar_status_tarefa/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
     path('alterar_prioridade_tarefa/<int:tarefa_id>/', views.alterar_prioridade_tarefa, name='alterar_prioridade_tarefa'),
     path('calendario/', views.calendario, name='calendario'),
-    
-    #TinyMCE
+
+    # TinyMCE
     path('upload_image/', views.upload_image, name='upload_image'),
-    ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-
-urlpatterns = [
-      path('periodos/', views.lista_periodos, name='lista_periodos'),
+    # Períodos e matérias
+    path('periodos/', views.lista_periodos, name='lista_periodos'),
     path('periodos/novo/', views.novo_periodo, name='novo_periodo'),
     path('materias/novo/', views.nova_materia, name='nova_materia'),
     path('tarefas/', views.lista_tarefas, name='lista_tarefas'),
     path('tarefas/novo/', views.nova_tarefa, name='nova_tarefa'),
-    path('materiais/novo/', views.nova_materia, name='nova_materia')
+    path('materiais/novo/', views.nova_materia, name='nova_materia'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
