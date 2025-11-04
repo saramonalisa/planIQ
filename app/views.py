@@ -22,6 +22,11 @@ def index(request):
     return render(request, "index.html")
 
 
+meses_nome_ptbr = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+]
+
 @login_required
 def home(request):
     hoje = timezone.localdate()
@@ -45,10 +50,17 @@ def home(request):
         mes = 1
         ano += 1
 
+    meses_nome = [(i, meses_nome_ptbr[i-1]) for i in range(1, 13)]
+
     context = gerar_calendario(request.user, ano=ano, mes=mes)
 
-    tarefas = lista_por_status(request.user)
+    anos_disponiveis = range(hoje.year - 5, hoje.year + 5)
 
+    context['meses_nome'] = meses_nome 
+    context['meses'] = range(1, 13)
+    context['anos_disponiveis'] = anos_disponiveis
+
+    tarefas = lista_por_status(request.user)
     context.update(tarefas)
 
     return render(request, "home.html", context)

@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict 
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
 from accounts.models import Usuario
@@ -7,8 +7,12 @@ import calendar
 
 def gerar_calendario(usuario, ano=None, mes=None):
     hoje = timezone.localdate()
+    
     ano = int(ano) if ano else hoje.year
     mes = int(mes) if mes else hoje.month
+    
+    if mes < 1 or mes > 12:
+        mes = hoje.month
 
     meses_pt = [
         '', 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',

@@ -3,7 +3,48 @@
 <div class="calendar">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <a href="{% url 'app:home' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-primary">&lt;</a>
-    <h3 class="text-center fw-bold">{{ mes_nome }} {{ ano }}</h3>
+    
+    <div class="d-flex align-items-center">
+      <h3 class="text-center fw-bold mr-3">{{ mes_nome }} {{ ano }}
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          Selecionar Mês/Ano
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li>
+            <form method="get" class="p-3">
+              <div class="mb-2">
+                <label for="mes" class="form-label">Mês</label>
+                <select name="mes" id="mes" class="form-control form-control-sm">
+                  {% for i, nome_mes in meses_nome %}
+                    <option value="{{ i }}" {% if i == mes %}selected{% endif %}>
+                      {{ nome_mes }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              
+              <div class="mb-2">
+                <label for="ano" class="form-label">Ano</label>
+                <select name="ano" id="ano" class="form-control form-control-sm">
+                  {% for ano_opcao in anos_disponiveis %}
+                    <option value="{{ ano_opcao }}" {% if ano_opcao == ano %}selected{% endif %}>
+                      {{ ano_opcao }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+              
+              <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Ir</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      </h3>
+      
+      
+    </div>
+
     <a href="{% url 'app:home' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-primary">&gt;</a>
   </div>
 
