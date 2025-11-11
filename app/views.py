@@ -313,18 +313,6 @@ def nova_materia(request):
 
 
 @login_required
-def nova_tarefa(request):
-    if request.method == 'POST':
-        form = TarefaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('lista_tarefas')
-    else:
-        form = TarefaForm()
-    return render(request, 'academico/form_tarefa.html', {'form': form})
-
-
-@login_required
 def lista_tarefas(request):
     materia_id = request.GET.get('materia')
     periodo_id = request.GET.get('periodo')

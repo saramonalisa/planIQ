@@ -8,22 +8,22 @@ app_name = 'app'
 urlpatterns = [
     path('', views.index, name='index'),
     path('home/', views.home, name='home'),
-
-    path('nova_tarefa/', views.nova_tarefa, name='nova_tarefa'),
-    path('detalhar_tarefa/<int:tarefa_id>/', views.detalhar_tarefa, name='detalhar_tarefa'),
+    
+    #Tarefas
+    path('tarefas/novo/', views.nova_tarefa, name='nova_tarefa'),
+    path('tarefas/detalhar/<int:tarefa_id>/', views.detalhar_tarefa, name='detalhar_tarefa'),
     path('minhas_tarefas/', views.minhas_tarefas, name='minhas_tarefas'),
     path('tarefas/<int:ano>/<int:mes>/<int:dia>/', views.tarefas_do_dia, name='tarefas_do_dia'),
-    path('editar_tarefa/<int:tarefa_id>/', views.editar_tarefa, name='editar_tarefa'),
-    path('excluir_tarefa/<int:tarefa_id>/', views.excluir_tarefa, name='excluir_tarefa'),
-    path('marcar_concluida/<int:tarefa_id>/', views.marcar_concluida, name='marcar_concluida'),
-    path('alterar_status_tarefa/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
-    path('alterar_prioridade_tarefa/<int:tarefa_id>/', views.alterar_prioridade_tarefa, name='alterar_prioridade_tarefa'),
+    path('tarefas/editar/<int:tarefa_id>/', views.editar_tarefa, name='editar_tarefa'),
+    path('tarefas/excluir/<int:tarefa_id>/', views.excluir_tarefa, name='excluir_tarefa'),
+    path('tarefas/alterar_status/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
+    path('tarefas/alterar_prioridade/<int:tarefa_id>/', views.alterar_prioridade_tarefa, name='alterar_prioridade_tarefa'),
     path('calendario/', views.calendario, name='calendario'),
+    
+    #Acadêmico
     path('periodos/', views.lista_periodos, name='lista_periodos'),
     path('periodos/novo/', views.novo_periodo, name='novo_periodo'),
     path('materias/novo/', views.nova_materia, name='nova_materia'),
-    path('tarefas/', views.lista_tarefas, name='lista_tarefas'),
-    path('tarefas/novo/', views.nova_tarefa, name='nova_tarefa'),
     path('materiais/novo/', views.nova_materia, name='nova_materia'),
     
     #TinyMCE
