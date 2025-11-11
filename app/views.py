@@ -9,16 +9,11 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
 from collections import defaultdict
-from .models import Tarefa
-from .forms import TarefaForm
+from .models import Tarefa, Periodo, Materia
+from .forms import TarefaForm, PeriodoForm, MateriaForm
 from .utils import gerar_calendario, lista_por_status
 from datetime import datetime, date
 import calendar
-from django.http import HttpResponse
-from .models import Periodo, Materia, Tarefa
-from .forms import PeriodoForm, MateriaForm, TarefaForm
-
-
 
 def index(request):
     if request.user.is_authenticated:
