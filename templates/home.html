@@ -2,24 +2,19 @@
 
 {% block content %}
 <div class="container mt-5">
-  <div class="text-center mb-5">
-    <h1 class="display-5 fw-bold">Bem-vindo ao PlanIQ!</h1>
-    <p class="lead">Gerencie suas tarefas, matérias e períodos de forma prática e organizada.</p>
-    <div class="d-flex justify-content-center gap-3 mt-4">
-      <a href="{% url 'app:lista_periodos' %}" class="btn btn-outline-primary btn-lg">
-        <i class="bi bi-calendar-week"></i> Ver Períodos
-      </a>
-      <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-info btn-lg">
-        <i class="bi bi-book"></i> Adicionar Matéria
-      </a>
-    </div>
-  </div>
-
   <div class="row">
     <div class="col-md-6">
-      <a href="{% url 'app:nova_tarefa' %}" class="btn btn-secondary mb-3">
-        <i class="bi bi-plus-circle"></i> Nova Tarefa
-      </a>
+      <div class="dropdown">
+        <button class="btn btn-secondary mb-3" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-plus-circle"></i> Novo
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="{% url 'app:nova_tarefa' %}">Nova Tarefa</a></li>
+          <li><a class="dropdown-item" href="{% url 'app:novo_periodo' %}">Novo Período</a></li>
+          <li><a class="dropdown-item" href="{% url 'app:nova_materia' %}">Nova Matéria</a></li>
+        </ul>
+      </div>
+
       {% include "partials/_lista_tarefas.html" %}
     </div>
 

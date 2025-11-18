@@ -26,6 +26,8 @@ class Tarefa(models.Model):
     prazo = models.DateField(blank=True, null=True) 
     prioridade = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='sem_prioridade')
     notificacoes = models.BooleanField(default=False)
+    periodo = models.ForeignKey('Periodo', on_delete=models.CASCADE, related_name='tarefas', blank=True, null=True)
+    materia = models.ForeignKey('Materia', on_delete=models.CASCADE, related_name='tarefas', blank=True, null=True)
 
     def __str__(self):
         return self.titulo
@@ -37,7 +39,7 @@ class Tarefa(models.Model):
         return False
     
 class Periodo(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='periodos')
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='periodos')
     nome = models.CharField(max_length=100)
     data_inicio = models.DateField()
     data_fim = models.DateField()
@@ -46,6 +48,7 @@ class Periodo(models.Model):
         return self.nome
 
 class Materia(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='materias')
     periodo = models.ForeignKey(Periodo, on_delete=models.CASCADE, related_name='materias')
     nome = models.CharField(max_length=100)
 

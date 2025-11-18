@@ -32,12 +32,8 @@ class TarefaForm(forms.ModelForm):
         new_prazo = cleaned_data.get('new_prazo')
         confirm_new_prazo = cleaned_data.get('confirm_new_prazo')
 
-        if new_prazo and current_prazo:
-            if not self.instance.check_prazo(current_prazo):
-                raise ValidationError("A senha atual está incorreta.")
-            if new_prazo != confirm_new_prazo:
-                raise ValidationError("As novas senhas não coincidem.")
-
+        if new_prazo and new_prazo != confirm_new_prazo:
+            self.add_error('confirm_new_prazo', 'A confirmação do novo prazo não corresponde ao novo prazo.')
         return cleaned_data
 
     def save(self, commit=True):

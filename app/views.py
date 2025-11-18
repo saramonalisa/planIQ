@@ -104,7 +104,6 @@ def tarefas_do_dia(request, ano, mes, dia):
     }
 
     return render(request, 'tarefas/tarefas_do_dia.html', context)
-
     
 
 @login_required
@@ -125,7 +124,6 @@ def nova_tarefa(request):
         form = TarefaForm()
 
     return render(request, 'tarefas/nova_tarefa.html', {'form': form})
-
 
 
 @login_required
@@ -190,41 +188,42 @@ def alterar_status_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
     novo_status = request.POST.get('status')
 
-    if novo_status in ['pendente', 'em_progresso', 'concluida']:
-        tarefa.status = novo_status
-        tarefa.save()
+    # Validar status
+    if novo_status not in ['pendente', 'em_progresso', 'concluida']:
+        return HttpResponseForbidden("Status inválido")
 
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({
-                'id': tarefa.id,
-                'status': tarefa.status
-            })
+    tarefa.status = novo_status
+    tarefa.save()
 
-        referer = request.META.get('HTTP_REFERER')
-        return redirect(referer or 'home')
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'id': tarefa.id,
+            'status': tarefa.status
+        })
+
+    referer = request.META.get('HTTP_REFERER')
+    return redirect(referer or 'home')
 
     return HttpResponseForbidden("Status inválido")
 
 
 @login_required
+@require_POST
 def alterar_prioridade_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
     nova_prioridade = request.POST.get('prioridade')
 
-    if nova_prioridade in ['alta', 'media', 'baixa', 'sem_prioridade']:
-        tarefa.prioridade = nova_prioridade
-        tarefa.save()
+    if nova_prioridade not in ['alta', 'media', 'baixa', 'sem_prioridade']:
+        return HttpResponseForbidden("Prioridade inválida")
 
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-            return JsonResponse({
-                'id': tarefa.id,
-                'prioridade': tarefa.prioridade
-            })
+    tarefa.prioridade = nova_prioridade
+    tarefa.save()
 
-        referer = request.META.get('HTTP_REFERER')
-        return redirect(referer or 'app:home')
-
-    return HttpResponseForbidden("Prioridade inválida")
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'id': tarefa.id,
+            'prioridade': tarefa.prioridade
+        })  
 
 
 @login_required
@@ -281,9 +280,9 @@ def upload_image(request):
 
 
 @login_required
-def lista_periodos(request):
+def meus_periodos(request):
     periodos = Periodo.objects.filter(user=request.user)
-    return render(request, 'academico/lista_periodos.html', {'periodos': periodos})
+    return render(request, 'academico/meus_periodos.html', {'periodos': periodos})
 
 
 @login_required
@@ -294,10 +293,16 @@ def novo_periodo(request):
             periodo = form.save(commit=False)
             periodo.user = request.user
             periodo.save()
-            return redirect('lista_periodos')
+            return redirect('meus_periodos')
     else:
         form = PeriodoForm()
-    return render(request, 'academico/form_periodo.html', {'form': form})
+    return render(request, 'academico/novo_periodo.html', {'form': form})
+
+
+@login_required
+def minhas_materias(request):
+    periodos = Periodo.objects.filter(user=request.user)
+    return render(request, 'academico/minhas_materias.html', {'periodos': periodos})
 
 
 @login_required
@@ -306,10 +311,10 @@ def nova_materia(request):
         form = MateriaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('lista_periodos')
+            return redirect('meus_periodos')
     else:
         form = MateriaForm()
-    return render(request, 'academico/form_materia.html', {'form': form})
+    return render(request, 'academico/nova_materia.html', {'form': form})
 
 
 @login_required

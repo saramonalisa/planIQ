@@ -21,10 +21,10 @@ urlpatterns = [
     path('calendario/', views.calendario, name='calendario'),
     
     #Acadêmico
-    path('periodos/', views.lista_periodos, name='lista_periodos'),
+    path('periodos/', views.meus_periodos, name='meus_periodos'),
     path('periodos/novo/', views.novo_periodo, name='novo_periodo'),
-    path('materias/novo/', views.nova_materia, name='nova_materia'),
-    path('materiais/novo/', views.nova_materia, name='nova_materia'),
+    path('materias/', views.minhas_materias, name='minhas_materias'),
+    path('materias/novo', views.nova_materia, name='nova_materia'),
     
     #TinyMCE
     path('upload_image/', views.upload_image, name='upload_image'),
