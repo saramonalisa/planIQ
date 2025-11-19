@@ -40,6 +40,16 @@
                             <div class="text-danger small">{{ form.prioridade.errors.0 }}</div>
                         {% endif %}
                     </div>
+
+                    <div class="col-md-4 form-check mt-4">
+                    {{ form.notificacoes|add_class:"form-check-input" }}
+                    <label class="form-check-label" for="{{ form.notificacoes.id_for_label }}">
+                        Enviar notificações de lembrete para esta tarefa
+                    </label>
+                    {% if form.notificacoes.errors %}
+                        <div class="text-danger small">{{ form.notificacoes.errors.0 }}</div>
+                    {% endif %}
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -47,16 +57,6 @@
                     {{ form.descricao|add_class:"form-control" }}
                     {% if form.descricao.errors %}
                         <div class="text-danger small">{{ form.descricao.errors.0 }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="mb-3 form-check">
-                    {{ form.notificacoes|add_class:"form-check-input" }}
-                    <label class="form-check-label" for="{{ form.notificacoes.id_for_label }}">
-                        Enviar notificações de lembrete para esta tarefa
-                    </label>
-                    {% if form.notificacoes.errors %}
-                        <div class="text-danger small">{{ form.notificacoes.errors.0 }}</div>
                     {% endif %}
                 </div>
 
