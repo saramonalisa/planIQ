@@ -1,3 +1,5 @@
+{% load static %}
+
 <nav class="navbar navbar-expand-lg border-bottom fixed-top">
   <div class="container-fluid d-flex align-items-center px-3">
 
@@ -28,8 +30,10 @@
       </div>
     {% endif %}
 
-      <div class="position-absolute start-50 translate-middle-x">
-      <span class="navbar-brand fw-bold mb-0 h4">PlanIQ</span>
+    <div class="position-absolute start-50 translate-middle-x">
+      <span class="navbar-brand fw-bold mb-0 h4">
+        <a href="{% url 'app:home' %}"><img src="{% static 'svg/logo.svg' %}" alt="Logo PlanIQ" class="d-inline-block align-text-top ms-2 logo-light"></a>
+      </span>
     </div>
 
     <div class="d-flex align-items-center gap-3">
