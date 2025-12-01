@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponseForbidden
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.contrib import messages
 from django.utils import timezone
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Q
 from collections import defaultdict
 from .models import Tarefa, Periodo, Materia
 from .forms import TarefaForm, PeriodoForm, MateriaForm
@@ -204,8 +203,6 @@ def alterar_status_tarefa(request, tarefa_id):
     referer = request.META.get('HTTP_REFERER')
     return redirect(referer or 'home')
 
-    return HttpResponseForbidden("Status inválido")
-
 
 @login_required
 @require_POST
@@ -224,6 +221,267 @@ def alterar_prioridade_tarefa(request, tarefa_id):
             'id': tarefa.id,
             'prioridade': tarefa.prioridade
         })  
+
+
+@login_required
+def meus_periodos(request):
+    periodos = Periodo.objects.filter(usuario=request.user).order_by('-data_inicio')
+    
+    for periodo in periodos:
+        periodo.num_materias = Materia.objects.filter(periodo=periodo, usuario=request.user).count()
+        periodo.num_tarefas = Tarefa.objects.filter(
+            usuario=request.user,
+            periodo=periodo
+        ).count()
+    
+    return render(request, 'academico/periodos/meus_periodos.html', {
+        'periodos': periodos
+    })
+
+
+@login_required
+def novo_periodo(request):
+    if request.method == 'POST':
+        form = PeriodoForm(request.POST)
+        if form.is_valid():
+            periodo = form.save(commit=False, usuario=request.user)
+            periodo.save()
+            messages.success(request, "Período criado com sucesso!")
+            return redirect('app:meus_periodos')
+    else:
+        form = PeriodoForm()
+    
+    return render(request, 'academico/periodos/novo_periodo.html', {
+        'form': form,
+        'titulo': 'Novo Período'
+    })
+
+
+@login_required
+def editar_periodo(request, periodo_id):
+    periodo = get_object_or_404(Periodo, id=periodo_id, usuario=request.user)
+    
+    if request.method == 'POST':
+        form = PeriodoForm(request.POST, instance=periodo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Período atualizado com sucesso!")
+            return redirect('app:meus_periodos')
+    else:
+        form = PeriodoForm(instance=periodo)
+    
+    return render(request, 'academico/periodos/novo_periodo.html', {
+        'form': form,
+        'titulo': 'Editar Período',
+        'periodo': periodo
+    })
+
+
+@login_required
+@require_POST
+def excluir_periodo(request, periodo_id):
+    periodo = get_object_or_404(Periodo, id=periodo_id, usuario=request.user)
+    
+    materias_count = Materia.objects.filter(periodo=periodo, usuario=request.user).count()
+    tarefas_count = Tarefa.objects.filter(periodo=periodo, usuario=request.user).count()
+    
+    if materias_count > 0 or tarefas_count > 0:
+        messages.error(request, 
+            f"Não é possível excluir este período. "
+            f"Ele possui {materias_count} matéria(s) e {tarefas_count} tarefa(s) associadas.")
+        return redirect('app:meus_periodos')
+    
+    periodo.delete()
+    messages.success(request, "Período excluído com sucesso!")
+    return redirect('app:meus_periodos')
+
+
+@login_required
+def minhas_materias(request):
+    periodos = Periodo.objects.filter(usuario=request.user).order_by('-data_inicio')
+    
+    for periodo in periodos:
+        periodo.materias_list = Materia.objects.filter(
+            periodo=periodo, 
+            usuario=request.user
+        ).order_by('nome')
+        
+        for materia in periodo.materias_list:
+            materia.num_tarefas = Tarefa.objects.filter(
+                usuario=request.user,
+                materia=materia
+            ).count()
+    
+    return render(request, 'academico/materias/minhas_materias.html', {
+        'periodos': periodos,
+        'total_materias': Materia.objects.filter(usuario=request.user).count()
+    })
+
+
+@login_required
+def nova_materia(request):
+    if request.method == 'POST':
+        form = MateriaForm(request.POST, usuario=request.user)
+        if form.is_valid():
+            materia = form.save(commit=False, usuario=request.user)
+            materia.save()
+            messages.success(request, "Matéria criada com sucesso!")
+            return redirect('app:minhas_materias')
+    else:
+        form = MateriaForm(usuario=request.user)
+    
+    return render(request, 'academico/materias/nova_materia.html', {
+        'form': form,
+        'titulo': 'Nova Matéria'
+    })
+
+
+@login_required
+def editar_materia(request, materia_id):
+    materia = get_object_or_404(Materia, id=materia_id, usuario=request.user)
+    
+    if request.method == 'POST':
+        form = MateriaForm(request.POST, instance=materia, usuario=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Matéria atualizada com sucesso!")
+            return redirect('app:minhas_materias')
+    else:
+        form = MateriaForm(instance=materia, usuario=request.user)
+    
+    return render(request, 'academico/materias/nova_materia.html', {
+        'form': form,
+        'titulo': 'Editar Matéria',
+        'materia': materia
+    })
+
+
+@login_required
+@require_POST
+def excluir_materia(request, materia_id):
+    materia = get_object_or_404(Materia, id=materia_id, usuario=request.user)
+    
+    tarefas_count = Tarefa.objects.filter(materia=materia, usuario=request.user).count()
+    
+    if tarefas_count > 0:
+        messages.error(request, 
+            f"Não é possível excluir esta matéria. "
+            f"Ela possui {tarefas_count} tarefa(s) associadas.")
+        return redirect('app:minhas_materias')
+    
+    materia.delete()
+    messages.success(request, "Matéria excluída com sucesso!")
+    return redirect('app:minhas_materias')
+
+
+@login_required
+def detalhar_materia(request, materia_id):
+    materia = get_object_or_404(Materia, id=materia_id, usuario=request.user)
+    
+    tarefas = Tarefa.objects.filter(
+        usuario=request.user,
+        materia=materia
+    ).order_by('prazo', 'prioridade')
+    
+    tarefas_pendentes = tarefas.filter(status='pendente').count()
+    tarefas_em_progresso = tarefas.filter(status='em_progresso').count()
+    tarefas_concluidas = tarefas.filter(status='concluida').count()
+    
+    return render(request, 'academico/materias/detalhar_materia.html', {
+        'materia': materia,
+        'tarefas': tarefas,
+        'tarefas_pendentes': tarefas_pendentes,
+        'tarefas_em_progresso': tarefas_em_progresso,
+        'tarefas_concluidas': tarefas_concluidas,
+        'total_tarefas': tarefas.count()
+    })
+
+
+@login_required
+def detalhar_periodo(request, periodo_id):
+    periodo = get_object_or_404(Periodo, id=periodo_id, usuario=request.user)
+    
+    materias = Materia.objects.filter(
+        periodo=periodo,
+        usuario=request.user
+    ).order_by('nome')
+    
+    tarefas = Tarefa.objects.filter(
+        usuario=request.user,
+        periodo=periodo
+    ).order_by('prazo', 'prioridade')
+    
+    total_materias = materias.count()
+    total_tarefas = tarefas.count()
+    
+    tarefas_pendentes = tarefas.filter(status='pendente').count()
+    tarefas_em_progresso = tarefas.filter(status='em_progresso').count()
+    tarefas_concluidas = tarefas.filter(status='concluida').count()
+    
+    return render(request, 'academico/periodos/detalhar_periodo.html', {
+        'periodo': periodo,
+        'materias': materias,
+        'tarefas': tarefas,
+        'total_materias': total_materias,
+        'total_tarefas': total_tarefas,
+        'tarefas_pendentes': tarefas_pendentes,
+        'tarefas_em_progresso': tarefas_em_progresso,
+        'tarefas_concluidas': tarefas_concluidas
+    })
+
+
+@login_required
+def lista_tarefas(request):
+    materia_id = request.GET.get('materia')
+    periodo_id = request.GET.get('periodo')
+    status = request.GET.get('status')
+    prioridade = request.GET.get('prioridade')
+    
+    tarefas = Tarefa.objects.filter(usuario=request.user)
+    
+    if materia_id and materia_id != 'todas':
+        tarefas = tarefas.filter(materia_id=materia_id)
+    
+    if periodo_id and periodo_id != 'todos':
+        tarefas = tarefas.filter(periodo_id=periodo_id)
+    
+    if status and status != 'todos':
+        tarefas = tarefas.filter(status=status)
+    
+    if prioridade and prioridade != 'todas':
+        tarefas = tarefas.filter(prioridade=prioridade)
+    
+    ordenacao = request.GET.get('ordenacao', 'prazo')
+    if ordenacao == 'prioridade':
+        tarefas = tarefas.annotate(
+            prioridade_order=Case(
+                When(prioridade='alta', then=Value(1)),
+                When(prioridade='media', then=Value(2)),
+                When(prioridade='baixa', then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField()
+            )
+        ).order_by('prioridade_order', 'prazo')
+    else:
+        tarefas = tarefas.order_by('prazo', 'prioridade')
+    
+    periodos = Periodo.objects.filter(usuario=request.user)
+    materias = Materia.objects.filter(usuario=request.user)
+    
+    context = {
+        'tarefas': tarefas,
+        'periodos': periodos,
+        'materias': materias,
+        'status_choices': Tarefa.STATUS_CHOICES,
+        'prioridade_choices': Tarefa.PRIORITY_CHOICES,
+        'filtro_materia': materia_id,
+        'filtro_periodo': periodo_id,
+        'filtro_status': status,
+        'filtro_prioridade': prioridade,
+        'ordenacao': ordenacao
+    }
+    
+    return render(request, 'academico/lista_tarefas.html', context)
 
 
 @login_required
@@ -277,63 +535,3 @@ def upload_image(request):
         url = default_storage.url(path)
         return JsonResponse({'location': url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
-@login_required
-def meus_periodos(request):
-    periodos = Periodo.objects.filter(user=request.user)
-    return render(request, 'academico/meus_periodos.html', {'periodos': periodos})
-
-
-@login_required
-def novo_periodo(request):
-    if request.method == 'POST':
-        form = PeriodoForm(request.POST)
-        if form.is_valid():
-            periodo = form.save(commit=False)
-            periodo.user = request.user
-            periodo.save()
-            return redirect('meus_periodos')
-    else:
-        form = PeriodoForm()
-    return render(request, 'academico/novo_periodo.html', {'form': form})
-
-
-@login_required
-def minhas_materias(request):
-    periodos = Periodo.objects.filter(user=request.user)
-    return render(request, 'academico/minhas_materias.html', {'periodos': periodos})
-
-
-@login_required
-def nova_materia(request):
-    if request.method == 'POST':
-        form = MateriaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('meus_periodos')
-    else:
-        form = MateriaForm()
-    return render(request, 'academico/nova_materia.html', {'form': form})
-
-
-@login_required
-def lista_tarefas(request):
-    materia_id = request.GET.get('materia')
-    periodo_id = request.GET.get('periodo')
-
-    tarefas = Tarefa.objects.all()
-    if materia_id:
-        tarefas = tarefas.filter(materia_id=materia_id)
-    if periodo_id:
-        tarefas = tarefas.filter(materia__periodo_id=periodo_id)
-
-    periodos = Periodo.objects.filter(user=request.user)
-    materias = Materia.objects.filter(periodo__in=periodos)
-
-    context = {
-        'tarefas': tarefas,
-        'periodos': periodos,
-        'materias': materias
-    }
-    return render(request, 'academico/lista_tarefas.html', context)

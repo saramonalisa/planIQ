@@ -11,9 +11,17 @@
             <div class="card-body p-5">
               <h2 class="text-center fw-bold">PlanIQ | Cadastro</h2>
 
+              <p class="text-center text-muted mb-3 mb-0">Já tem uma conta? <a href="{% url 'usuarios:login' %}" class="fw-bold text-body"><u>Faça login</u></a></p>
+
+              {% include "partials/_google_auth_button.html" %}
+              <div class="d-flex align-items-center my-3">
+                  <hr class="flex-grow-1">
+                  <span class="px-3">OU</span>
+                  <hr class="flex-grow-1">
+              </div>
+
               <form id="registrationForm" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <p class="text-center text-muted mb-3 mb-0">Já tem uma conta? <a href="{% url 'accounts:login' %}" class="fw-bold text-body"><u>Faça login</u></a></p>
 
                 <div class="row">
                   <div class="col-md-6">

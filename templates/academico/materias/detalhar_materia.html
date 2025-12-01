@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="mb-0">{{ materia.nome }}</h4>
+                <small class="opacity-75">
+                    <i class="bi bi-calendar-week me-1"></i>
+                    Período: {{ materia.periodo.nome }}
+                </small>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'app:editar_materia' materia.id %}" class="btn btn-light btn-sm">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+                <a href="{% url 'app:nova_tarefa' %}" class="btn btn-success btn-sm">
+                    <i class="bi bi-plus-circle"></i> Nova Tarefa
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-center bg-warning bg-opacity-10">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tarefas_pendentes }}</h5>
+                            <p class="card-text">Pendentes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center bg-info bg-opacity-10">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tarefas_em_progresso }}</h5>
+                            <p class="card-text">Em Progresso</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-center bg-success bg-opacity-10">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tarefas_concluidas }}</h5>
+                            <p class="card-text">Concluídas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tarefas da Matéria -->
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-list-task me-2"></i>
+                Tarefas desta Matéria
+                <span class="badge bg-light text-dark ms-2">{{ total_tarefas }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if tarefas %}
+                <ul class="list-group">
+                    <h6 class="mt-3">Pendente</h6>
+                    {% for tarefa in tarefas %}
+                        {% if tarefa.status == 'pendente' %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       title="Detalhar">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <strong>{{ tarefa.titulo }}</strong>
+                                    {% if tarefa.prazo %}
+                                    <span class="text-muted ms-2">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        {{ tarefa.prazo|date:"d/m/Y" }}
+                                    </span>
+                                    {% endif %}
+                                    {% if tarefa.atrasada %}
+                                    <span class="badge bg-danger ms-2">Atrasada</span>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    {% include "partials/_select_status.html" %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <h6 class="mt-4">Em Andamento</h6>
+                    {% for tarefa in tarefas %}
+                        {% if tarefa.status == 'em_progresso' %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       title="Detalhar">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <strong>{{ tarefa.titulo }}</strong>
+                                    {% if tarefa.prazo %}
+                                    <span class="text-muted ms-2">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        {{ tarefa.prazo|date:"d/m/Y" }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    {% include "partials/_select_status.html" %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <h6 class="mt-4">Concluído</h6>
+                    {% for tarefa in tarefas %}
+                        {% if tarefa.status == 'concluida' %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       title="Detalhar">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <strong class="text-decoration-line-through">{{ tarefa.titulo }}</strong>
+                                    {% if tarefa.prazo %}
+                                    <span class="text-muted ms-2">
+                                        <i class="bi bi-calendar me-1"></i>
+                                        {{ tarefa.prazo|date:"d/m/Y" }}
+                                    </span>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    {% include "partials/_select_status.html" %}
+                                </div>
+                            </div>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-clipboard text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-3">Nenhuma tarefa cadastrada nesta matéria.</p>
+                    <a href="{% url 'app:nova_tarefa' %}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Criar Tarefa
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'app:minhas_materias' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar para Matérias
+        </a>
+        <a href="{% url 'app:detalhar_periodo' materia.periodo.id %}" class="btn btn-outline-primary">
+            <i class="bi bi-calendar-week"></i> Ver Período
+        </a>
+    </div>
+</div>
+{% endblock %}

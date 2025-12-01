@@ -1,8 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from accounts.models import Usuario
-from django.conf import settings
-from tkinter import CASCADE
+from usuarios.models import Usuario
 
 class Tarefa(models.Model):
     STATUS_CHOICES = [
@@ -26,8 +24,8 @@ class Tarefa(models.Model):
     prazo = models.DateField(blank=True, null=True) 
     prioridade = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='sem_prioridade')
     notificacoes = models.BooleanField(default=False)
-    periodo = models.ForeignKey('Periodo', on_delete=models.CASCADE, related_name='tarefas', blank=True, null=True)
-    materia = models.ForeignKey('Materia', on_delete=models.CASCADE, related_name='tarefas', blank=True, null=True)
+    periodo = models.ForeignKey('Periodo', on_delete=models.SET_NULL, related_name='tarefas', blank=True, null=True)
+    materia = models.ForeignKey('Materia', on_delete=models.SET_NULL, related_name='tarefas', blank=True, null=True)
 
     def __str__(self):
         return self.titulo
@@ -45,7 +43,7 @@ class Periodo(models.Model):
     data_fim = models.DateField()
     
     def __str__(self):
-        return self.nome
+        return f"{self.nome}"
 
 class Materia(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='materias')
@@ -54,3 +52,4 @@ class Materia(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.periodo.nome})"
+    

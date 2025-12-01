@@ -1,4 +1,102 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4">Meus Períodos</h3>
+  <div class="mt-2">
+    <a href="{% url 'app:novo_periodo' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Novo Período
+        </a>
+    </div>
+
+    {% if periodos %}
+        <div class="row">
+            {% for periodo in periodos %}
+            <div class="col-md-6 col-lg-4 my-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">{{ periodo.nome }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <p class="mb-1">
+                                <i class="bi bi-calendar-week me-2"></i>
+                                <strong>Início:</strong> {{ periodo.data_inicio|date:"d/m/Y" }}
+                            </p>
+                            <p class="mb-1">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                <strong>Término:</strong> {{ periodo.data_fim|date:"d/m/Y" }}
+                            </p>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-info">
+                                <i class="bi bi-book me-1"></i> {{ periodo.num_materias }} matéria(s)
+                            </span>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-check-circle me-1"></i> {{ periodo.num_tarefas }} tarefa(s)
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'app:detalhar_periodo' periodo.id %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Detalhar
+                            </a>
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'app:editar_periodo' periodo.id %}" 
+                                   class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" 
+                                        class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal{{ periodo.id }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="deleteModal{{ periodo.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmar Exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Tem certeza que deseja excluir o período <strong>{{ periodo.nome }}</strong>?</p>
+                                {% if periodo.num_materias > 0 %}
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    Atenção! Este período possui {{ periodo.num_materias }} matéria(s) associada(s). Desvincule elas antes de excluir o período.
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <form action="{% url 'app:excluir_periodo' periodo.id %}" method="POST" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i>
+            Você ainda não tem períodos cadastrados.
+            <a href="{% url 'app:novo_periodo' %}" class="alert-link">Clique aqui para criar o primeiro!</a>
+        </div>
+    {% endif %}
+  </div>
+</div>
+
 {% endblock %}

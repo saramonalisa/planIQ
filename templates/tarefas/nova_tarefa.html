@@ -41,6 +41,14 @@
                         {% endif %}
                     </div>
 
+                    <div class="col-md-4">
+                        <label for="{{ form.materia.id_for_label }}" class="form-label">Matéria</label>
+                        {{ form.materia|add_class:"form-control form-select" }}
+                        {% if form.materia.errors %}
+                            <div class="text-danger small">{{ form.materia.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
                     <div class="col-md-4 form-check mt-4">
                     {{ form.notificacoes|add_class:"form-check-input" }}
                     <label class="form-check-label" for="{{ form.notificacoes.id_for_label }}">

@@ -11,8 +11,16 @@
             <div class="card-body p-5">
               <h2 class="text-center fw-bold">PlanIQ | Login</h2>
               <p class="text-center my-3">
-                Ainda não tem uma conta? <a href="{% url 'accounts:cadastro' %}" class="fw-bold text-body"><u>Cadastre-se</u></a>
+                Ainda não tem uma conta? <a href="{% url 'usuarios:cadastro' %}" class="fw-bold text-body"><u>Cadastre-se</u></a>
               </p>
+
+              {% include "partials/_google_auth_button.html" %}
+              <div class="d-flex align-items-center my-3">
+                  <hr class="flex-grow-1">
+                  <span class="px-3">OU</span>
+                  <hr class="flex-grow-1">
+              </div>
+              
               <form method="POST" novalidate>
                 {% csrf_token %}
                 <div class="mb-3">
@@ -32,7 +40,7 @@
                   <div class="text-danger" id="passwordError"></div>
                 </div>
 
-                <a href="{% url 'accounts:password_reset' %}" class="d-block text-start text-body">Esqueceu a senha?</a>
+                <a href="{% url 'usuarios:password_reset' %}" class="d-block text-start text-body">Esqueceu a senha?</a>
 
                 <div class="d-flex justify-content-center mt-4">
                   <button type="submit" class="btn btn-primary">Entrar</button>

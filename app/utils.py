@@ -1,7 +1,7 @@
 from collections import defaultdict 
 from django.utils import timezone
 from django.db.models import Case, When, Value, IntegerField
-from accounts.models import Usuario
+from usuarios.models import Usuario
 from app.models import Tarefa
 import calendar
 

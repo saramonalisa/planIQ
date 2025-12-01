@@ -63,7 +63,7 @@ def editar_perfil(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Perfil atualizado com sucesso!')
-            return redirect('accounts:configuracoes')
+            return redirect('usuarios:configuracoes')
     else:
         form = EditProfileForm(instance=usuario)
 
