@@ -4,10 +4,10 @@
 <div class="container mt-5">
   <h3 class="mb-4">Minhas Matérias</h3>
         <div class="btn-group">
-            <a href="{% url 'app:nova_materia' %}" class="btn btn-primary">
+            <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-purple">
                 <i class="bi bi-plus-circle"></i> Nova Matéria
             </a>
-            <a href="{% url 'app:meus_periodos' %}" class="btn btn-outline-secondary">
+            <a href="{% url 'app:meus_periodos' %}" class="btn btn-outline-purple">
                 <i class="bi bi-calendar-week"></i> Períodos
             </a>
         </div>
@@ -17,7 +17,7 @@
         {% for periodo in periodos %}
             {% if periodo.materias_list %}
             <div class="card shadow my-4">
-                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
                         <i class="bi bi-calendar-week me-2"></i>
                         {{ periodo.nome }}
@@ -32,7 +32,7 @@
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <h6 class="card-title mb-0">{{ materia.nome }}</h6>
-                                        <span class="badge bg-info">{{ materia.num_tarefas }} tarefa(s)</span>
+                                        <span class="badge bg-info text-dark">{{ materia.num_tarefas }} tarefa(s)</span>
                                     </div>
                                     <p class="card-text text-muted small">
                                         <i class="bi bi-calendar-week me-1"></i>
@@ -42,16 +42,16 @@
                                 <div class="card-footer bg-transparent border-top-0">
                                     <div class="d-flex justify-content-between">
                                         <a href="{% url 'app:detalhar_materia' materia.id %}" 
-                                           class="btn btn-sm btn-outline-primary">
+                                           class="btn btn-sm btn-outline-purple">
                                             <i class="bi bi-eye"></i> Detalhar
                                         </a>
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'app:editar_materia' materia.id %}" 
-                                               class="btn btn-sm btn-outline-secondary">
+                                               class="btn btn-sm btn-outline-purple">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <a href="{% url 'app:excluir_materia' materia.id %}" 
-                                               class="btn btn-sm btn-outline-danger">
+                                               class="btn btn-sm btn-outline-purple">
                                                 <i class="bi bi-trash"></i>
                                             </a>
                                         </div>

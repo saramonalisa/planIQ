@@ -228,11 +228,21 @@ def meus_periodos(request):
     periodos = Periodo.objects.filter(usuario=request.user).order_by('-data_inicio')
     
     for periodo in periodos:
-        periodo.num_materias = Materia.objects.filter(periodo=periodo, usuario=request.user).count()
+        periodo.num_materias = Materia.objects.filter(
+            periodo=periodo, 
+            usuario=request.user
+        ).count()
+        
+        materias_periodo = Materia.objects.filter(periodo=periodo, usuario=request.user)
         periodo.num_tarefas = Tarefa.objects.filter(
             usuario=request.user,
-            periodo=periodo
+            materia__in=materias_periodo
         ).count()
+        
+        periodo.tarefas_recentes = Tarefa.objects.filter(
+            usuario=request.user,
+            materia__periodo=periodo
+        ).select_related('materia').order_by('-prazo')[:5]
     
     return render(request, 'academico/periodos/meus_periodos.html', {
         'periodos': periodos
@@ -406,29 +416,73 @@ def detalhar_periodo(request, periodo_id):
         usuario=request.user
     ).order_by('nome')
     
+    materias_ids = materias.values_list('id', flat=True)
+    
     tarefas = Tarefa.objects.filter(
         usuario=request.user,
-        periodo=periodo
-    ).order_by('prazo', 'prioridade')
+        materia_id__in=materias_ids
+    ).select_related('materia').annotate(
+        prioridade_order=Case(
+            When(prioridade='alta', then=Value(1)),
+            When(prioridade='media', then=Value(2)),
+            When(prioridade='baixa', then=Value(3)),
+            default=Value(4),
+            output_field=IntegerField()
+        )
+    ).order_by('prioridade_order', 'prazo')
     
-    total_materias = materias.count()
-    total_tarefas = tarefas.count()
+    tarefas_por_materia = {}
+    for materia in materias:
+        tarefas_materia = tarefas.filter(materia=materia)
+        if tarefas_materia.exists():
+            tarefas_por_materia[materia] = tarefas_materia
     
     tarefas_pendentes = tarefas.filter(status='pendente').count()
     tarefas_em_progresso = tarefas.filter(status='em_progresso').count()
     tarefas_concluidas = tarefas.filter(status='concluida').count()
     
-    return render(request, 'academico/periodos/detalhar_periodo.html', {
+    tarefas_alta = tarefas.filter(prioridade='alta').count()
+    tarefas_media = tarefas.filter(prioridade='media').count()
+    tarefas_baixa = tarefas.filter(prioridade='baixa').count()
+    tarefas_sem_prioridade = tarefas.filter(prioridade='sem_prioridade').count()
+    
+    hoje = timezone.localdate()
+    sete_dias = hoje + timezone.timedelta(days=7)
+    proximas_tarefas = tarefas.filter(
+        prazo__range=[hoje, sete_dias]
+    ).order_by('prazo')[:10]
+    
+    tarefas_atrasadas = tarefas.filter(
+        prazo__lt=hoje,
+        status__in=['pendente', 'em_progresso']
+    ).order_by('prazo')
+    
+    context = {
         'periodo': periodo,
         'materias': materias,
         'tarefas': tarefas,
-        'total_materias': total_materias,
-        'total_tarefas': total_tarefas,
+        'tarefas_por_materia': tarefas_por_materia,
+        'total_materias': materias.count(),
+        'total_tarefas': tarefas.count(),
+        
         'tarefas_pendentes': tarefas_pendentes,
         'tarefas_em_progresso': tarefas_em_progresso,
-        'tarefas_concluidas': tarefas_concluidas
-    })
-
+        'tarefas_concluidas': tarefas_concluidas,
+        
+        'tarefas_alta': tarefas_alta,
+        'tarefas_media': tarefas_media,
+        'tarefas_baixa': tarefas_baixa,
+        'tarefas_sem_prioridade': tarefas_sem_prioridade,
+        
+        'proximas_tarefas': proximas_tarefas,
+        'tarefas_atrasadas': tarefas_atrasadas,
+        'tarefas_atrasadas_count': tarefas_atrasadas.count(),
+        
+        'hoje': hoje,
+        'sete_dias': sete_dias,
+    }
+    
+    return render(request, 'academico/periodos/detalhar_periodo.html', context)
 
 @login_required
 def lista_tarefas(request):

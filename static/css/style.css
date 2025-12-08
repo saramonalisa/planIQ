@@ -1,19 +1,28 @@
 /*-------------------------------------
 Root & Dark Mode
 --------------------------------------*/
-/* Light mode variables */
 :root {
-  --bg-color: #faf6f8;
-  --text-color: #2c2c2c;
+  --planner-primary: #6d4c97; 
+  --planner-secondary: #6b9c7d; 
+  --planner-accent: #ffc296;
+  --planner-highlight: #fce8a5;
+  --planner-paper: #fffef7;
+  --planner-lines: #e6e2d6;
+  --planner-grid: #d9e2ec;
+  --planner-text: #2c3e50;
+  --planner-text-light: #5d6d7e;
+  --planner-border: #b8c4d4;
+  
+  --bg-color: var(--planner-paper);
+  --text-color: var(--planner-text);
   --nav-bg: #ffffff;
-  --sidebar-bg: #fefcfc;
-  --sidebar-text: #2c2c2c;
+  --sidebar-bg: #f8f6f2;
+  --sidebar-text: var(--planner-text);
   --footer-bg: #ffffff;
-  --footer-text: #222222;
-  --link-color: #6d4c97;
-  --link-hover: #9c74c9;
+  --footer-text: var(--planner-text);
+  --link-color: var(--planner-primary);
+  --link-hover: #8b6fcf;
 
-  /* Post-It Colors */
   --postit-azul: #a5e1e9;
   --postit-verde: #d5edb9;
   --postit-roxo: #c4bdf3;
@@ -21,365 +30,406 @@ Root & Dark Mode
   --postit-laranja: #ffc296;
   --postit-rosa: #f8cadc;
 
-  /* Cards */
   --card-bg: #ffffff;
-  --card-border: #ead6e0;
-  --card-text: #2c2c2c;
+  --card-border: var(--planner-border);
+  --card-text: var(--planner-text);
 
-  /* Calendar specific */
   --calendar-day-bg: #f5faff;
   --calendar-day-hover-bg: #e1f0ff;
-  --calendar-day-shadow: rgba(0, 0, 0, 0.08);
+  --calendar-day-shadow: rgba(109, 76, 151, 0.1);
 
-  /* Task count badges */
-  --badge-low: #4479b1;
-  --badge-medium: #b47537;
-  --badge-high: #aa3c3c;
+  --badge-low: var(--postit-azul);
+  --badge-medium: var(--postit-laranja);
+  --badge-high: var(--postit-rosa);
 
-  /* Bordas, headers e hovers estilo planner */
-  --border-light: #e7d5df;
-  --table-header-bg: #fbf7fa;
-  --input-hover-bg: #f6eef3;
+  --border-light: var(--planner-lines);
+  --table-header-bg: #f0f4f8;
+  --input-hover-bg: #e8eef4;
 }
 
-/* Dark Mode */
 body.dark-mode {
-  --bg-color: #1e1c1f;
-  --text-color: #efefef;
+  --planner-primary: #9c74c9; 
+  --planner-secondary: #8abca0;
+  --planner-accent: #ffb085; 
+  --planner-highlight: #ffe6a5;
+  --planner-paper: #1e1c1f;
+  --planner-lines: #4a424b;
+  --planner-grid: #2a262c;
+  --planner-text: #efefef;
+  --planner-text-light: #b0b0b0;
+  --planner-border: #554e56;
+  
+  --bg-color: var(--planner-paper);
+  --text-color: var(--planner-text);
   --nav-bg: #2a272b;
   --sidebar-bg: #2f2b30;
   --sidebar-text: #f1e6f3;
   --footer-bg: #2a272b;
   --footer-text: #f5f5f5;
+  --link-color: var(--planner-primary);
+  --link-hover: #b495e0;
+
+  --postit-azul: #7a9fa9;
+  --postit-verde: #9cb399;
+  --postit-roxo: #9a93d9;
+  --postit-amarelo: #e6d095;
+  --postit-laranja: #e6a57e;
+  --postit-rosa: #e6aec2;
 
   --card-bg: #2e292f;
-  --card-border: #443d46;
-  --card-text: #efefef;
+  --card-border: var(--planner-border);
+  --card-text: var(--planner-text);
 
-  --border-light: #4a424b;
+  --border-light: var(--planner-lines);
   --table-header-bg: #353036;
   --input-hover-bg: #423c44;
 
   --calendar-day-bg: #2a262c;
   --calendar-day-hover-bg: #363139;
-  --calendar-day-shadow: rgba(255, 255, 255, 0.05);
-}
+  --calendar-day-shadow: rgba(156, 116, 201, 0.15);
 
-/* Dark Mode */
-body.dark-mode {
-    --bg-color: #1e1c1f;
-    --text-color: #efefef;
-    --nav-bg: #2a272b;
-    --sidebar-bg: #2f2b30;
-    --sidebar-text: #f1e6f3;
-    --footer-bg: #2a272b;
-    --footer-text: #f5f5f5;
-
-    --card-bg: #2e292f;
-    --card-border: #443d46;
-    --card-text: #efefef;
-
-    --border-light: #4a424b;
-    --table-header-bg: #353036;
-    --input-hover-bg: #423c44;
-
-    --calendar-day-bg: #2a262c;
-    --calendar-day-hover-bg: #363139;
-    --calendar-day-shadow: rgba(255, 255, 255, 0.05);
+  --badge-low: var(--postit-azul);
+  --badge-medium: var(--postit-laranja);
+  --badge-high: var(--postit-rosa);
 }
 
 /*-------------------------------------
 Global (Body, Links, Transitions)
 --------------------------------------*/
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-a {
-    color: var(--link-color);
-    text-decoration: none;
-    transition: color 0.3s ease, transform 0.3s ease;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 a:hover {
-    color: var(--link-hover);
-    transform: scale(1.1);
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  color: var(--link-hover);
+  transform: scale(1.1);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 /*-------------------------------------
 Navbar
 --------------------------------------*/
 .navbar {
-    background-color: var(--nav-bg) !important;
-    color: var(--text-color);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--nav-bg) !important;
+  color: var(--text-color);
+  box-shadow: 0 2px 8px rgba(109, 76, 151, 0.1);
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  border-bottom: 3px solid var(--planner-primary);
+  padding: 0.75rem 0;
+  position: relative;
+  z-index: 1000;
 }
 
 .navbar a {
-    color: var(--link-color);
+  color: var(--link-color);
 }
 
 .navbar a:hover {
-    color: var(--link-hover);
-    transform: scale(1.05);
+  color: var(--link-hover);
+  transform: scale(1.05);
 }
 
 /*-------------------------------------
 Sidebar & Sidebar Toggle
 --------------------------------------*/
 .sidebar {
-    width: 250px;
-    position: fixed;
-    top: 56px;
-    left: 0;
-    bottom: 0;
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-light);
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-    transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    z-index: 1000;
-    color: var(--sidebar-text);
-    font-weight: 500;
+  width: 250px;
+  position: fixed;
+  top: 56px;
+  left: 0;
+  bottom: 0;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--planner-lines);
+  box-shadow: 2px 0 8px rgba(109, 76, 151, 0.05);
+  transition: width 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 999;
+  color: var(--sidebar-text);
+  font-weight: 500;
 }
 
 .sidebar.collapsed {
-    width: 80px;
+  width: 80px;
 }
 
 .sidebar-toggle {
-    position: absolute;
-    top: 50%;
-    right: -15px;
-    transform: translateY(-50%);
-    z-index: 1100;
-    background-color: var(--sidebar-bg);
-    border-radius: 50%;
-    border: 1px solid var(--sidebar-text);
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  z-index: 1100;
+  background-color: var(--sidebar-bg);
+  border-radius: 50%;
+  border: 2px solid var(--planner-primary);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-toggle:hover {
-    background-color: var(--link-hover);
+  background-color: var(--planner-primary);
+  transform: translateY(-50%) scale(1.1);
 }
 
-.sidebar-toggle i {
-    color: var(--link-color);
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
+.sidebar-toggle i,
 .sidebar-toggle:hover i {
-    color: var(--bg-color);
+  color: var(--bg-color);
 }
 
 .sidebar .nav-link {
-    display: flex;
-    align-items: center;
-    padding: 10px 16px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--link-color);
-    transition: background-color 0.3s ease, transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--planner-text);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-left: 3px solid transparent;
+  border-radius: 8px;
 }
 
 .sidebar .nav-link:hover {
-    transform: scale(1.05);
-    background-color: rgba(200, 180, 210, 0.2); /* efeito planner suave */
-    border-radius: 50rem;
-    padding-left: 16px;
-    padding-right: 16px;
+  transform: translateX(3px);
+  background-color: rgba(109, 76, 151, 0.1);
+  border-left-color: var(--planner-primary);
+  padding-left: 20px;
 }
 
 .sidebar .nav-link i {
-    font-size: 1.2rem;
-    color: var(--link-color);
-    transition: color 0.3s ease, transform 0.3s ease;
+  font-size: 1.2rem;
+  color: var(--planner-primary);
+  transition: color 0.3s ease, transform 0.3s ease;
+  width: 24px;
+  text-align: center;
 }
 
 .sidebar.collapsed .nav-link .text {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-    display: inline-block;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  display: inline-block;
 }
 
 .sidebar .nav-link .text {
-    margin-left: 10px;
-    white-space: nowrap;
+  margin-left: 12px;
+  white-space: nowrap;
 }
 
 /*-------------------------------------
 Main Content Area
 --------------------------------------*/
 .main-content {
-    margin-left: 250px;
-    transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    min-height: 100vh;
-    padding: 80px 20px 40px 20px;
-    width: calc(100% - 250px);
-    background-color: var(--bg-color);
-    color: var(--text-color);
+  margin-left: 250px;
+  transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+  padding: 80px 20px 40px 20px;
+  width: calc(100% - 250px);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  position: relative;
 }
 
 .main-content.collapsed {
-    margin-left: 80px;
-    width: calc(100% - 80px);
+  margin-left: 80px;
+  width: calc(100% - 80px);
 }
 
 .main-content.full-width {
-    margin-left: 0 !important;
-    width: 100% !important;
-    padding-left: 20px;
-    padding-right: 20px;
+  margin-left: 0 !important;
+  width: 100% !important;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .main-content h1,
 .main-content h2,
 .main-content h3,
 .main-content h4 {
-    color: var(--link-color);
-    margin-bottom: 1rem;
+  color: var(--planner-primary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.main-content h1 {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.main-content h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(to right, var(--planner-primary), var(--planner-border));
+  border-radius: 2px;
 }
 
 .main-content p {
-    line-height: 1.6;
-    color: var(--text-color);
+  line-height: 1.6;
+  color: var(--planner-text-light);
 }
 
 .main-content .card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    box-shadow: 0 4px 8px var(--calendar-day-shadow);
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  background-color: var(--card-bg);
+  border: 1px solid var(--planner-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(109, 76, 151, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-content .card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--postit-roxo), var(--planner-border));
 }
 
 .main-content .card:hover {
-    box-shadow: 0 6px 12px var(--calendar-day-shadow);
+  box-shadow: 0 6px 20px rgba(109, 76, 151, 0.12);
+  transform: translateY(-2px);
+}
+
+.bg-info {
+  background: linear-gradient(135deg, var(--postit-azul), #8bcbdb) !important;
+  color: var(--planner-text) !important;
+}
+
+.btn-outline-purple {
+  border: 1px solid var(--planner-text) !important;
+  color: var(--planner-text) !important;
 }
 
 /*-------------------------------------
 Footer
 --------------------------------------*/
 footer {
-    transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    margin-left: 250px;
-    width: calc(100% - 250px);
-    background-color: var(--footer-bg);
-    color: var(--footer-text);
-    text-align: center;
-    padding: 20px 0;
-    border-top: 1px solid var(--border-light);
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.03);
+  transition: margin-left 0.3s ease, width 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  text-align: center;
+  padding: 20px 0;
+  border-top: 2px solid var(--planner-primary);
+  box-shadow: 0 -2px 8px rgba(109, 76, 151, 0.05);
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 3px;
+  background: linear-gradient(to right, var(--link-hover), var(--planner-border));
 }
 
 footer.collapsed {
-    margin-left: 80px;
-    width: calc(100% - 80px);
+  margin-left: 80px;
+  width: calc(100% - 80px);
 }
 
 footer.full-width {
-    margin-left: 0 !important;
-    width: 100% !important;
-}
-
-footer a {
-    color: var(--link-color);
-    text-decoration: underline;
-}
-
-footer a:hover {
-    color: var(--link-hover);
-    transform: scale(1.05);
+  margin-left: 0 !important;
+  width: 100% !important;
 }
 
 /*-------------------------------------
 Dropdown Menu & User Dropdown
 --------------------------------------*/
 .dropdown-menu {
-    background-color: var(--nav-bg) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-light) !important;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--planner-paper) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--planner-border) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(109, 76, 151, 0.15);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  border-top: 3px solid var(--planner-primary);
 }
 
 .dropdown-menu .dropdown-item {
-    color: var(--text-color) !important;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-    padding: 8px 16px;
-    border-radius: 8px;
+  color: var(--planner-text) !important;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
 .dropdown-menu .dropdown-item:hover {
-    background-color: var(--calendar-day-hover-bg);
-    color: var(--link-hover) !important;
-    transform: scale(1.03);
+  background-color: rgba(109, 76, 151, 0.1);
+  color: var(--planner-primary) !important;
+  transform: translateX(3px);
 }
 
 .dropdown-toggle {
-    color: var(--text-color);
+  color: var(--planner-text);
 }
 
 .dropdown-divider {
-    border-top: 1px solid var(--border-light);
+  border-top: 1px solid var(--planner-lines);
 }
 
 .dropdown-menu form {
-    margin: 0 !important;
+  margin: 0 !important;
 }
 
 .dropdown-menu form .dropdown-item {
-    all: unset;
-    display: block;
-    width: 100% !important;
-    padding: 8px 16px !important;
-    text-align: left !important;
-    color: var(--text-color) !important;
-    font-weight: 400 !important;
-    font-size: 1rem !important;
-    cursor: pointer !important;
-    border-radius: 8px;
+  all: unset;
+  display: block;
+  width: 100% !important;
+  padding: 10px 16px !important;
+  text-align: left !important;
+  color: var(--planner-text) !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  border-radius: 8px;
 }
 
 .dropdown-menu form .dropdown-item:hover {
-    background-color: var(--calendar-day-hover-bg) !important;
-    color: var(--link-hover) !important;
+  background-color: rgba(109, 76, 151, 0.1) !important;
+  color: var(--planner-primary) !important;
 }
 
-/* User dropdown */
 #userDropdownContainer {
-    padding-left: 12px;
-    width: auto;
-    transition: padding 0.3s ease;
+  padding-left: 12px;
+  width: auto;
+  transition: padding 0.3s ease;
 }
 
 #userDropdownContainer .user-name {
-    transition: opacity 0.3s ease, width 0.3s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    color: var(--link-color);
-    font-weight: 500;
+  transition: opacity 0.3s ease, width 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--planner-primary);
+  font-weight: 600;
 }
 
 nav.navbar.sidebar-collapsed #userDropdownContainer .user-name {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-    display: inline-block;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  display: inline-block;
 }
 
 /*-------------------------------------
@@ -388,20 +438,28 @@ Forms (Inputs, Buttons, Selects)
 input.form-control,
 select.form-select,
 textarea.form-control {
-    background-color: var(--sidebar-bg);
-    border: 1px solid var(--link-color);
-    color: var(--text-color);
-    border-radius: 50rem !important;
-    padding: 0.5rem 1rem;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--planner-paper);
+  border: 2px solid var(--planner-border);
+  color: var(--planner-text);
+  border-radius: 25px !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
 }
 
 input.form-control:hover,
 select.form-select:hover,
 textarea.form-control:hover {
-    background-color: var(--calendar-day-hover-bg);
-    border-color: var(--link-hover);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background-color: var(--input-hover-bg);
+  border-color: var(--planner-primary);
+  box-shadow: 0 4px 8px rgba(109, 76, 151, 0.1);
+}
+
+input.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+  border-color: var(--planner-primary);
+  box-shadow: 0 0 0 3px rgba(109, 76, 151, 0.2);
+  outline: none;
 }
 
 button,
@@ -409,13 +467,14 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 .btn {
-    background-color: var(--sidebar-bg);
-    color: var(--card-text);
-    border: 1px solid var(--link-color);
-    border-radius: 50rem !important;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  background: linear-gradient(135deg, var(--link-hover), var(--planner-border));
+  color: white;
+  border: none;
+  border-radius: 25px !important;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(109, 76, 151, 0.2);
 }
 
 button:hover,
@@ -423,394 +482,418 @@ input[type="button"]:hover,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 .btn:hover {
-    background-color: var(--calendar-day-hover-bg);
-    color: var(--text-color);
-    border-color: var(--link-hover);
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(135deg, var(--planner-border), var(--link-hover));
+  color: white;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 12px rgba(109, 76, 151, 0.3);
+}
+
+/* Botão outline planner */
+.btn-outline-primary {
+  background: transparent !important;
+  border: 2px solid var(--planner-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--planner-primary);
+  color: white;
 }
 
 /*-------------------------------------
 List Group Items
 --------------------------------------*/
 ul.list-group li.list-group-item {
-    margin-bottom: 6px;
-    padding: 10px 12px;
-    border-radius: 12px;
-    border: 1px solid transparent;
-    background-color: var(--card-bg);
-    border-color: var(--card-border);
-    color: var(--card-text);
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  margin-bottom: 6px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--planner-border);
+  background-color: var(--planner-paper);
+  color: var(--planner-text);
+  transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(109, 76, 151, 0.05);
+  position: relative;
+}
+
+ul.list-group li.list-group-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--postit-amarelo), var(--postit-laranja));
+  border-radius: 3px 0 0 3px;
 }
 
 li.list-group-item:has(.btn:hover) {
-    background-color: var(--calendar-day-hover-bg);
-    border-radius: 50rem;
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  background-color: rgba(109, 76, 151, 0.08);
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(109, 76, 151, 0.1);
 }
 
 ul.list-group li.list-group-item:hover {
-    transform: scale(1.03);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 12px rgba(109, 76, 151, 0.1);
+  border-color: var(--planner-primary);
 }
 
 /*-------------------------------------
 Theme Switch Toggle
 --------------------------------------*/
 .theme-switch {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
 }
 
 .theme-toggle {
-    display: none;
+  display: none;
 }
 
 .switch-label {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 60px;
-    height: 30px;
-    background: var(--sidebar-bg);
-    border: 1px solid var(--text-color);
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 60px;
+  height: 30px;
+  background: linear-gradient(to right, var(--planner-border), var(--postit-roxo));
+  border: 2px solid var(--planner-primary);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(109, 76, 151, 0.2);
 }
 
 .switch-label .sun,
 .switch-label .moon {
-    position: absolute;
-    font-size: 12px;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    text-align: center;
-    transition: opacity 0.4s ease;
-    color: var(--text-color);
+  position: absolute;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  transition: opacity 0.4s ease;
+  color: white;
 }
 
 .switch-label .sun {
-    left: 6px;
-    opacity: 1;
-    z-index: 2;
+  left: 6px;
+  opacity: 1;
+  z-index: 2;
 }
 
 .switch-label .moon {
-    right: 6px;
-    opacity: 1;
-    z-index: 2;
+  right: 5px;
+  opacity: 1;
+  z-index: 2;
 }
 
 .switch-ball {
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 22px;
-    height: 22px;
-    background: var(--text-color);
-    border-radius: 50%;
-    transition: transform 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.4s ease, background 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-body:not(.dark-mode) .switch-label .sun {
-    color: var(--bg-color);
-}
-
-body:not(.dark-mode) .switch-label .moon {
-    opacity: 1;
-}
-
+body:not(.dark-mode) .switch-label .sun,
 body.dark-mode .switch-label .moon {
-    color: var(--bg-color);
+  color: var(--planner-primary);
 }
 
-body.dark-mode .switch-label .sun {
-    opacity: 1;
+body:not(.dark-mode) .switch-label .moon,
+body.dark-mode .switch-label .sun,
+.theme-toggle:checked + .switch-label .moon,
+.theme-toggle:checked + .switch-label .sun {
+  opacity: 1;
 }
 
 .theme-toggle:checked + .switch-label .switch-ball {
-    transform: translateX(30px);
-}
-
-.theme-toggle:checked + .switch-label .moon {
-    opacity: 1;
-}
-
-.theme-toggle:checked + .switch-label .sun {
-    opacity: 1;
+  transform: translateX(30px);
 }
 
 .switch-ball:hover {
-    transform: scale(1.1);
-    background-color: var(--sidebar-text);
+  transform: scale(1.1);
+  background-color: var(--planner-highlight);
 }
 
 /*-------------------------------------
 Calendar
 --------------------------------------*/
 .calendar {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-    margin: 20px auto;
-    width: 70%;
-    max-width: 800px;
-    color: var(--card-text);
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  background-color: var(--planner-paper);
+  border: 2px solid var(--planner-primary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(109, 76, 151, 0.1);
+  margin: 20px auto;
+  width: 70%;
+  max-width: 800px;
+  color: var(--planner-text);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--postit-verde), var(--planner-border));
 }
 
 .calendar-table {
-    width: 100%;
-    table-layout: fixed;
-    font-size: 0.75rem;
-    background-color: var(--footer-bg);
-    border-radius: 8px;
-    overflow: hidden;
+  width: 100%;
+  table-layout: fixed;
+  font-size: 0.75rem;
+  background-color: var(--planner-paper);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .calendar-table th,
 .calendar-table td {
-    padding: 0.25rem;
+  padding: 0.25rem;
 }
 
 .calendar-table th {
-    font-size: 0.85rem;
-    background-color: var(--sidebar-bg) !important;
-    color: var(--link-color) !important;
-    text-align: center;
-    padding: 0.5rem;
+  font-size: 0.85rem;
+  background: linear-gradient(to bottom, var(--link-hover), var(--planner-border)) !important;
+  color: white !important;
+  text-align: center;
+  padding: 0.75rem;
+  font-weight: 600;
 }
 
 .calendar-table td {
-    min-width: 50px;
-    height: 50px;
-    vertical-align: top;
-    font-size: 0.85rem;
-    padding: 0.15rem;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 50px;
+  height: 50px;
+  vertical-align: top;
+  font-size: 0.85rem;
+  padding: 0.15rem;
+  border-radius: 8px;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--planner-lines);
 }
 
 .calendar-table td strong {
-    display: block;
-    font-size: 0.9rem;
-    margin-bottom: 2px;
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+  color: var(--planner-primary);
+  font-weight: 600;
 }
 
 .calendar-table td ul {
-    padding: 0;
-    margin-top: 4px;
-    list-style: none;
+  padding: 0;
+  margin-top: 4px;
+  list-style: none;
 }
 
 .calendar-table td ul li {
-    font-size: 0.7rem;
-    margin-bottom: 3px;
-    padding: 2px 4px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.7rem;
+  margin-bottom: 3px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: rgba(109, 76, 151, 0.05);
+  border-left: 3px solid var(--planner-primary);
 }
 
 .calendar-day {
-    background-color: var(--calendar-day-bg) !important;
-    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    color: var(--link-color) !important;
-    border-radius: 8px;
+  background-color: var(--calendar-day-bg) !important;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  color: var(--planner-primary) !important;
+  border-radius: 8px;
 }
 
 .calendar-day:hover {
-    background-color: var(--calendar-day-hover-bg) !important;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
+  background-color: var(--calendar-day-hover-bg) !important;
+  box-shadow: 0 4px 12px rgba(109, 76, 151, 0.15);
+  cursor: pointer;
+  transform: scale(1.02);
 }
 
 .empty-day {
-    min-width: 50px;
-    height: 50px;
-    background-color: var(--calendar-day-bg) !important;
-    border-radius: 8px;
+  min-width: 50px;
+  height: 50px;
+  background-color: var(--calendar-day-bg) !important;
+  border-radius: 8px;
+  opacity: 0.5;
 }
 
 .calendar-table td ul li:hover {
-    transform: scale(1.05);
-    background-color: var(--calendar-day-hover-bg) !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transform: translateX(3px) scale(1.05);
+  background-color: rgba(109, 76, 151, 0.1);
+  box-shadow: 0 2px 8px rgba(109, 76, 151, 0.1);
+  border-left-color: var(--planner-secondary);
 }
 
 /*-------------------------------------
 Task Count Badges
 --------------------------------------*/
 .tarefa-count {
-    display: inline-block;
-    min-width: 22px;
-    height: 22px;
-    padding: 0 4px;
-    font-size: 0.65rem;
-    font-weight: 600;
-    color: #fff;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 22px;
-    margin-top: 2px;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  margin-top: 2px;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .tarefa-count.low {
-    background-color: var(--badge-low);
+  background: linear-gradient(135deg, var(--postit-azul), #8bcbdb);
 }
 
 .tarefa-count.medium {
-    background-color: var(--badge-medium);
+  background: linear-gradient(135deg, var(--postit-laranja), #ffaa80);
 }
 
 .tarefa-count.high {
-    background-color: var(--badge-high);
+  background: linear-gradient(135deg, var(--postit-rosa), #f5b3c8);
 }
 
 .day:hover .tarefa-count {
-    transform: scale(1.15);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 /*-------------------------------------
 Task Cards
 --------------------------------------*/
 .tarefa-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--card-border);
-    color: var(--card-text);
-    border-radius: 14px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-    margin: 0 auto 2rem auto;
+  background-color: var(--planner-paper);
+  border: 2px solid var(--planner-primary);
+  color: var(--planner-text);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(109, 76, 151, 0.12);
+  margin: 0 auto 2rem auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.tarefa-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--postit-amarelo), var(--postit-laranja));
 }
 
 .tarefa-card .card-header {
-    background-color: var(--nav-bg);
-    border-bottom: 1px solid var(--card-border);
-    font-weight: 600;
-    padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top-left-radius: 14px;
-    border-top-right-radius: 14px;
+  background: linear-gradient(to right, var(--planner-paper), rgba(109, 76, 151, 0.05));
+  border-bottom: 2px solid var(--planner-border);
+  font-weight: 600;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 .tarefa-card .card-header h4 {
-    margin: 0;
-    color: var(--card-text);
-    font-size: 1.1rem;
+  margin: 0;
+  color: var(--planner-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
 .tarefa-card .card-body {
-    font-size: 1rem;
-    line-height: 1.5;
-    color: var(--card-text);
-    border-bottom: 1px solid var(--card-border);
-    background-color: var(--card-bg);
-    padding: 1rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--planner-text);
+  border-bottom: 1px solid var(--planner-lines);
+  background-color: var(--planner-paper);
+  padding: 1.5rem;
 }
 
 .tarefa-card .card-body p,
 .tarefa-card .card-body p.text-muted {
-    color: var(--card-text) !important;
-    margin-bottom: 0.5rem;
+  color: var(--planner-text-light) !important;
+  margin-bottom: 0.75rem;
 }
 
 .tarefa-card .card-footer {
-    background-color: var(--nav-bg);
-    border-top: 1px solid var(--card-border);
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    border-bottom-left-radius: 14px;
-    border-bottom-right-radius: 14px;
-}
-
-/*-------------------------------------
-Scrollbar Styling
---------------------------------------*/
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--sidebar-bg);
-    border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--link-color);
-    border-radius: 10px;
-    border: 2px solid var(--sidebar-bg);
-    transition: background-color 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--link-hover);
+  background: linear-gradient(to right, var(--planner-paper), rgba(109, 76, 151, 0.05));
+  border-top: 1px solid var(--planner-border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 /*-------------------------------------
 Responsive adjustments
 --------------------------------------*/
 @media (max-width: 768px) {
-    .sidebar {
-        width: 80px;
-        transition: width 0.3s ease;
-    }
+  .sidebar {
+    width: 80px;
+    transition: width 0.3s ease;
+  }
 
-    .main-content {
-        margin-left: 80px;
-        width: calc(100% - 80px);
-        padding: 60px 15px 30px 15px;
-        transition: margin-left 0.3s ease, width 0.3s ease;
-    }
+  .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    padding: 60px 15px 30px 15px;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+  }
 
-    footer {
-        margin-left: 80px;
-        width: calc(100% - 80px);
-        padding: 15px 0;
-    }
+  footer {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+    padding: 15px 0;
+  }
+  
+  .calendar {
+    width: 95%;
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .sidebar {
-        display: none;
-    }
+  .sidebar {
+    display: none;
+  }
 
-    .main-content {
-        margin-left: 0;
-        width: 100%;
-        padding: 40px 15px 20px 15px;
-    }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 40px 15px 20px 15px;
+  }
 
-    footer {
-        margin-left: 0;
-        width: 100%;
-        padding: 15px 0;
-    }
+  footer {
+    margin-left: 0;
+    width: 100%;
+    padding: 15px 0;
+  }
 
-    .calendar {
-        width: 90%;
-        padding: 1rem;
-    }
+  .calendar {
+    width: 100%;
+    padding: 0.75rem;
+  }
 
-    .tarefa-card {
-        padding: 1rem;
-    }
+  .tarefa-card {
+    padding: 1rem;
+  }
 }

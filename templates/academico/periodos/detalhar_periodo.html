@@ -8,18 +8,17 @@
     <span style="cursor: pointer;" onclick="history.back()">&larr; Voltar</span>
   </div>
 <div class="container mt-4">
-    <!-- Cabeçalho do Período -->
     <div class="card mb-4 shadow">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="mb-0">
                 <i class="bi bi-calendar-week me-2"></i>
                 {{ periodo.nome }}
             </h4>
             <div class="btn-group">
-                <a href="{% url 'app:detalhar_periodo' periodo.id %}" class="btn btn-light btn-sm">
+                <a href="{% url 'app:detalhar_periodo' periodo.id %}" class="btn btn-outline-purple btn-sm">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
-                <a href="{% url 'app:nova_materia' %}" class="btn btn-success btn-sm">
+                <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-purple btn-sm">
                     <i class="bi bi-plus-circle"></i> Nova Matéria
                 </a>
             </div>
@@ -44,7 +43,6 @@
         </div>
     </div>
 
-    <!-- Estatísticas de Tarefas -->
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card text-center bg-warning bg-opacity-10">
@@ -72,9 +70,8 @@
         </div>
     </div>
 
-    <!-- Matérias do Período -->
     <div class="card shadow mb-4">
-        <div class="card-header bg-secondary text-white">
+        <div class="card-header">
             <h5 class="mb-0">
                 <i class="bi bi-book me-2"></i>
                 Matérias deste Período
@@ -97,11 +94,11 @@
                             </div>
                             <div class="btn-group">
                                 <a href="{% url 'app:detalhar_materia' materia.id %}" 
-                                   class="btn btn-sm btn-outline-secondary">
+                                   class="btn btn-sm btn-outline-purple">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <a href="{% url 'app:detalhar_materia' materia.id %}" 
-                                   class="btn btn-sm btn-outline-danger">
+                                   class="btn btn-sm btn-outline-purple">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>
@@ -113,7 +110,7 @@
                 <div class="text-center py-4">
                     <i class="bi bi-book text-muted" style="font-size: 3rem;"></i>
                     <p class="text-muted mt-3">Nenhuma matéria cadastrada neste período.</p>
-                    <a href="{% url 'app:nova_materia' %}" class="btn btn-primary">
+                    <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-purple">
                         <i class="bi bi-plus-circle"></i> Adicionar Matéria
                     </a>
                 </div>
@@ -121,9 +118,8 @@
         </div>
     </div>
 
-    <!-- Tarefas do Período -->
     <div class="card shadow">
-        <div class="card-header bg-info text-white">
+        <div class="card-header">
             <h5 class="mb-0">
                 <i class="bi bi-list-task me-2"></i>
                 Tarefas deste Período
@@ -139,7 +135,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       class="btn btn-sm btn-outline-purple me-2" 
                                        title="Detalhar">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -166,7 +162,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       class="btn btn-sm btn-outline-purple me-2" 
                                        title="Detalhar">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -211,7 +207,7 @@
                 <div class="text-center py-4">
                     <i class="bi bi-clipboard text-muted" style="font-size: 3rem;"></i>
                     <p class="text-muted mt-3">Nenhuma tarefa cadastrada neste período.</p>
-                    <a href="{% url 'app:nova_tarefa' %}" class="btn btn-primary">
+                    <a href="{% url 'app:nova_tarefa' %}" class="btn btn-outline-purple">
                         <i class="bi bi-plus-circle"></i> Criar Tarefa
                     </a>
                 </div>

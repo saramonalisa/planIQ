@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="card mb-4 shadow">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <div>
                 <h4 class="mb-0">{{ materia.nome }}</h4>
                 <small class="opacity-75">
@@ -13,10 +13,10 @@
                 </small>
             </div>
             <div class="btn-group">
-                <a href="{% url 'app:editar_materia' materia.id %}" class="btn btn-light btn-sm">
+                <a href="{% url 'app:editar_materia' materia.id %}" class="btn btn-outline-purple btn-sm">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
-                <a href="{% url 'app:nova_tarefa' %}" class="btn btn-success btn-sm">
+                <a href="{% url 'app:nova_tarefa' %}" class="btn btn-outline-purple btn-sm">
                     <i class="bi bi-plus-circle"></i> Nova Tarefa
                 </a>
             </div>
@@ -51,13 +51,12 @@
         </div>
     </div>
 
-    <!-- Tarefas da Matéria -->
     <div class="card shadow">
-        <div class="card-header bg-info text-white">
+        <div class="card-header">
             <h5 class="mb-0">
                 <i class="bi bi-list-task me-2"></i>
                 Tarefas desta Matéria
-                <span class="badge bg-light text-dark ms-2">{{ total_tarefas }}</span>
+                <span class="badge bg-info text-dark ms-2">{{ total_tarefas }}</span>
             </h5>
         </div>
         <div class="card-body">
@@ -70,7 +69,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       class="btn btn-sm btn-outline-purple me-2" 
                                        title="Detalhar">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -100,7 +99,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       class="btn btn-sm btn-outline-purple me-2" 
                                        title="Detalhar">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -127,7 +126,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-                                       class="btn btn-sm btn-outline-secondary me-2" 
+                                       class="btn btn-sm btn-outline-purple me-2" 
                                        title="Detalhar">
                                         <i class="bi bi-eye"></i>
                                     </a>
@@ -163,7 +162,7 @@
         <a href="{% url 'app:minhas_materias' %}" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Voltar para Matérias
         </a>
-        <a href="{% url 'app:detalhar_periodo' materia.periodo.id %}" class="btn btn-outline-primary">
+        <a href="{% url 'app:detalhar_periodo' materia.periodo.id %}" class="btn btn-outline-purple">
             <i class="bi bi-calendar-week"></i> Ver Período
         </a>
     </div>
