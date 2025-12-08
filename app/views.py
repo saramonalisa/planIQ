@@ -187,7 +187,6 @@ def alterar_status_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
     novo_status = request.POST.get('status')
 
-    # Validar status
     if novo_status not in ['pendente', 'em_progresso', 'concluida']:
         return HttpResponseForbidden("Status inválido")
 
