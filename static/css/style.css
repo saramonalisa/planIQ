@@ -313,8 +313,8 @@ Main Content Area
 }
 
 .btn-outline-purple {
-  border: 1px solid var(--planner-text) !important;
-  color: var(--planner-text) !important;
+  border: 1px solid #1e1c1f !important;
+  color: #1e1c1f !important;
 }
 
 /*-------------------------------------
