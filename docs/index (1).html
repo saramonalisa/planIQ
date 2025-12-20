@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Usuário - PlanIQ</title>
+    <style>
+        :root {
+            --planner-blue: #4a6fa5;
+            --planner-green: #6b9c7d;
+            --planner-primary: #6d4c97;
+            --link-hover: #b495e0;
+            --planner-light: #f8f7fc;
+            --planner-dark: #333344;
+            --planner-gray: #e6e6f0;
+            --planner-warning: #e67e22;
+            --planner-success: #27ae60;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--link-hover) 0%, var(--planner-primary) 100%);
+            color: white;
+            padding: 40px 0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-text p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .version {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar h3 {
+            color: var(--planner-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-links a {
+            display: block;
+            padding: 12px 15px;
+            color: #444;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-links a:hover {
+            background-color: var(--planner-gray);
+            color: var(--link-hover);
+            border-left: 3px solid var(--link-hover);
+        }
+        
+        .nav-links a.active {
+            background-color: var(--planner-gray);
+            color: var(--planner-primary);
+            font-weight: 600;
+            border-left: 3px solid var(--planner-primary);
+        }
+        
+        .content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        section:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        h2 {
+            color: var(--planner-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--planner-primary);
+        }
+        
+        h3 {
+            color: var(--planner-primary)  ;
+            margin: 25px 0 15px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .note {
+            background-color: #f8f9ff;
+            border-left: 4px solid var(--planner-primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .warning {
+            background-color: #fff8f8;
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .tip {
+            background-color: #f8fff8;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .steps {
+            counter-reset: step-counter;
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .steps li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .steps li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--planner-primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background-color: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e8ecff;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .feature-card h4 {
+            color: var(--planner-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #e8efff;
+            color: var(--link-hover);
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        
+        .screenshot {
+            background: linear-gradient(45deg, var(--planner-gray) 25%, #f0f0f8 25%, #f0f0f8 50%, var(--planner-gray) 50%, var(--planner-gray) 75%, #f0f0f8 75%, #f0f0f8 100%);
+            background-size: 20px 20px;
+            height: auto; /* Mudado de 200px para auto */
+            min-height: 200px; /* Mantém altura mínima */
+            border-radius: 12px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--planner-blue);
+            font-style: italic;
+            border: 2px dashed var(--planner-gray);
+            position: relative;
+            overflow: hidden;
+            padding: 10px; /* Adicionado padding */
+        }
+
+        .screenshot::after {
+            content: '📱 Screenshot ilustrativo';
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        /* Remove o ::after quando há imagem dentro */
+        .screenshot:has(img)::after {
+            display: none;
+        }
+
+        /* Estilo para a imagem dentro do screenshot */
+        .screenshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Mantém proporção da imagem */
+            border-radius: 8px;
+            display: block;
+            max-height: 400px; /* Limite máximo de altura */
+        }
+
+        /* Estado quando não há imagem (placeholder) */
+        .screenshot:empty::after {
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+        
+        /* Estilos para os ícones */
+        .material-icons {
+            font-size: 20px;
+        }
+        
+        /* Estilo para o seletor de seções */
+        .section-selector {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .section-selector {
+                display: block;
+                width: 100%;
+                padding: 12px;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                background-color: white;
+                font-size: 1rem;
+                color: #333;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <span class="material-icons">school</span>
+                </div>
+                <div class="logo-text">
+                    <h1>PlanIQ</h1>
+                    <p>Gerenciador de Tarefas Acadêmicas</p>
+                </div>
+            </div>
+            <div class="version">
+                <span class="material-icons" style="font-size: 16px; vertical-align: middle;">info</span>
+                Versão 1.0
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <aside class="sidebar">
+                <h3>Sumário</h3>
+                <ul class="nav-links">
+                    <li><a href="#section-1" class="active"><span class="material-icons">info</span>Introdução</a></li>
+                    <li><a href="#section-2"><span class="material-icons">person_add</span> Primeiros Passos</a></li>
+                    <li><a href="#section-3"><span class="material-icons">date_range</span> Períodos</a></li>
+                    <li><a href="#section-4"><span class="material-icons">library_books</span> Matérias</a></li>
+                    <li><a href="#section-5"><span class="material-icons">assignment</span> Tarefas</a></li>
+                    <li><a href="#section-6"><span class="material-icons">calendar_today</span> Calendário</a></li>
+                    <li><a href="#section-7"><span class="material-icons">person</span> Perfil</a></li>
+                    <li><a href="#section-8"><span class="material-icons">lightbulb</span> Dicas</a></li>
+                    <li><a href="#section-9"><span class="material-icons">help</span> Suporte</a></li>
+                    <li><a href="#section-10"><span class="material-icons">security</span> Avisos Legais</a></li>
+                </ul>
+                
+                <select class="section-selector" onchange="location.href=this.value">
+                    <option value="#section-1">Descrição do Sistema</option>
+                    <option value="#section-2">Primeiros Passos</option>
+                    <option value="#section-3">Períodos</option>
+                    <option value="#section-4">Matérias</option>
+                    <option value="#section-5">Tarefas</option>
+                    <option value="#section-6">Calendário</option>
+                    <option value="#section-7">Perfil</option>
+                    <option value="#section-8">Dicas</option>
+                    <option value="#section-9">Suporte</option>
+                    <option value="#section-10">Avisos Legais</option>
+                </select>
+            </aside>
+            
+            <main class="content">
+                <section id="section-1">
+                    <h2><span class="material-icons">info</span> 1. Boas Vindas ao PlanIQ!</h2>
+                    
+                    <h3>O que é o PlanIQ?</h3>
+                    <p>O PlanIQ é um sistema inteligente de gerenciamento de tarefas acadêmicas desenvolvido para ajudar estudantes a organizarem suas atividades escolares e universitárias de forma eficiente.</p>
+                    
+                    <h3>Público-Alvo</h3>
+                    <ul>
+                        <li>Estudantes do ensino médio</li>
+                        <li>Universitários de graduação e pós-graduação</li>
+                        <li>Pesquisadores</li>
+                        <li>Qualquer pessoa que precise gerenciar tarefas acadêmicas</li>
+                    </ul>
+                    
+                    <h3>Objetivo</h3>
+                    <p>Otimizar a organização das atividades acadêmicas e promover uma gestão eficiente do tempo através de ferramentas específicas para o contexto estudantil.</p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><span class="material-icons">assignment_turned_in</span> Gerenciamento de Tarefas</h4>
+                            <p>Crie, organize e acompanhe todas as suas tarefas acadêmicas em um só lugar.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><span class="material-icons">calendar_today</span> Calendário Integrado</h4>
+                            <p>Visualize suas tarefas em formato de calendário para melhor planejamento.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><span class="material-icons">category</span> Organização por Matérias</h4>
+                            <p>Agrupe tarefas por matérias e períodos acadêmicos.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="section-2">
+                    <h2><span class="material-icons">person_add</span> 2. Primeiros Passos</h2>
+                    
+                    <h3>Fazer Cadastro</h3>
+                    <ol class="steps">
+                        <li>Acesse a página inicial do PlanIQ</li>
+                        <li>Clique no botão "Criar nova conta"</li>
+                        <li>Preencha os seguintes campos:
+                            <p style="margin-top: 5px;">Username<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Nome de Exibição<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>E-mail<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Foto de perfil <br>Senha<span style="color: var(--planner-primary); font-weight:bold;">*</span></p>
+                            <div class="note">
+                                <strong>Observação:</strong> Campos marcados com um <span style="color: var(--planner-primary); font-weight:bold;">*</span> são obrigatórios.
+                            </div>
+                        </li>
+                        <li>Clique em "Cadastrar"</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/cadastro.png" alt="Tela de cadastro no PlanIQ">
+                    </div>
+                    
+                    <h3>Fazer Login</h3>
+                    <ol class="steps">
+                        <li>Acesse a página de login</li>
+                        <li>Insira seu username e senha cadastrados</li>
+                        <li>Clique em "Entrar"</li>
+                    </ol>
+
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/login.png" alt="Tela de login no PlanIQ">
+                    </div>
+                </section>
+                
+                <section id="section-3">
+                    <h2><span class="material-icons">date_range</span> 3. Gerenciamento de Períodos</h2>
+                    
+                    <h3>Criar Período</h3>
+                    <ol class="steps">
+                        <li>No tela inicial, clique no botão "Novo" ou no menu lateral, clique em "Meus Períodos"</li>
+                        <li>Clique na opção "Novo Período"</li>
+                        <li>Preencha os dados:
+                            <p style="margin-top: 5px;">Nome do período (ex: "2024.1", "2º Semestre")<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Data de início<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Data de término<span style="color: var(--planner-primary); font-weight:bold;">*</span></p>
+                            <div class="note">
+                                <strong>Observação:</strong> Campos marcados com um <span style="color: var(--planner-primary); font-weight:bold;">*</span> são obrigatórios.
+                            </div>
+                        </li>
+                        <li>Clique em "Salvar Período"</li>
+                    </ol>
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/criar_periodo.png" alt="Tela de criação de periodo no PlanIQ">
+                    </div>
+                    
+                    <h3>Ver Períodos</h3>
+                    <ol class="steps">
+                        <li>No menu lateral, clique em "Meus Períodos"</li>
+                        <li>Visualize todos os períodos criados</li>
+                        <li>Clique no botão "Detalhar" para ver detalhes de um período</li>
+                    </ol>
+                    
+                    <h3>Editar Período</h3>
+                    <ol class="steps">
+                        <li>Na lista de períodos, clique no período desejado</li>
+                        <li>Clique no botão "Editar"</li>
+                        <li>Faça as alterações necessárias</li>
+                        <li>Clique em "Salvar "</li>
+                    </ol>
+                    
+                    <h3>Deletar Período</h3>
+                    <ol class="steps">
+                        <li>Acesse os detalhes do período</li>
+                        <li>Clique no botão "Excluir"</li>
+                        <li>Confirme a exclusão</li>
+                    </ol>
+                    
+                    <div class="warning">
+                        <strong>Atenção:</strong> Você só poderá excluir períodos que não possuam matérias e tarefas vinculadas a si.
+                    </div>
+                </section>
+                
+                <section id="section-4">
+                    <h2><span class="material-icons">library_books</span> 4. Gerenciamento de Matérias</h2>
+                    
+                    <h3>Criar Matéria</h3>
+                    <ol class="steps">
+                        <li>No menu, clique em "Matérias"</li>
+                        <li>Clique em "Nova Matéria"</li>
+                        <li>Preencha os campos:
+                            <p style="margin-top: 5px;">Período (ex: "2024.1", "2º Semestre")<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Nome da matéria<span style="color: var(--planner-primary); font-weight:bold;">*</span></p>
+                            <div class="note">
+                                <strong>Observação:</strong> Campos marcados com um <span style="color: var(--planner-primary); font-weight:bold;">*</span> são obrigatórios.
+                            </div>
+                        </li>
+                        <li>Clique em "Salvar Matéria"</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/criar_materia.png" alt="Tela de criação de matéria no PlanIQ">
+                    </div>
+                    
+                    <h3>Ver Matérias</h3>
+                    <ol class="steps">
+                        <li>Acesse "Minhas Matérias" no menu lateral</li>
+                        <li>Visualize todas as matérias organizadas por período</li>
+                        <li>Clique no botão "Detalhar" para ver detalhes de uma matéria</li>
+                    </ol>
+                    
+                    <h3>Editar Matéria</h3>
+                    <ol class="steps">
+                        <li>Clique na matéria que deseja editar</li>
+                        <li>Clique em "Editar"</li>
+                        <li>Modifique os campos necessários</li>
+                        <li>Salve as alterações</li>
+                    </ol>
+                    
+                    <h3>Deletar Matéria</h3>
+                    <ol class="steps">
+                        <li>Acesse os detalhes da matéria</li>
+                        <li>Clique em "Excluir"</li>
+                        <li>Confirme a ação</li>
+                    </ol>
+                    
+                    <div class="warning">
+                        <strong>Atenção:</strong> Você só poderá excluir matérias que não possuam tarefas vinculadas a si.
+                    </div>
+                </section>
+                
+                <section id="section-5">
+                    <h2><span class="material-icons">assignment</span> 5. Gerenciamento de Tarefas</h2>
+                    
+                    <h3>Criar Tarefa</h3>
+                    <ol class="steps">
+                        <li>No menu, clique em "Tarefas"</li>
+                        <li>Clique em "Nova Tarefa"</li>
+                        <li>Preencha os dados:
+                            <p style="margin-top: 5px;">Título da tarefa<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Prazo<span style="color: var(--planner-primary); font-weight:bold;">*</span> <br>Nível de prioridade <br>Matéria vinculada <br>Descrição</p>
+                            <div class="note">
+                                <strong>Observação:</strong> Campos marcados com um <span style="color: var(--planner-primary); font-weight:bold;">*</span> são obrigatórios.
+                            </div>
+                        </li>
+                        <li>Clique em "Salvar Tarefa"</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/criar_tarefa.png" alt="Tela de criação de tarefas no PlanIQ">
+                    </div>
+                    
+                    <h3>Ver Tarefas</h3>
+                    <ol class="steps">
+                        <li>Acesse "Minhas Tarefas" no menu lateral</li>
+                        <li>Visualize as tarefas em formato de lista</li>
+                        <li>Clique no botão "Detalhar" para ver detalhes de uma tarefa</li>
+                    </ol>
+                    
+                    <h3>Editar Tarefa</h3>
+                    <ol class="steps">
+                        <li>Clique na tarefa desejada</li>
+                        <li>Clique no botão com icone de lápis ao lado do campo que desejar editar</li>
+                        <li>Após alterar, clique em "Salvar"</li>
+                        <li>Para mudar a urgencia da tarefa, altere a seleção de prioridade</li>
+                        <li>Para marcar como concluída, altere a seleção de status</li>
+                    </ol>
+                    
+                    <h3>Deletar Tarefa</h3>
+                    <ol class="steps">
+                        <li>Acesse os detalhes da tarefa</li>
+                        <li>Clique em "Excluir"</li>
+                        <li>Confirme a exclusão</li>
+                    </ol>
+                    
+                    <h3>Recursos Avançados de Tarefas</h3>
+                    <ul>
+                        <li><strong>Ordenação:</strong> Clique nos cabeçalhos da tabela para ordenar</li>
+                        <li><strong>Busca:</strong> Use a barra de busca para encontrar tarefas específicas</li>
+                        <li><strong>Visualização rápida:</strong> Passe o mouse sobre uma tarefa para ver detalhes</li>
+                    </ul>
+                </section>
+                
+                <section id="section-6">
+                    <h2><span class="material-icons">calendar_today</span> 6. Calendário</h2>
+                    
+                    <h3>Acessar Calendário</h3>
+                    <ol class="steps">
+                        <li>No menu lateral, clique em "Calendário"</li>
+                        <li>Visualize suas tarefas organizadas por data</li>
+                    </ol>
+                    
+                    <div class="screenshot">
+                        <img src="./manual/screenshots/calendario.png" alt="Tela do calendário no PlanIQ">
+                    </div>
+                    
+                    <h3>Funcionalidades do Calendário</h3>
+                    <ul>
+                        <li><strong>Vista mensal:</strong> Veja todo o mês com as tarefas marcadas</li>
+                        <li><strong>Vista diária:</strong> Detalhes das tarefas do dia</li>
+                        <li><strong>Navegação:</strong> Use as setas para mudar de mês/semana/dia</li>
+                    </ul>
+                    
+                    <h3>Interagir com o Calendário</h3>
+                    <ol class="steps">
+                        <li>Clique em um dia para ver as tarefas específicas</li>
+                        <li>Clique nos filtros para visualizar mês e ano específicos</li>
+                    </ol>
+                    
+                    <h3>Filtrar no Calendário</h3>
+                    <ol class="steps">
+                        <li>Use o painel de filtros no canto superior do calendário</li>
+                        <li>Selecione datas específicas para visualizar</li>
+                    </ol>
+                </section>
+                
+                <section id="section-7">
+                    <h2><span class="material-icons">person</span> 7. Perfil do Usuário</h2>
+                    
+                    <h3>Editar Perfil</h3>
+                    <ol class="steps">
+                        <li>No canto superior direito, clique em seu nome</li>
+                        <li>Clique em "Editar Perfil"</li>
+                        <li>Você poderá modificar os seguintes campos:
+                            <p style="margin-top: 5px;">Username <br>Nome de Exibição <br>Foto de perfil</p>
+                        </li>
+                        <li>Clique em "Salvar Alterações"</li>
+                    </ol>
+                </section>
+                
+                <section id="section-8">
+                    <h2><span class="material-icons">lightbulb</span> 8. Dicas e Melhores Práticas</h2>
+                    
+                    <h3>Organização Eficiente</h3>
+                    <ol class="steps">
+                        <li>Crie períodos correspondentes aos seus semestres letivos</li>
+                        <li>Associe cores diferentes para cada matéria</li>
+                        <li>Use prioridades para focar no que é importante</li>
+                        <li>Revise o calendário semanalmente</li>
+                    </ol>
+                    
+                    <h3>Produtividade</h3>
+                    <ol class="steps">
+                        <li>Crie todas as tarefas no início do período</li>
+                        <li>Atualize o status das tarefas regularmente</li>
+                        <li>Use a vista calendário para planejamento de longo prazo</li>
+                        <li>Configure lembretes para prazos importantes</li>
+                    </ol>
+                    
+                    <h3>Manutenção</h3>
+                    <ol class="steps">
+                        <li>Limpe tarefas concluídas periodicamente</li>
+                        <li>Atualize seu perfil quando houver mudanças</li>
+                        <li>Exporte dados importantes se necessário</li>
+                    </ol>
+                    
+                    <div class="tip">
+                        <strong>Dica:</strong> Utilize a funcionalidade de prioridades para identificar rapidamente quais tarefas exigem sua atenção imediata.
+                    </div>
+                </section>
+                
+                <section id="section-9">
+                    <h2><span class="material-icons">help</span> 9. Solução de Problemas</h2>
+                    
+                    <h3>Problemas Comuns</h3>
+                    
+                    <h4>Não consigo fazer login</h4>
+                    <ul>
+                        <li>Verifique se Caps Lock está ativado</li>
+                        <li>Certifique-se de que a conta foi ativada</li>
+                    </ul>
+                    
+                    <h4>Tarefas não aparecem no calendário</h4>
+                    <ul>
+                        <li>Verifique se a data está correta</li>
+                        <li>Confira os filtros aplicados</li>
+                        <li>Certifique-se de que a tarefa não está concluída</li>
+                    </ul>
+                    
+                    <h4>Página lenta</h4>
+                    <ul>
+                        <li>Limpe o cache do navegador</li>
+                        <li>Verifique sua conexão com a internet</li>
+                        <li>Feche abas não utilizadas</li>
+                    </ul>
+                </section>
+                
+                <section id="section-10">
+                    <h2><span class="material-icons">security</span> 10. Avisos Legais e Privacidade</h2>
+                    
+                    <ul>
+                        <li>Seus dados são armazenados de forma segura</li>
+                        <li>Não compartilhe sua senha com ninguém</li>
+                        <li>Faça logout ao usar computadores públicos</li>
+                        <li>O PlanIQ não se responsabiliza por prazos perdidos</li>
+                    </ul>
+                    
+                    <div class="note">
+                        <p><strong>Versão do Sistema:</strong> 1.0</p>
+                    </div>
+                    
+                    <p>Para sugestões ou feedback, entre em contato com nossa equipe de desenvolvimento.</p>
+                </section>
+            </main>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 PlanIQ - Gerenciador de Tarefas Acadêmicas. Todos os direitos reservados.</p>
+        <p>Este manual está sujeito a atualizações periódicas.</p>
+    </footer>
+
+    <script>
+        // Atualizar data atual
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('pt-BR');
+        
+        // Navegação suave para âncoras
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    // Atualizar link ativo
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Rolar suavemente para a seção
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Atualizar link ativo ao rolar
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let currentSectionId = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if(window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSectionId = '#' + section.id;
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === currentSectionId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Atualizar também o seletor móvel
+            const sectionSelector = document.querySelector('.section-selector');
+            if(sectionSelector && currentSectionId) {
+                sectionSelector.value = currentSectionId;
+            }
+        });
+        
+        // Ajustar para dispositivos móveis
+        window.addEventListener('resize', function() {
+            if(window.innerWidth <= 768) {
+                document.querySelector('.sidebar').style.position = 'static';
+            } else {
+                document.querySelector('.sidebar').style.position = 'sticky';
+            }
+        });
+    </script>
+</body>
+</html>
