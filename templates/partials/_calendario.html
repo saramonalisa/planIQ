@@ -3,15 +3,15 @@
 <div class="calendar">
   <div class="d-flex justify-content-between align-items-center mb-3">
     {% if 'calendario' in request.path %}
-    <a href="{% url 'app:calendario' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-purple">&lt;</a>
+    <a href="{% url 'app:calendario' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-light">&lt;</a>
     {% else %}
-    <a href="{% url 'app:home' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-purple">&lt;</a>
+    <a href="{% url 'app:home' %}?ano={{ ano_ant }}&mes={{ mes_ant }}" class="btn btn-outline-light">&lt;</a>
     {% endif %}
     
     <div class="d-flex align-items-center">
       <h3 class="text-center fw-bold mr-3">{{ mes_nome }} {{ ano }}
       <div class="dropdown">
-        <button class="btn btn-outline-purple btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
           Selecionar Mês/Ano
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -52,9 +52,9 @@
     </div>
 
     {% if 'calendario' in request.path %}
-    <a href="{% url 'app:calendario' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-purple">&gt;</a>
+    <a href="{% url 'app:calendario' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-light">&gt;</a>
     {% else %}
-    <a href="{% url 'app:home' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-purple">&gt;</a>
+    <a href="{% url 'app:home' %}?ano={{ ano_prox }}&mes={{ mes_prox }}" class="btn btn-outline-light">&gt;</a>
     {% endif %}
   </div>
 

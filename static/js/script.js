@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (passwordField && toggleButton) {
       if (passwordField.type === 'password') {
         passwordField.type = 'text';
-        toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+        toggleButton.innerHTML = '<i class="bi bi-eye-slash text-light"></i>';
       } else {
         passwordField.type = 'password';
-        toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+        toggleButton.innerHTML = '<i class="bi bi-eye text-light"></i>';
       }
     }
   }
@@ -21,10 +21,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (confirmPasswordField && toggleButton) {
       if (confirmPasswordField.type === 'password') {
         confirmPasswordField.type = 'text';
-        toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+        toggleButton.innerHTML = '<i class="bi bi-eye-slash text-light"></i>';
       } else {
         confirmPasswordField.type = 'password';
-        toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+        toggleButton.innerHTML = '<i class="bi bi-eye text-light"></i>';
       }
     }
   }

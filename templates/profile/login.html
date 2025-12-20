@@ -39,10 +39,8 @@
                   <div class="text-danger" id="passwordError"></div>
                 </div>
 
-                <a href="{% url 'usuarios:password_reset' %}" class="d-block text-start text-body">Esqueceu a senha?</a>
-
                 <div class="d-flex justify-content-center mt-4">
-                  <button type="submit" class="btn btn-primary">Entrar</button>
+                  <button type="submit" class="btn btn-outline-light">Entrar</button>
                 </div>
               </form>
             </div>
@@ -60,10 +58,10 @@
     
     if (passwordField.type === 'password') {
       passwordField.type = 'text';
-      toggleButton.innerHTML = '<i class="bi bi-eye-slash"></i>';
+      toggleButton.innerHTML = '<i class="bi bi-eye-slash text-light"></i>';
     } else {
       passwordField.type = 'password';
-      toggleButton.innerHTML = '<i class="bi bi-eye"></i>';
+      toggleButton.innerHTML = '<i class="bi bi-eye text-light"></i>';
     }
   }
 </script>

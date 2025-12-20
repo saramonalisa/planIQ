@@ -4,7 +4,7 @@
 <div class="container mt-5">
   <h3 class="mb-4">Meus Períodos</h3>
   <div class="mt-2">
-    <a href="{% url 'app:novo_periodo' %}" class="btn btn-outline-purple">
+    <a href="{% url 'app:novo_periodo' %}" class="btn btn-outline-light">
             <i class="bi bi-plus-circle"></i> Novo Período
         </a>
     </div>
@@ -41,16 +41,16 @@
                     <div class="card-footer bg-transparent border-top-0">
                         <div class="d-flex justify-content-between">
                             <a href="{% url 'app:detalhar_periodo' periodo.id %}" 
-                               class="btn btn-sm btn-outline-purple">
+                               class="btn btn-sm btn-outline-light">
                                 <i class="bi bi-eye"></i> Detalhar
                             </a>
                             <div class="btn-group" role="group">
                                 <a href="{% url 'app:editar_periodo' periodo.id %}" 
-                                   class="btn btn-sm btn-outline-purple">
+                                   class="btn btn-sm btn-outline-light">
                                     <i class="bi bi-pencil"></i>
                                 </a>
                                 <button type="button" 
-                                        class="btn btn-sm btn-outline-purple"
+                                        class="btn btn-sm btn-outline-light"
                                         data-bs-toggle="modal" 
                                         data-bs-target="#deleteModal{{ periodo.id }}">
                                     <i class="bi bi-trash"></i>
