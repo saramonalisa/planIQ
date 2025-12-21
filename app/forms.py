@@ -11,7 +11,7 @@ class TarefaForm(forms.ModelForm):
     
     class Meta:
         model = Tarefa
-        fields = ['titulo', 'prazo', 'descricao', 'prioridade', 'notificacoes', 'periodo', 'materia']
+        fields = ['titulo', 'prazo', 'descricao', 'prioridade', 'periodo', 'materia']
         widgets = {
             'titulo': forms.TextInput(attrs={
                 'class': 'form-control', 
@@ -30,9 +30,6 @@ class TarefaForm(forms.ModelForm):
             }),
             'prioridade': forms.Select(attrs={
                 'class': 'form-select'
-            }),
-            'notificacoes': forms.CheckboxInput(attrs={
-                'class': 'form-check-input'
             }),
             'periodo': forms.Select(attrs={
                 'class': 'form-select',

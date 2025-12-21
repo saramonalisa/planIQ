@@ -23,7 +23,6 @@ class Tarefa(models.Model):
     data_criacao = models.DateTimeField(auto_now_add=True) 
     prazo = models.DateField(blank=True, null=True) 
     prioridade = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='sem_prioridade')
-    notificacoes = models.BooleanField(default=False)
     periodo = models.ForeignKey('Periodo', on_delete=models.SET_NULL, related_name='tarefas', blank=True, null=True)
     materia = models.ForeignKey('Materia', on_delete=models.SET_NULL, related_name='tarefas', blank=True, null=True)
 
