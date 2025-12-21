@@ -32,7 +32,7 @@ Este projeto foi desenvolvido para a matéria de Programação e Desenvolvimento
 ### 1. Clone o repositório
 ```bash
 git clone https://github.com/saramonalisa/planIQ.git
-cd planiq
+cd planIQ
 ```
 
 ### 2. Crie e ative um ambiente virtual
