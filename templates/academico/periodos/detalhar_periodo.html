@@ -14,8 +14,8 @@
                 <i class="bi bi-calendar-week me-2"></i>
                 {{ periodo.nome }}
             </h4>
-            <div class="btn-group">
-                <a href="{% url 'app:detalhar_periodo' periodo.id %}" class="btn btn-outline-light btn-sm">
+            <div class="btn-group gap-2">
+                <a href="{% url 'app:editar_periodo' periodo.id %}" class="btn btn-outline-light btn-sm">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
                 <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-light btn-sm">
@@ -32,7 +32,7 @@
                 <div class="col-md-6">
                     <div class="d-flex gap-3">
                         <span class="badge bg-info fs-6">
-                            <i class="bi bi-book me-1"></i> {{ total_materias }} Matéria(s)
+                            <i class="bi bi-book me-1"></i> {{ total_materias|default:materias.count }} Matéria(s)
                         </span>
                         <span class="badge bg-secondary fs-6">
                             <i class="bi bi-check-circle me-1"></i> {{ total_tarefas }} Tarefa(s)
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-center bg-info bg-opacity-10">
+            <div class="card text-center bg-secondary bg-opacity-10">
                 <div class="card-body">
                     <h5 class="card-title">{{ tarefas_em_progresso }}</h5>
                     <p class="card-text">Em Progresso</p>
@@ -89,18 +89,50 @@
                                 </a>
                                 <small class="text-muted">
                                     <i class="bi bi-check-circle me-1"></i>
-                                    {{ materia.num_tarefas|default:0 }} tarefa(s)
+                                    {% with total=materia.tarefas.count %}
+                                        {{ total }} tarefa{{ total|pluralize }}
+                                    {% endwith %}
                                 </small>
                             </div>
                             <div class="btn-group">
-                                <a href="{% url 'app:detalhar_materia' materia.id %}" 
+                                <a href="{% url 'app:editar_materia' materia.id %}" 
                                    class="btn btn-sm btn-outline-light">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a href="{% url 'app:detalhar_materia' materia.id %}" 
-                                   class="btn btn-sm btn-outline-light">
+                                <a href="#" 
+                                   class="btn btn-sm btn-outline-light" 
+                                   data-bs-toggle="modal" 
+                                   data-bs-target="#deleteModal{{ materia.id }}">
                                     <i class="bi bi-trash"></i>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal de confirmação para excluir matéria -->
+                    <div class="modal fade" id="deleteModal{{ materia.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirmar Exclusão</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Tem certeza que deseja excluir a matéria <strong>{{ materia.nome }}</strong>?</p>
+                                    {% if materia.tarefas.count > 0 %}
+                                    <div class="alert alert-warning">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        Esta matéria possui {{ materia.tarefas.count }} tarefa(s) associada(s).
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <form action="{% url 'app:excluir_materia' materia.id %}" method="POST" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-light">Excluir</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -127,11 +159,13 @@
         </div>
         <div class="card-body">
             {% if tarefas %}
-                <ul class="list-group">
-                    <h6 class="mt-3">Pendente</h6>
-                    {% for tarefa in tarefas %}
+                <div class="tarefas-container">
+                    <!-- Tarefas Pendentes -->
+                    <h6 class="mt-3">Pendente <span class="badge bg-secondary">{{ tarefas_pendentes }}</span></h6>
+                    {% with tarefas_pendentes_list=tarefas|dictsortreversed:"atrasada"|dictsort:"status" %}
+                    {% for tarefa in tarefas_pendentes_list %}
                         {% if tarefa.status == 'pendente' %}
-                        <li class="list-group-item">
+                        <div class="list-group-item mb-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
@@ -151,14 +185,21 @@
                                     {% include "partials/_select_status.html" %}
                                 </div>
                             </div>
-                        </li>
+                        </div>
                         {% endif %}
+                    {% empty %}
+                        <div class="alert alert-light text-center py-3">
+                            <i class="bi bi-check-circle text-muted"></i>
+                            <p class="text-muted mb-0 mt-2">Nenhuma tarefa pendente neste período.</p>
+                        </div>
                     {% endfor %}
+                    {% endwith %}
                     
-                    <h6 class="mt-4">Em Andamento</h6>
+                    <!-- Tarefas Em Andamento -->
+                    <h6 class="mt-4">Em Andamento <span class="badge bg-secondary ms-2">{{ tarefas_em_progresso }}</span></h6>
                     {% for tarefa in tarefas %}
                         {% if tarefa.status == 'em_progresso' %}
-                        <li class="list-group-item">
+                        <div class="list-group-item mb-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
@@ -175,14 +216,19 @@
                                     {% include "partials/_select_status.html" %}
                                 </div>
                             </div>
-                        </li>
+                        </div>
                         {% endif %}
+                    {% empty %}
+                        <div class="alert alert-light text-center py-3">
+                            <p class="text-muted mb-0 mt-2">Nenhuma tarefa em andamento neste período.</p>
+                        </div>
                     {% endfor %}
                     
-                    <h6 class="mt-4">Concluído</h6>
-                    {% for tarefa in tarefas %}
+                    <!-- Tarefas Concluídas -->
+                    <h6 class="mt-4">Concluído <span class="badge bg-secondary ms-2">{{ tarefas_concluidas }}</span></h6>
+                    {% for tarefa in tarefas|dictsortreversed:"data_conclusao" %}
                         {% if tarefa.status == 'concluida' %}
-                        <li class="list-group-item">
+                        <div class="list-group-item mb-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
@@ -199,10 +245,14 @@
                                     {% include "partials/_select_status.html" %}
                                 </div>
                             </div>
-                        </li>
+                        </div>
                         {% endif %}
+                    {% empty %}
+                        <div class="alert alert-light text-center py-3">
+                            <p class="text-muted mb-0 mt-2">Nenhuma tarefa concluída neste período.</p>
+                        </div>
                     {% endfor %}
-                </ul>
+                </div>
             {% else %}
                 <div class="text-center py-4">
                     <i class="bi bi-clipboard text-muted" style="font-size: 3rem;"></i>
@@ -221,4 +271,31 @@
         </a>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Ordenar tarefas pendentes por status de atraso
+document.addEventListener('DOMContentLoaded', function() {
+    // Adiciona contador de tarefas nos títulos das seções
+    const pendentesCount = document.querySelectorAll('.tarefas-container [data-status="pendente"]').length;
+    const emProgressoCount = document.querySelectorAll('.tarefas-container [data-status="em_progresso"]').length;
+    const concluidasCount = document.querySelectorAll('.tarefas-container [data-status="concluida"]').length;
+    
+    // Atualiza os badges se não foram preenchidos pelo backend
+    const pendentesBadge = document.querySelector('h6:nth-of-type(1) .badge');
+    const emProgressoBadge = document.querySelector('h6:nth-of-type(2) .badge');
+    const concluidasBadge = document.querySelector('h6:nth-of-type(3) .badge');
+    
+    if (pendentesBadge && pendentesCount > 0) {
+        pendentesBadge.textContent = pendentesCount;
+    }
+    if (emProgressoBadge && emProgressoCount > 0) {
+        emProgressoBadge.textContent = emProgressoCount;
+    }
+    if (concluidasBadge && concluidasCount > 0) {
+        concluidasBadge.textContent = concluidasCount;
+    }
+});
+</script>
 {% endblock %}

@@ -67,7 +67,13 @@ def home(request):
 @login_required
 def detalhar_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
-    return render(request, "tarefas/detalhar_tarefa.html", {"tarefa": tarefa})
+    materias_disponiveis = Materia.objects.filter(usuario=request.user).order_by('nome')
+    
+    context = {
+        'tarefa': tarefa,
+        'materias_disponiveis': materias_disponiveis
+    }
+    return render(request, "tarefas/detalhar_tarefa.html", context)
 
 
 @login_required
@@ -79,6 +85,8 @@ def minhas_tarefas(request):
 @login_required
 def tarefas_do_dia(request, ano, mes, dia):
     data_escolhida = date(ano, mes, dia)
+    
+    # Filtra as tarefas para a data escolhida
     tarefas = Tarefa.objects.filter(
         usuario=request.user,
         prazo=data_escolhida
@@ -91,15 +99,40 @@ def tarefas_do_dia(request, ano, mes, dia):
             output_field=IntegerField()
         )
     ).order_by('prioridade_order')
-
+    
+    # Separa as tarefas por status
+    tarefas_pendentes_qs = tarefas.filter(status='pendente')
+    tarefas_andamento_qs = tarefas.filter(status='em_progresso')
+    tarefas_concluidas_qs = tarefas.filter(status='concluida')
+    
+    # Adiciona atributo temporário para atrasada
+    hoje = timezone.localdate()
+    
+    for tarefa in tarefas:
+        # Usa atributo temporário com underscore
+        tarefa._atrasada_temp = tarefa.prazo and tarefa.prazo < hoje and tarefa.status != 'concluida'
+    
+    # Gera o calendário para o mês atual (para navegação)
+    calendario_info = gerar_calendario(request.user, ano=ano, mes=mes)
+    
     context = {
         'data': data_escolhida,
         'tarefas': tarefas,
+        'tarefas_pendentes': tarefas_pendentes_qs,
+        'tarefas_andamento': tarefas_andamento_qs,
+        'tarefas_concluidas': tarefas_concluidas_qs,
         'ano': ano,
         'mes': mes,
-        'mes_nome': gerar_calendario(request.user)['mes_nome'],
-        'semanas': gerar_calendario(request.user)['semanas'],
-        'tarefas_por_dia': gerar_calendario(request.user)['tarefas_por_dia']
+        'dia': dia,
+        'mes_nome': calendario_info['mes_nome'],
+        'semanas': calendario_info['semanas'],
+        'tarefas_por_dia': calendario_info.get('tarefas_por_dia', {}),
+        'total_tarefas_dia': tarefas.count(),
+        'tarefas_pendentes_count': tarefas_pendentes_qs.count(),
+        'tarefas_andamento_count': tarefas_andamento_qs.count(),
+        'tarefas_concluidas_count': tarefas_concluidas_qs.count(),
+        'hoje': hoje,
+        'data_escolhida': data_escolhida,
     }
 
     return render(request, 'tarefas/tarefas_do_dia.html', context)
@@ -108,10 +141,9 @@ def tarefas_do_dia(request, ano, mes, dia):
 @login_required
 def nova_tarefa(request):
     if request.method == 'POST':
-        form = TarefaForm(request.POST)
+        form = TarefaForm(request.POST, usuario=request.user) 
         if form.is_valid():
-            tarefa = form.save(commit=False)
-            tarefa.usuario = request.user
+            tarefa = form.save(commit=False, usuario=request.user)
             tarefa.save()
             messages.success(request, "Tarefa criada com sucesso!")
             return redirect('app:home')
@@ -120,7 +152,7 @@ def nova_tarefa(request):
                 for error in field.errors:
                     messages.error(request, f"{field.label}: {error}")
     else:
-        form = TarefaForm()
+        form = TarefaForm(usuario=request.user)
 
     return render(request, 'tarefas/nova_tarefa.html', {'form': form})
 
@@ -220,6 +252,34 @@ def alterar_prioridade_tarefa(request, tarefa_id):
             'id': tarefa.id,
             'prioridade': tarefa.prioridade
         })  
+
+
+@login_required
+@require_POST
+def alterar_materia_tarefa(request, tarefa_id):
+    tarefa = get_object_or_404(Tarefa, id=tarefa_id, usuario=request.user)
+    materia_id = request.POST.get('materia')
+    
+    if materia_id:
+        try:
+            materia = Materia.objects.get(id=materia_id, usuario=request.user)
+            tarefa.materia = materia
+        except Materia.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Matéria não encontrada'})
+    else:
+        tarefa.materia = None
+    
+    tarefa.save()
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'tarefa_id': tarefa.id,
+            'materia_id': tarefa.materia.id if tarefa.materia else None,
+            'materia_nome': tarefa.materia.nome if tarefa.materia else 'Não definida'
+        })
+
+    return render(request, 'detalhar_tarefa.html')
 
 
 @login_required
@@ -358,7 +418,7 @@ def editar_materia(request, materia_id):
     else:
         form = MateriaForm(instance=materia, usuario=request.user)
     
-    return render(request, 'academico/materias/nova_materia.html', {
+    return render(request, 'academico/materias/editar_materia.html', {
         'form': form,
         'titulo': 'Editar Matéria',
         'materia': materia

@@ -107,7 +107,7 @@ body {
 }
 
 a:hover {
-  color: var(--link-hover);
+  color: var(--link-hover) !important;
   transform: scale(1.1);
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
 }
@@ -462,7 +462,7 @@ input[type="button"],
 input[type="submit"],
 input[type="reset"],
 .btn {
-  background: linear-gradient(135deg, var(--link-hover), var(--planner-border));
+  background-color: var(--link-hover) !important;
   color: white;
   border: none;
   border-radius: 25px !important;
@@ -477,7 +477,7 @@ input[type="button"]:hover,
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 .btn:hover {
-  background: linear-gradient(135deg, var(--planner-border), var(--link-hover));
+  background: var(--planner-border);
   color: white;
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 6px 12px rgba(109, 76, 151, 0.3);
@@ -662,7 +662,7 @@ Calendar
 
 .calendar-table th {
   font-size: 0.85rem;
-  background: linear-gradient(to bottom, var(--link-hover), var(--planner-border)) !important;
+  background: var(--link-hover) !important;
   color: white !important;
   text-align: center;
   padding: 0.75rem;

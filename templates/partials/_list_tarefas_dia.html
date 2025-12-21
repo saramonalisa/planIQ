@@ -1,29 +1,88 @@
 <ul class="list-group">
-  {% for tarefa in tarefas %}
-    <li class="list-group-item">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
-             class="btn btn-sm btn-outline-secondary me-2" 
-             title="Detalhar">
-            <i class="bi bi-eye"></i>
-          </a>
+  <h4 class="mt-4">Pendente</h4>
+  <div id="secao-pendente" class="secao-tarefas" data-status="pendente">
+    {% if tarefas_pendentes %}
+      {% for tarefa in tarefas_pendentes %}
+        <li class="list-group-item tarefa-item" data-tarefa-id="{{ tarefa.id }}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                 class="btn btn-sm btn-outline-light me-2" 
+                 title="Detalhar">
+                <i class="bi bi-eye"></i> Detalhar
+              </a>
+              <strong>{{ tarefa.titulo }}</strong>
+              {% if tarefa.atrasada %}
+                <span class="badge bg-danger ms-2">Atrasada</span>
+              {% endif %}
+            </div>
+            <div class="d-flex align-items-center">
+              {% include "partials/_select_status.html" %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="list-group-item text-center text-muted sem-tarefas">
+        Nenhuma tarefa pendente.
+      </li>
+    {% endif %}
+  </div>
 
-          <strong>{{ tarefa.titulo }}</strong>
+  <h4 class="mt-4">Em Andamento</h4>
+  <div id="secao-em_progresso" class="secao-tarefas" data-status="em_progresso">
+    {% if tarefas_andamento %}
+      {% for tarefa in tarefas_andamento %}
+        <li class="list-group-item tarefa-item" data-tarefa-id="{{ tarefa.id }}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                 class="btn btn-sm btn-outline-light me-2" 
+                 title="Detalhar">
+                <i class="bi bi-eye"></i> Detalhar
+              </a>
+              <strong>{{ tarefa.titulo }}</strong>
+              {% if tarefa.atrasada %}
+                <span class="badge bg-danger ms-2">Atrasada</span>
+              {% endif %}
+            </div>
+            <div class="d-flex align-items-center">
+              {% include "partials/_select_status.html" %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="list-group-item text-center text-muted sem-tarefas">
+        Nenhuma tarefa em andamento.
+      </li>
+    {% endif %}
+  </div>
 
-          {% if tarefa.atrasada and tarefa.status != 'concluida' %}
-            <span class="badge bg-danger ms-2">Atrasada</span>
-          {% endif %}
-        </div>
-
-        <div class="d-flex align-items-center">
-          {% include "partials/_select_status.html" %}
-        </div>
-      </div>
-    </li>
-  {% empty %}
-    <li class="list-group-item text-center text-muted">
-      Nenhuma tarefa para este dia.
-    </li>
-  {% endfor %}
+  <h4 class="mt-4">Concluído</h4>
+  <div id="secao-concluida" class="secao-tarefas" data-status="concluida">
+    {% if tarefas_concluidas %}
+      {% for tarefa in tarefas_concluidas %}
+        <li class="list-group-item tarefa-item" data-tarefa-id="{{ tarefa.id }}">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
+                 class="btn btn-sm btn-outline-light me-2" 
+                 title="Detalhar">
+                <i class="bi bi-eye"></i> Detalhar
+              </a>
+              <strong class="text-decoration-line-through">{{ tarefa.titulo }}</strong>
+            </div>
+            <div class="d-flex align-items-center">
+              {% include "partials/_select_status.html" %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li class="list-group-item text-center text-muted sem-tarefas">
+        Nenhuma tarefa concluída.
+      </li>
+    {% endif %}
+  </div>
 </ul>

@@ -108,7 +108,7 @@
                 </div>
 
                 <div class="d-grid gap-3">
-                    <a href="{% url 'usuarios:login' %}" class="btn btn-planner-primary rounded-pill py-3">
+                    <a href="{% url 'usuarios:login' %}" class="btn btn-outline-light fw-bold rounded-pill py-3">
                         <i class="bi bi-box-arrow-in-right me-2"></i>
                         Entrar na minha conta
                     </a>
@@ -129,23 +129,16 @@
 
 <style>
     :root {
-        --planner-blue: #4a6fa5;
-        --planner-green: #6b9c7d;
-        --planner-orange: #e68a6c;
-        --planner-yellow: #f2c94c;
+        --roxo-escuro: #8b6fcf;    /* Roxo principal */
+        --roxo-claro: #b8c4d4;     /* Roxo claro/acinzentado */
         --planner-paper: #fffef7;
         --planner-lines: #e6e2d6;
         --planner-text: #2c3e50;
     }
 
-    .planner-title {
-        color: var(--planner-text);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
     .plan-title {
-        color: var(--planner-blue);
-        background: linear-gradient(135deg, var(--planner-blue), var(--planner-green));
+        color: var(--roxo-escuro);
+        background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-claro));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -154,7 +147,7 @@
     .planner-subtitle-line {
         width: 120px;
         height: 4px;
-        background: linear-gradient(to right, var(--planner-blue), var(--planner-green));
+        background: linear-gradient(to right, var(--roxo-escuro), var(--roxo-claro));
         margin: 10px 0 20px 0;
         border-radius: 2px;
     }
@@ -175,7 +168,7 @@
     }
 
     .checklist-marker {
-        color: var(--planner-green);
+        color: var(--roxo-escuro);
         font-size: 1.2rem;
         min-width: 24px;
     }
@@ -191,14 +184,14 @@
         border-radius: 12px;
         position: relative;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px rgba(139, 111, 207, 0.05);
         overflow: hidden;
     }
 
     .planner-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        border-color: var(--planner-blue);
+        box-shadow: 0 8px 15px rgba(139, 111, 207, 0.1);
+        border-color: var(--roxo-claro);
     }
 
     .card-corner {
@@ -209,7 +202,7 @@
         height: 0;
         border-style: solid;
         border-width: 0 40px 40px 0;
-        border-color: transparent var(--planner-blue) transparent transparent;
+        border-color: transparent var(--roxo-escuro) transparent transparent;
     }
 
     .planner-icon-wrapper {
@@ -220,18 +213,18 @@
     .planner-icon-circle {
         width: 70px;
         height: 70px;
-        background: linear-gradient(135deg, var(--planner-blue), var(--planner-green));
+        background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-claro));
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         color: white;
         font-size: 1.8rem;
-        box-shadow: 0 4px 8px rgba(74, 111, 165, 0.2);
+        box-shadow: 0 4px 8px rgba(139, 111, 207, 0.2);
     }
 
     .planner-card-title {
-        color: var(--planner-blue);
+        color: var(--roxo-escuro);
         text-align: center;
     }
 
@@ -244,18 +237,18 @@
     .planner-divider {
         width: 60px;
         height: 2px;
-        background: linear-gradient(to right, var(--planner-blue), var(--planner-green));
+        background: linear-gradient(to right, var(--roxo-escuro), var(--roxo-claro));
         margin: 20px auto 0 auto;
         border-radius: 1px;
     }
 
     .planner-access-card {
         background-color: var(--planner-paper);
-        border: 2px solid var(--planner-blue);
+        border: 2px solid var(--roxo-claro);
         border-radius: 16px;
         padding: 2.5rem;
         position: relative;
-        box-shadow: 0 6px 12px rgba(74, 111, 165, 0.15);
+        box-shadow: 0 6px 12px rgba(139, 111, 207, 0.15);
     }
 
     .card-header-line {
@@ -264,14 +257,14 @@
         left: 20px;
         right: 20px;
         height: 4px;
-        background: linear-gradient(to right, var(--planner-blue), var(--planner-green));
+        background: linear-gradient(to right, var(--roxo-escuro), var(--roxo-claro));
         border-radius: 0 0 2px 2px;
     }
 
     .planner-logo {
         width: 80px;
         height: 80px;
-        background: linear-gradient(135deg, var(--planner-blue), var(--planner-green));
+        background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-claro));
         border-radius: 50%;
         display: inline-flex;
         align-items: center;
@@ -290,22 +283,10 @@
         opacity: 0.8;
     }
 
-    .btn-planner-primary {
-        background: linear-gradient(135deg, var(--planner-blue), var(--planner-green));
-        border: none;
-        color: white;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-
-    .btn-planner-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(74, 111, 165, 0.3);
-    }
-
-    .btn-planner-outline:hover {
-        background-color: var(--planner-blue);
-        color: white;
+    .btn-outline-light:hover {
+        background: linear-gradient(135deg, var(--roxo-escuro), var(--roxo-claro));
+        border-color: #6d4c97 !important;
+        color: #6d4c97 !important;
         transform: translateY(-2px);
     }
 

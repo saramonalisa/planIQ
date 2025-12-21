@@ -3,83 +3,122 @@
 {% block content %}
 <div class="container mt-5">
   <h3 class="mb-4">Minhas Matérias</h3>
-        <div class="btn-group">
-            <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-light">
-                <i class="bi bi-plus-circle"></i> Nova Matéria
-            </a>
-            <a href="{% url 'app:meus_periodos' %}" class="btn btn-outline-light">
-                <i class="bi bi-calendar-week"></i> Períodos
-            </a>
-        </div>
-    </div>
-
-    {% if periodos %}
-        {% for periodo in periodos %}
-            {% if periodo.materias_list %}
-            <div class="card shadow my-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="bi bi-calendar-week me-2"></i>
-                        {{ periodo.nome }}
-                    </h5>
-                    <span class="badge bg-light text-dark">{{ periodo.materias_list|length }} matéria(s)</span>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        {% for materia in periodo.materias_list %}
-                        <div class="col-md-6 col-lg-4 mb-3">
-                            <div class="card h-100 border">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <h6 class="card-title mb-0">{{ materia.nome }}</h6>
-                                        <span class="badge bg-info text-dark">{{ materia.num_tarefas }} tarefa(s)</span>
-                                    </div>
-                                    <p class="card-text text-muted small">
-                                        <i class="bi bi-calendar-week me-1"></i>
-                                        Período: {{ periodo.nome }}
-                                    </p>
-                                </div>
-                                <div class="card-footer bg-transparent border-top-0">
-                                    <div class="d-flex justify-content-between">
-                                        <a href="{% url 'app:detalhar_materia' materia.id %}" 
-                                           class="btn btn-sm btn-outline-light">
-                                            <i class="bi bi-eye"></i> Detalhar
-                                        </a>
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'app:editar_materia' materia.id %}" 
-                                               class="btn btn-sm btn-outline-light">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="{% url 'app:excluir_materia' materia.id %}" 
-                                               class="btn btn-sm btn-outline-light">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <div class="alert alert-info text-center">
-            <i class="bi bi-info-circle me-2"></i>
-            Você ainda não tem matérias cadastradas.
-            <div class="mt-3">
-                <a href="{% url 'app:nova_materia' %}" class="btn btn-primary me-2">
-                    <i class="bi bi-plus-circle"></i> Criar Matéria
-                </a>
-                <a href="{% url 'app:novo_periodo' %}" class="btn btn-outline-primary">
-                    <i class="bi bi-calendar-plus"></i> Criar Período
-                </a>
-            </div>
-        </div>
-    {% endif %}
+  <div class="btn-group gap-2">
+    <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-light">
+      <i class="bi bi-plus-circle"></i> Nova Matéria
+    </a>
+    <a href="{% url 'app:meus_periodos' %}" class="btn btn-outline-light">
+      <i class="bi bi-calendar-week"></i> Períodos
+    </a>
   </div>
+
+  {% if periodos %}
+    {% for periodo in periodos %}
+      {% if periodo.materias_list %}
+      <div class="card shadow my-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="bi bi-calendar-week me-2"></i>
+            {{ periodo.nome }}
+          </h5>
+          <span class="badge bg-light text-dark">{{ periodo.materias_list|length }} matéria(s)</span>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% for materia in periodo.materias_list %}
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="card-title mb-0">{{ materia.nome }}</h6>
+                    <span class="badge bg-info text-dark">{{ materia.num_tarefas }} tarefa(s)</span>
+                  </div>
+                  <p class="card-text text-muted small">
+                    <i class="bi bi-calendar-week me-1"></i>
+                    Período: {{ periodo.nome }}
+                  </p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                  <div class="d-flex justify-content-between">
+                    <a href="{% url 'app:detalhar_materia' materia.id %}" 
+                       class="btn btn-sm btn-outline-light">
+                      <i class="bi bi-eye"></i> Detalhar
+                    </a>
+                    <div class="btn-group gap-2">
+                      <a href="{% url 'app:editar_materia' materia.id %}" 
+                         class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-pencil"></i>
+                      </a>
+                      <button type="button" 
+                              class="btn btn-sm btn-outline-light" 
+                              data-bs-toggle="modal" 
+                              data-bs-target="#deleteModal{{ materia.id }}">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info text-center">
+      <i class="bi bi-info-circle me-2"></i>
+      Você ainda não tem matérias cadastradas.
+      <div class="mt-3">
+        <a href="{% url 'app:nova_materia' %}" class="btn btn-outline-light me-2">
+          <i class="bi bi-plus-circle"></i> Criar Matéria
+        </a>
+        <a href="{% url 'app:novo_periodo' %}" class="btn btn-outline-primary">
+          <i class="bi bi-calendar-plus"></i> Criar Período
+        </a>
+      </div>
+    </div>
+  {% endif %}
 </div>
+
+<!-- MODAIS DE EXCLUSÃO (FORA DO LOOP PRINCIPAL) -->
+{% for periodo in periodos %}
+  {% for materia in periodo.materias_list %}
+  <div class="modal fade" id="deleteModal{{ materia.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Tem certeza que deseja excluir a matéria:</p>
+          <div class="alert alert-light border mb-3">
+            <h6 class="text-center mb-2"><strong>{{ materia.nome }}</strong></h6>
+            <p class="text-center text-muted small mb-0">
+              Período: {{ periodo.nome }}
+            </p>
+          </div>
+          {% if materia.num_tarefas > 0 %}
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Esta matéria possui {{ materia.num_tarefas }} tarefa(s) associada(s).
+            Todas as tarefas também serão excluídas.
+          </div>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <form action="{% url 'app:excluir_materia' materia.id %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-light">Excluir Matéria</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% endfor %}
 
 {% endblock %}

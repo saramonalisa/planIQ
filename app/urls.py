@@ -18,6 +18,7 @@ urlpatterns = [
     path('tarefas/excluir/<int:tarefa_id>/', views.excluir_tarefa, name='excluir_tarefa'),
     path('tarefas/alterar_status/<int:tarefa_id>/', views.alterar_status_tarefa, name='alterar_status_tarefa'),
     path('tarefas/alterar_prioridade/<int:tarefa_id>/', views.alterar_prioridade_tarefa, name='alterar_prioridade_tarefa'),
+    path('tarefas/alterar_materia/<int:tarefa_id>/', views.alterar_materia_tarefa, name='alterar_materia_tarefa'),
     path('calendario/', views.calendario, name='calendario'),
     
     #Acadêmico - Períodos e Matérias

@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  const applyTheme = (theme) => {
+  /* const applyTheme = (theme) => {
     if (theme === 'dark') {
       document.body.classList.add('dark-mode');
     } else {
@@ -117,6 +117,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const isDark = themeToggle.checked;
       applyTheme(isDark ? 'dark' : 'light');
     });
-  }
+  } */
 
 });

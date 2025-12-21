@@ -11,12 +11,34 @@
         <span class="text">Início</span>
       </a>
     </li>
-    <li>
-      <a href="{% url 'app:nova_tarefa' %}" class="nav-link">
+    
+    <li class="nav-item dropdown">
+      <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
         <i class="bi bi-plus-circle"></i>
         <span class="text">Novo</span>
       </a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        <li>
+          <a class="dropdown-item" href="{% url 'app:nova_tarefa' %}">
+            <i class="bi bi-card-checklist me-2"></i>
+            Nova Tarefa
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="{% url 'app:novo_periodo' %}">
+            <i class="bi bi-calendar-plus me-2"></i>
+            Novo Período
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item" href="{% url 'app:nova_materia' %}">
+            <i class="bi bi-journal-plus me-2"></i>
+            Nova Matéria
+          </a>
+        </li>
+      </ul>
     </li>
+    
     <li>
       <a href="{% url 'app:minhas_tarefas' %}" class="nav-link">
         <i class="bi bi-list-task"></i>
@@ -43,8 +65,8 @@
     </li>
     <li>
       <a href="{% url 'usuarios:configuracoes' %}" class="nav-link">
-      <i class="bi bi-gear"></i>
-      <span class="text">Configurações</span>
+        <i class="bi bi-gear"></i>
+        <span class="text">Configurar Perfil</span>
       </a>
     </li>
   </ul>

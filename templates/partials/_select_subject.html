@@ -1,0 +1,69 @@
+<form method="post" action="{% url 'app:alterar_materia_tarefa' tarefa.id %}" class="materia-form" data-tarefa-id="{{ tarefa.id }}">
+  {% csrf_token %}
+  <select name="materia" class="form-select form-select-sm materia-selector-ajax d-inline w-auto" 
+          data-tarefa-id="{{ tarefa.id }}" 
+          aria-label="Alterar matéria da tarefa">
+    <option value="">Não definida</option>
+    {% for materia in materias_disponiveis %}
+      <option value="{{ materia.id }}" 
+              {% if tarefa.materia and tarefa.materia.id == materia.id %}selected{% endif %}>
+        {{ materia.nome }}
+      </option>
+    {% endfor %}
+  </select>
+  <div class="spinner-border spinner-border-sm text-primary d-none" role="status" id="spinner-{{ tarefa.id }}">
+    <span class="visually-hidden">Carregando...</span>
+  </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Seleciona todos os selects de matéria com AJAX
+  const materiaSelectsAjax = document.querySelectorAll('.materia-selector-ajax');
+  
+  materiaSelectsAjax.forEach(select => {
+    select.addEventListener('change', function() {
+      const tarefaId = this.getAttribute('data-tarefa-id');
+      const materiaId = this.value;
+      const form = this.closest('form');
+      
+      // Envia via AJAX
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `materia=${materiaId}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Feedback visual de sucesso
+          const option = this.querySelector(`option[value="${materiaId}"]`);
+          if (option) {
+            const originalColor = this.style.color;
+            this.style.color = '#28a745'; // Verde para sucesso
+            setTimeout(() => {
+              this.style.color = originalColor;
+            }, 1000);
+          }
+        } else {
+          alert('Erro ao atualizar matéria: ' + data.message);
+          // Reverte para o valor anterior
+          const previousValue = form.getAttribute('data-previous-value');
+          this.value = previousValue || '';
+        }
+      })
+      .finally(() => {
+        // Esconde spinner
+        if (spinner) spinner.classList.add('d-none');
+      });
+      
+      // Salva o valor anterior
+      form.setAttribute('data-previous-value', this.getAttribute('data-current-value'));
+      this.setAttribute('data-current-value', materiaId);
+    });
+  });
+});
+</script>

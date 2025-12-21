@@ -76,11 +76,11 @@
                                 </div>
                                 {% endif %}
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <div class="modal-footer gap-2">
+                                <button type="button" class="btn btn-secondary mr-2" data-bs-dismiss="modal">Cancelar</button>
                                 <form action="{% url 'app:excluir_periodo' periodo.id %}" method="POST" style="display: inline;">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-danger">Excluir</button>
+                                    <button type="submit" class="btn btn-outline-light">Excluir</button>
                                 </form>
                             </div>
                         </div>

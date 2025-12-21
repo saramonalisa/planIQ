@@ -9,7 +9,7 @@
               <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
                  class="btn btn-sm btn-outline-light me-2" 
                  title="Detalhar">
-                <i class="bi bi-eye"></i>
+                <i class="bi bi-eye"></i> Detalhar
               </a>
               <strong>{{ tarefa.titulo }}</strong>
               {% if tarefa.atrasada and tarefa.status != 'concluida' %}
@@ -39,7 +39,7 @@
               <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
                  class="btn btn-sm btn-outline-light me-2" 
                  title="Detalhar">
-                <i class="bi bi-eye"></i>
+                <i class="bi bi-eye"></i> Detalhar
               </a>
               <strong>{{ tarefa.titulo }}</strong>
               {% if tarefa.atrasada and tarefa.status != 'concluida' %}
@@ -69,7 +69,7 @@
               <a href="{% url 'app:detalhar_tarefa' tarefa.id %}" 
                  class="btn btn-sm btn-outline-light me-2" 
                  title="Detalhar">
-                <i class="bi bi-eye"></i>
+                <i class="bi bi-eye"></i> Detalhar
               </a>
               <strong class="text-decoration-line-through">{{ tarefa.titulo }}</strong>
               {% if tarefa.atrasada and tarefa.status != 'concluida' %}

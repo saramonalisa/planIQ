@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+{% load static widget_tweaks crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Cabeçalho com navegação -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <button class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+                <i class="bi bi-arrow-left me-1"></i> Voltar
+            </button>
+            <h2 class="d-inline-block ms-3 mb-0">
+                <i class="bi bi-pencil-square text-primary me-2"></i>
+                Editar Período
+            </h2>
+        </div>
+        
+        <div class="text-end">
+            <span class="badge bg-light text-dark border">
+                <i class="bi bi-hash me-1"></i> ID: {{ periodo.id }}
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar2-week me-2"></i>
+                            Informações do Período
+                        </h5>
+                        <span class="badge bg-light text-primary">
+                            Editando
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form method="POST" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Nome do Período -->
+                        <div class="mb-4">
+                            <label for="{{ form.nome.id_for_label }}" class="form-label fw-semibold">
+                                <i class="bi bi-tag me-1"></i>
+                                Nome do Período
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.nome|add_class:"form-control form-control-lg"|attr:"placeholder:Ex: 1º Semestre 2024, Férias, etc" }}
+                            {% if form.nome.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.nome.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Dê um nome descritivo para identificar facilmente este período
+                            </small>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Data de Início -->
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.data_inicio.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-calendar-date me-1"></i>
+                                    Data de Início
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.data_inicio|add_class:"form-control"|attr:"type:date" }}
+                                {% if form.data_inicio.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.data_inicio.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Data de Término -->
+                            <div class="col-md-6 mb-4">
+                                <label for="{{ form.data_fim.id_for_label }}" class="form-label fw-semibold">
+                                    <i class="bi bi-calendar-check me-1"></i>
+                                    Data de Término
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.data_fim|add_class:"form-control"|attr:"type:date" }}
+                                {% if form.data_fim.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.data_fim.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Descrição (se houver no formulário) -->
+                        {% if form.descricao %}
+                        <div class="mb-4">
+                            <label for="{{ form.descricao.id_for_label }}" class="form-label fw-semibold">
+                                <i class="bi bi-text-paragraph me-1"></i>
+                                Descrição
+                            </label>
+                            {{ form.descricao|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Adicione uma descrição detalhada sobre este período..." }}
+                            {% if form.descricao.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.descricao.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Informações adicionais sobre este período acadêmico
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Cor (se houver no formulário) -->
+                        {% if form.cor %}
+                        <div class="mb-4">
+                            <label for="{{ form.cor.id_for_label }}" class="form-label fw-semibold">
+                                <i class="bi bi-palette me-1"></i>
+                                Cor do Período
+                            </label>
+                            {{ form.cor|add_class:"form-control form-control-color"|attr:"type:color"|attr:"style:height: 40px; width: 60px;" }}
+                            {% if form.cor.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.cor.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                Escolha uma cor para identificar este período no calendário
+                            </small>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Botões de ação -->
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                            <div>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    <i class="bi bi-trash me-1"></i> Excluir
+                                </button>
+                            </div>
+                            
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                    <i class="bi bi-x-circle me-1"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-check-circle me-1"></i> Salvar Alterações
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Painel lateral com informações -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Resumo do Período
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <p class="mb-1 text-muted small">Status</p>
+                        <span class="badge {% if periodo.ativo %}bg-success{% else %}bg-secondary{% endif %}">
+                            {% if periodo.ativo %}
+                                <i class="bi bi-check-circle me-1"></i> Ativo
+                            {% else %}
+                                <i class="bi bi-x-circle me-1"></i> Inativo
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1 text-muted small">Data de Criação</p>
+                        <p class="mb-0 fw-semibold">{{ periodo.data_criacao|date:"d/m/Y H:i" }}</p>
+                    </div>
+                    
+                    {% if periodo.data_inicio and periodo.data_fim %}
+                    <div class="mb-3">
+                        <p class="mb-1 text-muted small">Duração</p>
+                        <p class="mb-0 fw-semibold">{{ periodo.duracao }} dias</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <p class="mb-1 text-muted small">Matérias Associadas</p>
+                        <p class="mb-0 fw-semibold">{{ periodo.num_materias }} matéria(s)</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="mb-1 text-muted small">Tarefas Associadas</p>
+                        <p class="mb-0 fw-semibold">{{ periodo.num_tarefas }} tarefa(s)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        Dicas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Mantenha o nome do período claro e descritivo
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Verifique se as datas estão corretas
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Alterações aqui afetam todas as matérias do período
+                        </li>
+                        <li>
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Períodos não podem ter datas sobrepostas
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <div class="d-flex align-items-center">
+                    <div class="bg-danger bg-opacity-10 rounded-circle p-2 me-3">
+                        <i class="bi bi-exclamation-triangle-fill text-danger fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title mb-0">Excluir Período</h5>
+                        <p class="text-muted small mb-0">Esta ação é permanente</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <div class="modal-body">
+                <p>Tem certeza que deseja excluir permanentemente o período:</p>
+                <div class="alert alert-light border">
+                    <h6 class="fw-bold text-center mb-2">{{ periodo.nome }}</h6>
+                    <div class="text-center text-muted small">
+                        {{ periodo.data_inicio|date:"d/m/Y" }} - {{ periodo.data_fim|date:"d/m/Y" }}
+                    </div>
+                </div>
+                
+                {% if periodo.num_materias > 0 %}
+                <div class="alert alert-warning">
+                    <div class="d-flex">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <div>
+                            <strong>Atenção!</strong>
+                            <p class="mb-0 small">
+                                Este período possui {{ periodo.num_materias }} matéria(s) associada(s).
+                                <strong>Todas as matérias e tarefas serão excluídas permanentemente.</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                <form action="{% url 'app:excluir_periodo' periodo.id %}" method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-light">
+                        <i class="bi bi-trash me-1"></i> Excluir Permanentemente
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control-lg {
+        font-size: 1.1rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .form-label {
+        font-weight: 500;
+    }
+    
+    .card-header {
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+    }
+    
+    .list-unstyled li {
+        padding-left: 0;
+    }
+    
+    @media (max-width: 768px) {
+        .btn-group {
+            width: 100%;
+        }
+        
+        .btn-group .btn {
+            flex: 1;
+        }
+    }
+</style>
+
+<script>
+    // Validação de datas no frontend
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataInicio = document.getElementById('{{ form.data_inicio.id_for_label }}');
+        const dataFim = document.getElementById('{{ form.data_fim.id_for_label }}');
+        
+        function validarDatas() {
+            if (dataInicio.value && dataFim.value) {
+                const inicio = new Date(dataInicio.value);
+                const fim = new Date(dataFim.value);
+                
+                if (fim < inicio) {
+                    dataFim.setCustomValidity('A data de término não pode ser anterior à data de início');
+                    dataFim.classList.add('is-invalid');
+                } else {
+                    dataFim.setCustomValidity('');
+                    dataFim.classList.remove('is-invalid');
+                }
+            }
+        }
+        
+        if (dataInicio) dataInicio.addEventListener('change', validarDatas);
+        if (dataFim) dataFim.addEventListener('change', validarDatas);
+        
+        // Validação inicial
+        validarDatas();
+        
+        // Validação antes do envio
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        });
+    });
+</script>
+
+{% endblock %}

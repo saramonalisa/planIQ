@@ -1,10 +1,143 @@
-<form method="post" action="{% url 'app:alterar_prioridade_tarefa' tarefa.id %}">
-    {% csrf_token %}
-    <select name="prioridade" class="form-select form-select-sm prioridade-selector d-inline w-auto"
-        data-tarefa-id="{{ tarefa.id }}" aria-label="Alterar prioridade da tarefa">
+<form method="post" action="{% url 'app:alterar_prioridade_tarefa' tarefa.id %}" 
+      class="prioridade-form" data-tarefa-id="{{ tarefa.id }}">
+  {% csrf_token %}
+  <select name="prioridade" class="form-select form-select-sm prioridade-selector d-inline w-auto"
+          data-tarefa-id="{{ tarefa.id }}" aria-label="Alterar prioridade da tarefa">
     <option value="alta" {% if tarefa.prioridade == 'alta' %}selected{% endif %}>Alta</option>
     <option value="media" {% if tarefa.prioridade == 'media' %}selected{% endif %}>Média</option>
     <option value="baixa" {% if tarefa.prioridade == 'baixa' %}selected{% endif %}>Baixa</option>
     <option value="sem_prioridade" {% if tarefa.prioridade == 'sem_prioridade' %}selected{% endif %}>Sem Prioridade</option>
   </select>
 </form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Seleciona todos os selects de prioridade
+  const prioridadeSelects = document.querySelectorAll('.prioridade-selector');
+  
+  prioridadeSelects.forEach(select => {
+    // Aplica cor inicial baseada na prioridade atual
+    aplicarCorPrioridade(select, select.value);
+    
+    select.addEventListener('change', function() {
+      const tarefaId = this.getAttribute('data-tarefa-id');
+      const novaPrioridade = this.value;
+      const form = this.closest('form');
+      
+      // Salva o valor anterior para possível reversão
+      const valorAnterior = this.value;
+      
+      // Envia via AJAX
+      fetch(form.action, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `prioridade=${novaPrioridade}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.id && data.prioridade) {
+          // Aplica a nova cor
+          aplicarCorPrioridade(this, novaPrioridade);
+          
+          // Feedback visual de sucesso
+          const originalBorder = this.style.border;
+          this.style.border = '2px solid #28a745';
+          
+          setTimeout(() => {
+            this.style.border = originalBorder;
+          }, 500);
+          
+          // Atualiza badge de prioridade se existir
+          atualizarBadgePrioridade(tarefaId, novaPrioridade);
+        } else {
+          console.error('Resposta inesperada:', data);
+          reverterValor(this, valorAnterior);
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao atualizar prioridade.');
+        reverterValor(this, valorAnterior);
+      });
+    });
+    
+    // Aplica cor quando carrega a página
+    aplicarCorPrioridade(select, select.value);
+  });
+  
+  // Função para aplicar cor baseada na prioridade
+  function aplicarCorPrioridade(selectElement, prioridade) {
+    // Remove classes de cor anteriores
+    selectElement.classList.remove(
+      'prioridade-alta', 
+      'prioridade-media', 
+      'prioridade-baixa', 
+      'prioridade-sem'
+    );
+    
+    // Adiciona classe baseada na prioridade
+    switch(prioridade) {
+      case 'alta':
+        selectElement.classList.add('prioridade-alta');
+        selectElement.style.color = '#dc3545'; // Vermelho
+        selectElement.style.fontWeight = 'bold';
+        break;
+      case 'media':
+        selectElement.classList.add('prioridade-media');
+        selectElement.style.color = '#fd7e14'; // Laranja
+        selectElement.style.fontWeight = '600';
+        break;
+      case 'baixa':
+        selectElement.classList.add('prioridade-baixa');
+        selectElement.style.color = '#28a745'; // Verde
+        selectElement.style.fontWeight = '500';
+        break;
+      case 'sem_prioridade':
+        selectElement.classList.add('prioridade-sem');
+        selectElement.style.color = '#6c757d'; // Cinza
+        selectElement.style.fontWeight = 'normal';
+        break;
+    }
+  }
+  
+  // Função para reverter valor em caso de erro
+  function reverterValor(selectElement, valorAnterior) {
+    selectElement.value = valorAnterior;
+    aplicarCorPrioridade(selectElement, valorAnterior);
+  }
+  
+  // Função para atualizar badge de prioridade (se existir)
+  function atualizarBadgePrioridade(tarefaId, prioridade) {
+    const badge = document.querySelector(`.badge-prioridade[data-tarefa-id="${tarefaId}"]`);
+    if (!badge) return;
+    
+    // Remove classes anteriores
+    badge.classList.remove(
+      'bg-danger', 'bg-warning', 'bg-success', 'bg-secondary',
+      'text-white', 'text-dark'
+    );
+    
+    // Aplica novas classes baseadas na prioridade
+    switch(prioridade) {
+      case 'alta':
+        badge.classList.add('bg-danger', 'text-white');
+        badge.textContent = 'Alta';
+        break;
+      case 'media':
+        badge.classList.add('bg-warning', 'text-dark');
+        badge.textContent = 'Média';
+        break;
+      case 'baixa':
+        badge.classList.add('bg-success', 'text-white');
+        badge.textContent = 'Baixa';
+        break;
+      case 'sem_prioridade':
+        badge.classList.add('bg-secondary', 'text-white');
+        badge.textContent = 'Sem';
+        break;
+    }
+  }
+});
+</script>

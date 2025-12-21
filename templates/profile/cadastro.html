@@ -19,59 +19,107 @@
                   <hr class="flex-grow-1">
               </div>
 
-              <form id="registrationForm" method="POST" enctype="multipart/form-data">
+              <!-- MOSTRA ERROS APENAS SE O FORM FOI ENVIADO -->
+              {% if form.errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Erro no cadastro!</strong> Por favor, corrija os erros abaixo.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endif %}
+
+              <form method="POST" enctype="multipart/form-data" id="registrationForm">
                 {% csrf_token %}
 
                 <div class="row">
                   <div class="col-md-6">
                     <div class="mb-3">
-                      <label for="username" class="form-label">Nome de Usuário</label>
+                      <label for="id_username" class="form-label">
+                        Nome de Usuário <span class="text-danger">*</span>
+                      </label>
                       {{ form.username|add_class:"form-control" }}
-                      <div class="text-danger" id="usernameError"></div>
+                      {% if form.username.errors %}
+                        <div class="text-danger small mt-1">
+                          {{ form.username.errors.0 }}
+                        </div>
+                      {% endif %}
+                      <small class="form-text text-muted">Este é o nome de usuário que será usado para login.</small>
                     </div>
 
                     <div class="mb-3">
-                      <label for="email" class="form-label">E-mail</label>
+                      <label for="id_email" class="form-label">
+                        E-mail <span class="text-danger">*</span>
+                      </label>
                       {{ form.email|add_class:"form-control" }}
-                      <div class="text-danger" id="emailError"></div>
+                      {% if form.email.errors %}
+                        <div class="text-danger small mt-1">
+                          {{ form.email.errors.0 }}
+                        </div>
+                      {% endif %}
                     </div>
 
                     <div class="mb-3">
-                      <label for="password" class="form-label">Senha</label>
+                      <label for="id_password" class="form-label">
+                        Senha <span class="text-danger">*</span>
+                      </label>
                       <div class="input-group">
                         {{ form.password|add_class:"form-control" }}
-                        <button type="button" class="btn btn-outline-secondary" id="togglePassword" onclick="togglePasswordVisibility()">
+                        <button type="button" class="btn btn-outline-secondary toggle-password">
                           <i class="bi bi-eye"></i>
                         </button>
                       </div>
-                      <div class="text-danger" id="passwordError"></div>
+                      {% if form.password.errors %}
+                        <div class="text-danger small mt-1">
+                          {{ form.password.errors.0 }}
+                        </div>
+                      {% endif %}
+                      <small class="form-text text-muted">Mínimo de 8 caracteres.</small>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="mb-3">
-                      <label for="nome" class="form-label">Nome de Exibição</label>
+                      <label for="id_nome" class="form-label">
+                        Nome de Exibição <span class="text-danger">*</span>
+                      </label>
                       {{ form.nome|add_class:"form-control" }}
-                      <div class="text-danger" id="nomeError"></div>
+                      {% if form.nome.errors %}
+                        <div class="text-danger small mt-1">
+                          {{ form.nome.errors.0 }}
+                        </div>
+                      {% endif %}
+                      <small class="form-text text-muted">Este é o nome que será exibido para outros usuários.</small>
                     </div>
 
                     <div class="mb-3">
-                      <label for="avatar" class="form-label">Foto de perfil</label>
+                      <label for="id_avatar" class="form-label">
+                        Foto de perfil
+                      </label>
                       {{ form.avatar|add_class:"form-control" }}
                     </div>
 
                     <div class="mb-3">
-                      <label for="confirm_password" class="form-label">Confirmar Senha</label>
+                      <label for="id_confirm_password" class="form-label">
+                        Confirmar Senha <span class="text-danger">*</span>
+                      </label>
                       <div class="input-group">
                         {{ form.confirm_password|add_class:"form-control" }}
-                        <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPassword" onclick="toggleConfirmPasswordVisibility()">
+                        <button type="button" class="btn btn-outline-secondary toggle-confirm-password">
                           <i class="bi bi-eye"></i>
                         </button>
                       </div>
-                      <div class="text-danger" id="confirmPasswordError"></div>
+                      {% if form.confirm_password.errors %}
+                        <div class="text-danger small mt-1">
+                          {{ form.confirm_password.errors.0 }}
+                        </div>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
+
+                <div class="mt-4">
+                  <p class="text-muted small">
+                    <span class="text-danger">*</span> Campos obrigatórios
+                  </p>
 
                 <div class="d-flex justify-content-center mt-4">
                   <button type="submit" class="btn btn-outline-light">Cadastrar</button>
@@ -84,4 +132,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Função simples para mostrar/ocultar senha
+  document.querySelectorAll('.toggle-password, .toggle-confirm-password').forEach(button => {
+    button.addEventListener('click', function() {
+      const input = this.parentElement.querySelector('input');
+      const icon = this.querySelector('i');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      }
+    });
+  });
+</script>
 {% endblock %}

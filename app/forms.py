@@ -52,9 +52,12 @@ class TarefaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         usuario = kwargs.pop('usuario', None)
+        print(f"DEBUG: Usuário passado para TarefaForm: {usuario}")  
+        print(f"DEBUG: Usuário ID: {usuario.id if usuario else 'None'}")  
         super().__init__(*args, **kwargs)
         
         if usuario:
+            print(f"DEBUG: Filtrando matérias para usuário: {usuario.username}")  
             self.fields['periodo'].queryset = Periodo.objects.filter(
                 usuario=usuario
             ).order_by('-data_inicio')
@@ -62,6 +65,8 @@ class TarefaForm(forms.ModelForm):
             self.fields['materia'].queryset = Materia.objects.filter(
                 usuario=usuario
             ).order_by('nome')
+            
+            print(f"DEBUG: Total de matérias encontradas: {self.fields['materia'].queryset.count()}")
             
         if not self.fields['periodo'].queryset.exists():
             self.fields['periodo'].widget.attrs['disabled'] = 'disabled'
